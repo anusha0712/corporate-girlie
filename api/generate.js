@@ -39,7 +39,7 @@ export default async function handler(req, res) {
   // 1. Origin check
   // TODO: replace the placeholder below with your real Vercel URL after first deploy.
   //       e.g. "https://corporate-girlie.vercel.app"
-  const VERCEL_URL = "https://YOUR-APP.vercel.app"; // ← update after deploy
+  const VERCEL_URL = "https://corporate-girlie-85ts.vercel.app";
   const origin     = req.headers.origin || "";
   const isLocalhost = origin.startsWith("http://localhost") ||
                       origin.startsWith("http://127.0.0.1");
