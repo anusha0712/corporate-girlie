@@ -1,0 +1,9 @@
+{
+  "name": "corporate-girlie",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {},
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0"
+  }
+}

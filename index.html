@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corporate Girlie ✦</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background sparkle decorations (aria-hidden so screen readers skip them) -->
+  <div class="bg-sparkles" aria-hidden="true">
+    <span class="bg-sparkle s1">✦</span>
+    <span class="bg-sparkle s2">♥</span>
+    <span class="bg-sparkle s3">✦</span>
+    <span class="bg-sparkle s4">◆</span>
+    <span class="bg-sparkle s5">✦</span>
+    <span class="bg-sparkle s6">♥</span>
+    <span class="bg-sparkle s7">◆</span>
+    <span class="bg-sparkle s8">✦</span>
+    <span class="bg-sparkle s9">♥</span>
+    <span class="bg-sparkle s10">✦</span>
+  </div>
+
+  <div class="container">
+
+    <header>
+      <!-- Four-point stars flank the title -->
+      <div class="title-row">
+        <div class="star-group" aria-hidden="true">
+          <svg class="star tiny" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
+          <svg class="star small" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
+        </div>
+
+        <h1 class="title">Corporate Girlie</h1>
+
+        <div class="star-group" aria-hidden="true">
+          <svg class="star" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
+          <svg class="star small" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
+          <svg class="star tiny" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
+        </div>
+      </div>
+
+      <p class="header-dec" aria-hidden="true">♥ ✦ ♥</p>
+      <p class="tagline">corporate language, finally beat for the gods</p>
+    </header>
+
+    <main>
+
+      <!-- Mode toggle -->
+      <div class="mode-toggle" role="group" aria-label="Mode selection">
+        <button type="button" class="mode-btn active" id="btn-generate" aria-pressed="true">
+          Generate ✨
+        </button>
+        <button type="button" class="mode-btn" id="btn-reframe" aria-pressed="false">
+          Reframe 💄
+        </button>
+      </div>
+
+      <!-- Generate mode: optional topic hint -->
+      <div class="input-section" id="topic-section">
+        <input
+          type="text"
+          id="topic-input"
+          class="text-input"
+          placeholder="Topic hint (optional) — e.g. morning standup, budget cuts, hiring freeze..."
+          maxlength="100"
+          aria-label="Topic hint for phrase generation"
+        >
+      </div>
+
+      <!-- Reframe mode: paste your corporate speak -->
+      <div class="input-section" id="reframe-section" hidden>
+        <textarea
+          id="reframe-input"
+          class="text-input reframe-textarea"
+          placeholder="Paste your corporate speak here — we'll translate it into something actually useful to say..."
+          maxlength="500"
+          aria-label="Business language to reframe"
+        ></textarea>
+        <div class="char-counter" aria-live="polite">
+          <span id="char-count">0</span><span class="char-max">/500</span>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button type="button" class="submit-btn" id="submit-btn">
+        <span id="btn-text">Generate ✨</span>
+        <span id="btn-loading" hidden>
+          <span class="spin-star" aria-hidden="true">✦</span> generating...
+        </span>
+      </button>
+
+      <!-- Output: phrase cards, newest on top. Hardcoded samples for Phase 2. -->
+      <div class="output-area" id="output-area" aria-live="polite" aria-label="Generated phrases">
+        <div class="phrase-card">
+          <p class="phrase-text">Let it bake and we'll dust off tomorrow.</p>
+          <button type="button" class="copy-btn" aria-label="Copy phrase">Copy</button>
+        </div>
+        <div class="phrase-card">
+          <p class="phrase-text">Are we color correcting or just concealing?</p>
+          <button type="button" class="copy-btn" aria-label="Copy phrase">Copy</button>
+        </div>
+        <div class="phrase-card">
+          <p class="phrase-text">We can't dry shampoo our way out of this.</p>
+          <button type="button" class="copy-btn" aria-label="Copy phrase">Copy</button>
+        </div>
+      </div>
+
+    </main>
+
+    <footer>
+      <span>made with ✦ and SPF 50</span>
+      <a href="evals.html" class="evals-link">evals</a>
+    </footer>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

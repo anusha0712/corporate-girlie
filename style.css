@@ -1,0 +1,442 @@
+/* =====================================
+   Corporate Girlie — Y2K Maximalist
+   Zero gradients. Bold, loud, hard edges.
+   Lisa Frank × CD-ROM installer energy.
+   ===================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+[hidden] { display: none !important; }
+
+:root {
+  --hot-pink:  #e8267a;
+  --pink:      #ff9de6;
+  --lavender:  #bf94e4;
+  --sky:       #87d4f5;
+  --black:     #1a0a2e;
+  --white:     #ffffff;
+  --cream:     #fff8fc;
+
+  --border:    2.5px solid var(--black);
+
+  --font-display: 'Bagel Fat One', cursive;
+  --font-body:    'DM Sans', sans-serif;
+}
+
+/* ======================================
+   Page — cream base + repeating star tile
+   ====================================== */
+body {
+  background-color: var(--cream);
+  /* 4-point star repeating at 40×40px — pattern, not gradient */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath d='M20 6L21.8 18.2L34 20L21.8 21.8L20 34L18.2 21.8L6 20L18.2 18.2Z' fill='%23f0b0d8' opacity='0.3'/%3E%3C/svg%3E");
+  background-size: 40px 40px;
+  font-family: var(--font-body);
+  color: var(--black);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ======================================
+   Background sparkles — fixed overlay
+   ====================================== */
+.bg-sparkles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-sparkle {
+  position: absolute;
+  opacity: 0.6;
+  font-style: normal;
+  line-height: 1;
+  animation: twinkle 3.5s ease-in-out infinite;
+}
+
+.s1  { top: 6%;   left: 4%;    font-size: 15px; color: var(--hot-pink); animation-delay: 0s;    }
+.s2  { top: 12%;  right: 5%;   font-size: 10px; color: var(--sky);      animation-delay: 0.6s;  }
+.s3  { top: 30%;  left: 2%;    font-size: 20px; color: var(--lavender); animation-delay: 1.2s;  }
+.s4  { top: 50%;  left: 3%;    font-size: 10px; color: var(--hot-pink); animation-delay: 1.8s;  }
+.s5  { top: 70%;  left: 6%;    font-size: 15px; color: var(--sky);      animation-delay: 2.4s;  }
+.s6  { bottom: 8%;  left: 12%; font-size: 10px; color: var(--lavender); animation-delay: 0.3s;  }
+.s7  { top: 8%;   right: 9%;   font-size: 10px; color: var(--lavender); animation-delay: 0.9s;  }
+.s8  { top: 38%;  right: 3%;   font-size: 18px; color: var(--hot-pink); animation-delay: 1.5s;  }
+.s9  { top: 62%;  right: 5%;   font-size: 10px; color: var(--sky);      animation-delay: 2.1s;  }
+.s10 { bottom: 16%; right: 10%; font-size: 12px; color: var(--lavender); animation-delay: 0.4s; }
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.6;  transform: scale(1)    rotate(0deg);  }
+  50%       { opacity: 0.95; transform: scale(1.45) rotate(22deg); }
+}
+
+/* ======================================
+   Layout
+   ====================================== */
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 52px 24px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+/* ======================================
+   Header
+   ====================================== */
+header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.star-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Spinning four-point SVG stars — solid fills, no gradient */
+.star {
+  width: 28px;
+  height: 28px;
+  fill: var(--hot-pink);
+  animation: spin-slow 7s linear infinite;
+  flex-shrink: 0;
+}
+.star.small {
+  width: 18px;
+  height: 18px;
+  fill: var(--sky);
+  animation-duration: 9s;
+  animation-direction: reverse;
+}
+.star.tiny {
+  width: 12px;
+  height: 12px;
+  fill: var(--lavender);
+  animation-duration: 5s;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Title: solid hot pink, white text-stroke, hard drop shadow */
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 8vw, 3.8rem);
+  color: var(--hot-pink);
+  -webkit-text-stroke: 3px var(--white);
+  paint-order: stroke fill;
+  filter: drop-shadow(4px 4px 0 var(--black));
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+
+/* Hearts row between title and tagline */
+.header-dec {
+  font-size: 0.85rem;
+  letter-spacing: 10px;
+  color: var(--lavender);
+  padding-left: 10px; /* compensate for letter-spacing on last char */
+}
+
+.tagline {
+  font-size: 0.88rem;
+  font-style: italic;
+  color: #7a4a6a;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* ======================================
+   Main
+   ====================================== */
+main {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ======================================
+   Mode toggle — hard segmented buttons
+   No pill-in-pill. One solid block.
+   ====================================== */
+.mode-toggle {
+  display: flex;
+  border: var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--white);
+  box-shadow: 4px 4px 0 var(--black);
+}
+
+.mode-btn {
+  flex: 1;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 12px 28px;
+  border: none;
+  border-right: var(--border);
+  cursor: pointer;
+  background: var(--white);
+  color: var(--black);
+  transition: background 0.15s, color 0.15s;
+  letter-spacing: 0.01em;
+}
+
+.mode-btn:last-child {
+  border-right: none;
+}
+
+.mode-btn:hover:not(.active) {
+  background: #fff0f8;
+}
+
+.mode-btn.active {
+  background: var(--hot-pink);
+  color: var(--white);
+}
+
+/* ======================================
+   Inputs — solid white, hard border
+   No glassmorphism, no backdrop-filter
+   ====================================== */
+.input-section {
+  width: 100%;
+}
+
+.text-input {
+  width: 100%;
+  padding: 13px 18px;
+  border: var(--border);
+  border-radius: 12px;
+  background: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--black);
+  outline: none;
+  transition: box-shadow 0.12s;
+  line-height: 1.5;
+}
+
+.text-input::placeholder {
+  color: #c0a0cc;
+}
+
+.text-input:focus {
+  box-shadow: 3px 3px 0 var(--hot-pink);
+}
+
+.reframe-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.char-counter {
+  text-align: right;
+  margin-top: 6px;
+  font-size: 0.78rem;
+  color: #b0a0c0;
+}
+
+/* ======================================
+   Submit button
+   Solid pastel pink cycling through
+   rainbow via hue-rotate — Y2K iridescent
+   effect without a single gradient.
+   ====================================== */
+.submit-btn {
+  font-family: var(--font-body);
+  font-size: 1.08rem;
+  font-weight: 800;
+  padding: 15px 52px;
+  border: var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  background: var(--pink);
+  color: var(--black);
+  box-shadow: 5px 5px 0 var(--black);
+  letter-spacing: 0.02em;
+  transition: box-shadow 0.1s, transform 0.1s;
+  animation: hue-shift 5s linear infinite;
+}
+
+/* Press-down on hover: shadow shrinks, button moves into shadow */
+.submit-btn:hover {
+  box-shadow: 3px 3px 0 var(--black);
+  transform: translate(2px, 2px);
+}
+
+.submit-btn:active {
+  box-shadow: 1px 1px 0 var(--black);
+  transform: translate(4px, 4px);
+}
+
+.submit-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+@keyframes hue-shift {
+  from { filter: hue-rotate(0deg); }
+  to   { filter: hue-rotate(360deg); }
+}
+
+/* Spinning loading star */
+.spin-star {
+  display: inline-block;
+  animation: spin-fast 0.75s linear infinite;
+}
+
+@keyframes spin-fast {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ======================================
+   Output area + phrase cards
+   ====================================== */
+.output-area {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.phrase-card {
+  background: var(--white);
+  border: var(--border);
+  border-radius: 14px;
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: 4px 4px 0 var(--hot-pink);
+  animation: card-appear 0.3s ease both;
+}
+
+@keyframes card-appear {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.phrase-text {
+  font-size: 1rem;
+  line-height: 1.55;
+  font-weight: 500;
+  flex: 1;
+}
+
+.copy-btn {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 7px 16px;
+  border: 2px solid var(--black);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--black);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: 2px 2px 0 var(--black);
+  transition: box-shadow 0.1s, transform 0.1s, background 0.15s;
+}
+
+.copy-btn:hover {
+  background: var(--pink);
+}
+
+.copy-btn:active {
+  box-shadow: 0 0 0 var(--black);
+  transform: translate(2px, 2px);
+}
+
+.copy-btn.copied {
+  background: var(--lavender);
+  color: var(--white);
+  border-color: var(--lavender);
+}
+
+/* ======================================
+   Footer
+   ====================================== */
+footer {
+  margin-top: 4px;
+  font-size: 0.73rem;
+  color: #c0a0c0;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.evals-link {
+  color: #c0a0c0;
+  text-decoration: none;
+  opacity: 0.55;
+  transition: opacity 0.2s;
+}
+
+.evals-link:hover {
+  opacity: 1;
+}
+
+/* ======================================
+   Responsive
+   ====================================== */
+@media (max-width: 480px) {
+  .container {
+    padding: 36px 16px 28px;
+    gap: 20px;
+  }
+
+  .title {
+    font-size: clamp(1.8rem, 10vw, 2.4rem);
+    white-space: normal;
+  }
+
+  .title-row { gap: 8px; }
+
+  .star       { width: 22px; height: 22px; }
+  .star.small { width: 14px; height: 14px; }
+  .star.tiny  { width: 9px;  height: 9px;  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 14px 36px;
+  }
+
+  .phrase-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .copy-btn { align-self: flex-end; }
+}
