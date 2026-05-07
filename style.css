@@ -163,12 +163,13 @@ header {
   padding-left: 10px; /* compensate for letter-spacing on last char */
 }
 
-.tagline {
-  font-size: 0.88rem;
-  font-style: italic;
+.instructions {
+  font-size: 0.85rem;
   color: #7a4a6a;
-  font-weight: 500;
-  letter-spacing: 0.01em;
+  font-weight: 400;
+  line-height: 1.55;
+  max-width: 480px;
+  text-align: center;
 }
 
 /* ======================================
@@ -439,4 +440,158 @@ footer {
   }
 
   .copy-btn { align-self: flex-end; }
+}
+
+/* ======================================
+   Generate mode — current phrase card
+   ====================================== */
+#generate-output {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.current-card {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  box-shadow: 4px 4px 0 var(--hot-pink);
+}
+
+.current-card-body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.phrase-usage {
+  font-size: 0.82rem;
+  color: #9070a0;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.current-card-actions {
+  display: flex;
+  gap: 8px;
+  align-self: flex-end;
+}
+
+.save-btn {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 7px 16px;
+  border: 2px solid var(--black);
+  border-radius: 8px;
+  background: var(--lavender);
+  color: var(--white);
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 2px 2px 0 var(--black);
+  transition: box-shadow 0.1s, transform 0.1s, opacity 0.1s;
+}
+
+.save-btn:hover {
+  opacity: 0.85;
+}
+
+.save-btn:active {
+  box-shadow: 0 0 0 var(--black);
+  transform: translate(2px, 2px);
+}
+
+.save-btn.saved {
+  background: #b0a0c0;
+  border-color: #b0a0c0;
+  cursor: default;
+}
+
+.save-btn:disabled {
+  cursor: default;
+}
+
+/* ======================================
+   Saved phrases panel
+   ====================================== */
+.saved-section {
+  width: 100%;
+  border: var(--border);
+  border-radius: 14px;
+  background: var(--white);
+  box-shadow: 4px 4px 0 var(--black);
+  overflow: hidden;
+}
+
+.saved-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: var(--border);
+}
+
+.saved-toggle-btn {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 700;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--black);
+  padding: 0;
+}
+
+.saved-toggle-btn:hover { color: var(--hot-pink); }
+
+.copy-all-btn {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border: 2px solid var(--black);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--black);
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--black);
+  transition: box-shadow 0.1s, transform 0.1s, background 0.1s;
+}
+
+.copy-all-btn:hover { background: var(--pink); }
+
+.copy-all-btn:active {
+  box-shadow: 0 0 0 var(--black);
+  transform: translate(2px, 2px);
+}
+
+.saved-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.saved-item {
+  padding: 14px 18px;
+  border-bottom: 1.5px solid #f0e0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.saved-item:last-child { border-bottom: none; }
+
+.saved-phrase-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--black);
+}
+
+.saved-usage-text {
+  font-size: 0.8rem;
+  color: #9070a0;
+  font-style: italic;
+  line-height: 1.4;
 }

@@ -119,11 +119,19 @@ function ratingKey(version, input) {
 }
 
 function getRating(input, version = PROMPT_VERSION) {
-  return localStorage.getItem(ratingKey(version, input)); // 'up' | 'down' | null
+  const stored = localStorage.getItem(ratingKey(version, input));
+  if (!stored) return null;
+  try { return JSON.parse(stored).rating; } catch { return stored; }
 }
 
-function setRating(input, value) {
-  localStorage.setItem(ratingKey(PROMPT_VERSION, input), value);
+function getRatingData(input, version = PROMPT_VERSION) {
+  const stored = localStorage.getItem(ratingKey(version, input));
+  if (!stored) return null;
+  try { return JSON.parse(stored); } catch { return { rating: stored, output: '' }; }
+}
+
+function setRating(input, value, output = '') {
+  localStorage.setItem(ratingKey(PROMPT_VERSION, input), JSON.stringify({ rating: value, output }));
   updateSummary();
 }
 
@@ -145,19 +153,20 @@ function getPastVersions() {
 // ======================================
 
 function updateSummary(version = PROMPT_VERSION) {
-  let up = 0, down = 0, total = 0;
+  let good = 0, eh = 0, bad = 0, total = 0;
 
   TEST_CASES.forEach(({ input }) => {
     const r = getRating(input, version);
-    if (r === 'up')   { up++;   total++; }
-    if (r === 'down') { down++; total++; }
+    if (r === 'good') { good++; total++; }
+    if (r === 'eh')   { eh++;   total++; }
+    if (r === 'bad')  { bad++;  total++; }
   });
 
   const summaryEl = document.getElementById('summary-line');
   if (total === 0) {
     summaryEl.textContent = 'run all cases to start rating';
   } else {
-    summaryEl.textContent = `${version}: ${up} 👍 / ${down} 👎 (${total} rated of ${TEST_CASES.length})`;
+    summaryEl.textContent = `${version}: ${good} good / ${eh} eh / ${bad} bad (${total} of ${TEST_CASES.length} rated)`;
   }
 }
 
@@ -175,6 +184,7 @@ function renderCards() {
     card.id = `card-${tc.input.replace(/\s+/g, '-')}`;
 
     const existingRating = getRating(tc.input);
+    const isRated = !!existingRating;
 
     card.innerHTML = `
       <div class="eval-card-top">
@@ -183,28 +193,35 @@ function renderCards() {
       <div class="eval-input-sentence">${tc.input}</div>
       <div class="eval-output pending" id="output-${cardId(tc.input)}">not run yet</div>
       <div class="eval-card-bottom">
-        <button class="rating-btn ${existingRating === 'up' ? 'selected-up' : ''}"
-                id="up-${cardId(tc.input)}"
+        <button class="rating-btn ${existingRating === 'good' ? 'selected-good' : ''}"
+                id="good-${cardId(tc.input)}"
                 data-input="${tc.input}"
-                data-dir="up"
-                ${existingRating ? '' : 'disabled'}>👍</button>
-        <button class="rating-btn ${existingRating === 'down' ? 'selected-down' : ''}"
-                id="down-${cardId(tc.input)}"
+                data-dir="good"
+                ${isRated ? '' : 'disabled'}>Good</button>
+        <button class="rating-btn ${existingRating === 'eh' ? 'selected-eh' : ''}"
+                id="eh-${cardId(tc.input)}"
                 data-input="${tc.input}"
-                data-dir="down"
-                ${existingRating ? '' : 'disabled'}>👎</button>
+                data-dir="eh"
+                ${isRated ? '' : 'disabled'}>Eh</button>
+        <button class="rating-btn ${existingRating === 'bad' ? 'selected-bad' : ''}"
+                id="bad-${cardId(tc.input)}"
+                data-input="${tc.input}"
+                data-dir="bad"
+                ${isRated ? '' : 'disabled'}>Bad</button>
       </div>
     `;
 
     grid.appendChild(card);
   });
 
-  // Wire up rating buttons
+  // Wire up rating buttons — also capture output text at click time
   grid.querySelectorAll('.rating-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const input = btn.dataset.input;
-      const dir   = btn.dataset.dir;
-      setRating(input, dir);
+      const input    = btn.dataset.input;
+      const dir      = btn.dataset.dir;
+      const outputEl = document.getElementById(`output-${cardId(input)}`);
+      const output   = outputEl ? outputEl.textContent : '';
+      setRating(input, dir, output);
       applyRatingUI(input, dir);
     });
   });
@@ -215,14 +232,18 @@ function cardId(input) {
 }
 
 function applyRatingUI(input, dir) {
-  const upBtn   = document.getElementById(`up-${cardId(input)}`);
-  const downBtn = document.getElementById(`down-${cardId(input)}`);
-  if (!upBtn || !downBtn) return;
+  const goodBtn = document.getElementById(`good-${cardId(input)}`);
+  const ehBtn   = document.getElementById(`eh-${cardId(input)}`);
+  const badBtn  = document.getElementById(`bad-${cardId(input)}`);
+  if (!goodBtn || !ehBtn || !badBtn) return;
 
-  upBtn.classList.toggle('selected-up',   dir === 'up');
-  downBtn.classList.toggle('selected-down', dir === 'down');
-  upBtn.disabled   = false;
-  downBtn.disabled = false;
+  goodBtn.classList.toggle('selected-good', dir === 'good');
+  ehBtn.classList.toggle('selected-eh',     dir === 'eh');
+  badBtn.classList.toggle('selected-bad',   dir === 'bad');
+
+  goodBtn.disabled = false;
+  ehBtn.disabled   = false;
+  badBtn.disabled  = false;
 }
 
 function setCardOutput(input, text, isError = false) {
@@ -232,10 +253,12 @@ function setCardOutput(input, text, isError = false) {
   el.textContent = text;
 
   // Enable rating buttons once we have output
-  const upBtn   = document.getElementById(`up-${cardId(input)}`);
-  const downBtn = document.getElementById(`down-${cardId(input)}`);
-  if (upBtn)   upBtn.disabled   = false;
-  if (downBtn) downBtn.disabled = false;
+  const goodBtn = document.getElementById(`good-${cardId(input)}`);
+  const ehBtn   = document.getElementById(`eh-${cardId(input)}`);
+  const badBtn  = document.getElementById(`bad-${cardId(input)}`);
+  if (goodBtn) goodBtn.disabled = false;
+  if (ehBtn)   ehBtn.disabled   = false;
+  if (badBtn)  badBtn.disabled  = false;
 
   // Restore saved rating if any
   const saved = getRating(input);
@@ -282,6 +305,38 @@ async function runAll() {
 }
 
 // ======================================
+// Share with Claude
+// ======================================
+
+function compileForSharing() {
+  let good = 0, eh = 0, bad = 0;
+  const lines = [];
+
+  TEST_CASES.forEach(({ input, mode }) => {
+    const data = getRatingData(input);
+    if (!data) return;
+    if (data.rating === 'good') good++;
+    if (data.rating === 'eh')   eh++;
+    if (data.rating === 'bad')  bad++;
+  });
+
+  lines.push(`Prompt version: ${PROMPT_VERSION}`);
+  lines.push(`Summary: ${good} good / ${eh} eh / ${bad} bad`);
+  lines.push('');
+
+  TEST_CASES.forEach(({ input, mode }) => {
+    const data = getRatingData(input);
+    if (!data || !data.rating) return;
+    lines.push(`[${mode}] ${data.rating.toUpperCase()}`);
+    lines.push(`Input: ${input}`);
+    lines.push(`Output: ${data.output || '(not recorded)'}`);
+    lines.push('');
+  });
+
+  return lines.join('\n').trim();
+}
+
+// ======================================
 // Past version dropdown
 // ======================================
 
@@ -313,3 +368,11 @@ updateSummary();
 populateVersionDropdown();
 
 document.getElementById('run-all-btn').addEventListener('click', runAll);
+
+document.getElementById('share-btn').addEventListener('click', () => {
+  const text = compileForSharing();
+  const btn  = document.getElementById('share-btn');
+  navigator.clipboard.writeText(text)
+    .then(() => { btn.textContent = 'Copied! Paste into chat ✦'; setTimeout(() => { btn.textContent = 'Share with Claude'; }, 2000); })
+    .catch(() => { btn.textContent = 'Copied! Paste into chat ✦'; setTimeout(() => { btn.textContent = 'Share with Claude'; }, 2000); });
+});

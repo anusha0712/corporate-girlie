@@ -82,7 +82,7 @@ export default async function handler(req, res) {
 
   // 5. Anthropic call
   const userMessage = mode === 'reframe'
-    ? `Reframe this in corporate beauty language: "${input}"`
+    ? `Reframe this: "${input}"`
     : input ? `Topic: ${input}` : 'Generate a phrase.';
 
   try {
@@ -93,8 +93,17 @@ export default async function handler(req, res) {
       messages: [{ role: 'user', content: userMessage }],
     });
 
-    const phrase = message.content[0].text.trim();
-    return res.status(200).json({ phrase });
+    const text = message.content[0].text.trim();
+
+    if (mode === 'generate') {
+      const phraseMatch = text.match(/^PHRASE:\s*(.+?)$/m);
+      const usageMatch  = text.match(/^USAGE:\s*(.+?)$/m);
+      const phrase = phraseMatch ? phraseMatch[1].trim() : text;
+      const usage  = usageMatch  ? usageMatch[1].trim()  : '';
+      return res.status(200).json({ phrase, usage });
+    } else {
+      return res.status(200).json({ phrase: text });
+    }
   } catch (err) {
     console.error('Anthropic API error:', err);
     return res.status(500).json({

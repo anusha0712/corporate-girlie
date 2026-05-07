@@ -1,81 +1,110 @@
 // ======================================
 // Corporate Girlie — frontend logic
-// Phase 2: UI interactions, no API yet
 // ======================================
 
 // -- Elements --
-const btnGenerate   = document.getElementById('btn-generate');
-const btnReframe    = document.getElementById('btn-reframe');
-const topicSection  = document.getElementById('topic-section');
-const reframeSection = document.getElementById('reframe-section');
-const reframeInput  = document.getElementById('reframe-input');
-const charCount     = document.getElementById('char-count');
-const submitBtn     = document.getElementById('submit-btn');
-const btnText       = document.getElementById('btn-text');
-const btnLoading    = document.getElementById('btn-loading');
-const outputArea    = document.getElementById('output-area');
+const btnGenerate     = document.getElementById('btn-generate');
+const btnReframe      = document.getElementById('btn-reframe');
+const topicSection    = document.getElementById('topic-section');
+const reframeSection  = document.getElementById('reframe-section');
+const reframeInput    = document.getElementById('reframe-input');
+const charCount       = document.getElementById('char-count');
+const submitBtn       = document.getElementById('submit-btn');
+const btnText         = document.getElementById('btn-text');
+const btnLoading      = document.getElementById('btn-loading');
 
-// -- Mode state --
-let currentMode = 'generate';
+// Generate mode output
+const generateOutput  = document.getElementById('generate-output');
+const currentCard     = document.getElementById('current-card');
+const currentPhrase   = document.getElementById('current-phrase');
+const currentUsage    = document.getElementById('current-usage');
+const copyCurrent     = document.getElementById('copy-current-btn');
+const saveBtn         = document.getElementById('save-btn');
 
-// -- Mode toggle --
+// Saved panel
+const savedSection    = document.getElementById('saved-section');
+const savedToggleBtn  = document.getElementById('saved-toggle-btn');
+const savedCountEl    = document.getElementById('saved-count');
+const savedList       = document.getElementById('saved-list');
+const copyAllBtn      = document.getElementById('copy-all-btn');
+
+// Reframe output
+const reframeOutput   = document.getElementById('reframe-output');
+
+// -- State --
+let currentMode  = 'generate';
+let savedPhrases = []; // { phrase, usage }
+
+// ======================================
+// Mode toggle
+// ======================================
+
 btnGenerate.addEventListener('click', () => setMode('generate'));
-btnReframe.addEventListener('click', () => setMode('reframe'));
+btnReframe.addEventListener('click',  () => setMode('reframe'));
 
 function setMode(mode) {
   currentMode = mode;
-
   const isGenerate = mode === 'generate';
 
   btnGenerate.classList.toggle('active', isGenerate);
   btnGenerate.setAttribute('aria-pressed', String(isGenerate));
-
   btnReframe.classList.toggle('active', !isGenerate);
   btnReframe.setAttribute('aria-pressed', String(!isGenerate));
 
-  topicSection.hidden  = !isGenerate;
+  topicSection.hidden   = !isGenerate;
   reframeSection.hidden = isGenerate;
 
   btnText.textContent = isGenerate ? 'Generate ✨' : 'Reframe 💄';
+
+  // Show the output area for the active mode
+  if (isGenerate) {
+    reframeOutput.hidden  = true;
+    generateOutput.hidden = currentPhrase.textContent === '' && savedPhrases.length === 0;
+  } else {
+    generateOutput.hidden = true;
+    reframeOutput.hidden  = reframeOutput.children.length === 0;
+  }
 }
 
-// -- Character counter (reframe textarea) --
+// ======================================
+// Character counter (reframe textarea)
+// ======================================
+
 reframeInput.addEventListener('input', () => {
   charCount.textContent = reframeInput.value.length;
 });
 
 // ======================================
-// Submit — calls /api/generate
+// Submit
 // ======================================
 
 submitBtn.addEventListener('click', handleSubmit);
 
 async function handleSubmit() {
-  setLoading(true);
-
-  // Build the request body based on current mode
   const input = currentMode === 'reframe'
     ? reframeInput.value.trim()
     : document.getElementById('topic-input').value.trim();
 
+  setLoading(true);
+
   try {
-    const res = await fetch('/api/generate', {
-      method: 'POST',
+    const res  = await fetch('/api/generate', {
+      method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mode: currentMode, input }),
+      body:    JSON.stringify({ mode: currentMode, input }),
     });
 
     const data = await res.json();
 
     if (!res.ok) {
-      // Server returned a friendly error message
-      addCard(data.error || "the mirror's a little foggy — try again in a sec");
+      showError(data.error || "the mirror's a little foggy — try again in a sec");
+    } else if (currentMode === 'generate') {
+      showCurrentPhrase(data.phrase, data.usage || '');
     } else {
-      addCard(data.phrase);
+      addReframeCard(data.phrase);
     }
-  } catch (err) {
-    // Network error or JSON parse failure
-    addCard("the mirror's a little foggy — try again in a sec");
+  } catch {
+    showError("the mirror's a little foggy — try again in a sec");
   }
 
   setLoading(false);
@@ -88,20 +117,114 @@ function setLoading(loading) {
 }
 
 // ======================================
-// Phrase card — adds a new card to the
-// top of the output area with animation.
+// Generate mode — current phrase display
 // ======================================
 
-function addCard(phrase) {
+function showCurrentPhrase(phrase, usage) {
+  currentPhrase.textContent = phrase;
+  currentUsage.textContent  = usage;
+  currentUsage.hidden       = !usage;
+
+  generateOutput.hidden = false;
+
+  // Reset save button
+  saveBtn.textContent = 'Save';
+  saveBtn.disabled    = false;
+  saveBtn.classList.remove('saved');
+
+  // Wire copy button to this specific phrase
+  copyCurrent.onclick = () => copyPhrase(phrase, copyCurrent);
+
+  // Wire save button
+  saveBtn.onclick = () => savePhraseToList(phrase, usage);
+}
+
+function showError(message) {
+  if (currentMode === 'generate') {
+    showCurrentPhrase(message, '');
+  } else {
+    addReframeCard(message);
+  }
+}
+
+// ======================================
+// Save phrase
+// ======================================
+
+function savePhraseToList(phrase, usage) {
+  savedPhrases.push({ phrase, usage });
+
+  saveBtn.textContent = 'Saved ✦';
+  saveBtn.disabled    = true;
+  saveBtn.classList.add('saved');
+
+  renderSavedList();
+
+  savedSection.hidden  = false;
+  savedCountEl.textContent = savedPhrases.length;
+}
+
+function renderSavedList() {
+  savedList.innerHTML = '';
+
+  savedPhrases.forEach(({ phrase, usage }) => {
+    const item = document.createElement('div');
+    item.className = 'saved-item';
+
+    const phraseEl = document.createElement('p');
+    phraseEl.className   = 'saved-phrase-text';
+    phraseEl.textContent = phrase;
+    item.appendChild(phraseEl);
+
+    if (usage) {
+      const usageEl = document.createElement('p');
+      usageEl.className   = 'saved-usage-text';
+      usageEl.textContent = usage;
+      item.appendChild(usageEl);
+    }
+
+    savedList.appendChild(item);
+  });
+
+  savedCountEl.textContent = savedPhrases.length;
+}
+
+// Saved panel toggle
+savedToggleBtn.addEventListener('click', () => {
+  const isHidden = savedList.hidden;
+  savedList.hidden = !isHidden;
+  savedToggleBtn.setAttribute('aria-expanded', String(isHidden));
+});
+
+// Copy all — phrases only, one per line
+copyAllBtn.addEventListener('click', () => {
+  const text = savedPhrases.map(({ phrase }) => phrase).join('\n\n');
+  navigator.clipboard.writeText(text)
+    .then(() => showCopiedAll())
+    .catch(() => showCopiedAll());
+});
+
+function showCopiedAll() {
+  copyAllBtn.textContent = 'Copied! ✨';
+  setTimeout(() => { copyAllBtn.textContent = 'Copy all'; }, 1500);
+}
+
+// ======================================
+// Reframe mode — growing card list
+// ======================================
+
+function addReframeCard(phrase) {
+  reframeOutput.hidden = false;
+
   const card = document.createElement('div');
   card.className = 'phrase-card';
 
   const p = document.createElement('p');
-  p.className = 'phrase-text';
-  p.textContent = phrase; // textContent = safe, no XSS risk
+  p.className   = 'phrase-text';
+  p.textContent = phrase;
 
   const btn = document.createElement('button');
-  btn.type = 'button';
+  btn.type      = 'button';
   btn.className = 'copy-btn';
   btn.setAttribute('aria-label', 'Copy phrase');
   btn.textContent = 'Copy';
@@ -110,8 +233,7 @@ function addCard(phrase) {
   card.appendChild(p);
   card.appendChild(btn);
 
-  // Newest card goes on top
-  outputArea.insertBefore(card, outputArea.firstChild);
+  reframeOutput.insertBefore(card, reframeOutput.firstChild);
 }
 
 // ======================================
@@ -121,7 +243,7 @@ function addCard(phrase) {
 function copyPhrase(phrase, btn) {
   navigator.clipboard.writeText(phrase)
     .then(() => showCopied(btn))
-    .catch(() => showCopied(btn)); // still give feedback even if clipboard fails
+    .catch(() => showCopied(btn));
 }
 
 function showCopied(btn) {
@@ -132,10 +254,3 @@ function showCopied(btn) {
     btn.classList.remove('copied');
   }, 1500);
 }
-
-// Wire up copy buttons on the three hardcoded sample cards in the HTML
-document.querySelectorAll('.phrase-card').forEach(card => {
-  const phrase  = card.querySelector('.phrase-text').textContent;
-  const copyBtn = card.querySelector('.copy-btn');
-  copyBtn.addEventListener('click', () => copyPhrase(phrase, copyBtn));
-});
