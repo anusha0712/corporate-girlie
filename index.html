@@ -104,16 +104,9 @@
         </div>
 
         <div class="saved-section" id="saved-section" hidden>
-          <button type="button" class="saved-toggle-btn" id="saved-toggle-btn" aria-expanded="false">
-            <span>Your Arsenal ✦ (<span id="saved-count">0</span>)</span>
-            <span class="saved-chevron" aria-hidden="true">▼</span>
+          <button type="button" class="arsenal-trigger-btn" id="saved-toggle-btn">
+            Your Arsenal ✦ (<span id="saved-count">0</span>)
           </button>
-          <div class="saved-dropdown" id="saved-list" hidden aria-label="Saved phrases">
-            <!-- items injected by JS -->
-            <div class="saved-footer">
-              <button type="button" class="copy-all-btn" id="copy-all-btn">Copy all</button>
-            </div>
-          </div>
         </div>
 
       </div>
@@ -128,6 +121,21 @@
       <a href="evals.html" class="evals-link">evals</a>
     </footer>
 
+  </div>
+
+  <!-- Arsenal modal — shown when user clicks "Your Arsenal" trigger -->
+  <div id="arsenal-modal" class="arsenal-modal" hidden>
+    <div class="arsenal-backdrop" id="arsenal-backdrop"></div>
+    <div class="arsenal-popup">
+      <div class="arsenal-popup-header">
+        <span>Your Arsenal ✦</span>
+        <button type="button" class="arsenal-close-btn" id="arsenal-close-btn" aria-label="Close arsenal">×</button>
+      </div>
+      <div class="arsenal-popup-body" id="saved-list"></div>
+      <div class="arsenal-popup-footer">
+        <button type="button" class="copy-all-btn" id="copy-all-btn">Copy all</button>
+      </div>
+    </div>
   </div>
 
   <script src="app.js"></script>

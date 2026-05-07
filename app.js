@@ -28,6 +28,11 @@ const savedCountEl    = document.getElementById('saved-count');
 const savedList       = document.getElementById('saved-list');
 const copyAllBtn      = document.getElementById('copy-all-btn');
 
+// Arsenal modal
+const arsenalModal    = document.getElementById('arsenal-modal');
+const arsenalBackdrop = document.getElementById('arsenal-backdrop');
+const arsenalCloseBtn = document.getElementById('arsenal-close-btn');
+
 // Reframe output
 const reframeOutput   = document.getElementById('reframe-output');
 
@@ -166,24 +171,12 @@ function savePhraseToList(phrase, usage) {
   saveBtn.disabled    = true;
   saveBtn.classList.add('saved');
 
-  renderSavedList();
-
   savedSection.hidden = false;
   savedCountEl.textContent = savedPhrases.length;
-
-  // Auto-expand on first save
-  if (savedPhrases.length === 1) {
-    savedList.hidden = false;
-    savedToggleBtn.setAttribute('aria-expanded', 'true');
-    savedToggleBtn.classList.add('open');
-  }
 }
 
 function renderSavedList() {
-  // Remove all items but keep the footer
-  const footer = savedList.querySelector('.saved-footer');
   savedList.innerHTML = '';
-  if (footer) savedList.appendChild(footer);
 
   savedPhrases.forEach(({ phrase, usage }, index) => {
     const item = document.createElement('div');
@@ -214,6 +207,7 @@ function renderSavedList() {
       savedCountEl.textContent = savedPhrases.length;
       if (savedPhrases.length === 0) {
         savedSection.hidden = true;
+        closeArsenal();
       } else {
         renderSavedList();
       }
@@ -221,21 +215,25 @@ function renderSavedList() {
 
     item.appendChild(content);
     item.appendChild(deleteBtn);
-
-    // Insert before footer
-    savedList.insertBefore(item, footer);
+    savedList.appendChild(item);
   });
 
   savedCountEl.textContent = savedPhrases.length;
 }
 
-// Saved panel toggle
-savedToggleBtn.addEventListener('click', () => {
-  const isHidden = savedList.hidden;
-  savedList.hidden = !isHidden;
-  savedToggleBtn.setAttribute('aria-expanded', String(isHidden));
-  savedToggleBtn.classList.toggle('open', isHidden);
-});
+// Arsenal modal — open / close
+function openArsenal() {
+  renderSavedList();
+  arsenalModal.hidden = false;
+}
+
+function closeArsenal() {
+  arsenalModal.hidden = true;
+}
+
+savedToggleBtn.addEventListener('click', openArsenal);
+arsenalCloseBtn.addEventListener('click', closeArsenal);
+arsenalBackdrop.addEventListener('click', closeArsenal);
 
 // Copy all — phrases only, one per line
 copyAllBtn.addEventListener('click', () => {

@@ -37,8 +37,8 @@ body {
   background-size: 40px 40px;
   font-family: var(--font-body);
   color: var(--black);
-  min-height: 100vh;
-  overflow-x: hidden;
+  height: 100svh;
+  overflow: hidden;
 }
 
 /* ======================================
@@ -82,24 +82,25 @@ body {
   position: relative;
   z-index: 1;
   max-width: 720px;
-  min-height: 100svh;
+  height: 100svh;
   margin: 0 auto;
-  padding: 40px 20px 24px;
+  padding: 32px 20px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
 }
 
 /* ======================================
    Header
    ====================================== */
 header {
+  flex-shrink: 0;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 6px;
+  margin-bottom: 8px;
 }
 
 .title-row {
@@ -177,11 +178,16 @@ header {
    Main
    ====================================== */
 main {
+  flex: 1;
+  min-height: 0;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  justify-content: center;
+  gap: 14px;
+  overflow-y: auto;
+  padding: 8px 0;
 }
 
 /* ======================================
@@ -232,6 +238,7 @@ main {
    ====================================== */
 .input-section {
   width: 100%;
+  position: relative;
 }
 
 .text-input {
@@ -257,15 +264,18 @@ main {
 }
 
 .reframe-textarea {
-  min-height: 120px;
+  min-height: 80px;
   resize: vertical;
+  padding-bottom: 28px;
 }
 
 .char-counter {
-  text-align: right;
-  margin-top: 6px;
+  position: absolute;
+  bottom: 10px;
+  right: 14px;
   font-size: 0.78rem;
   color: #b0a0c0;
+  pointer-events: none;
 }
 
 /* ======================================
@@ -392,12 +402,14 @@ main {
    Footer
    ====================================== */
 footer {
-  margin-top: auto;
+  margin-top: 0;
+  padding-top: 10px;
   font-size: 0.73rem;
   color: #c0a0c0;
   display: flex;
   align-items: center;
   gap: 18px;
+  flex-shrink: 0;
 }
 
 .evals-link {
@@ -516,56 +528,122 @@ footer {
 }
 
 /* ======================================
-   Saved phrases — dropdown panel
+   Saved phrases — arsenal trigger button
    ====================================== */
 .saved-section {
   width: 100%;
-  border: var(--border);
-  border-radius: 14px;
-  background: var(--white);
-  box-shadow: 4px 4px 0 var(--black);
-  overflow: hidden;
 }
 
-.saved-toggle-btn {
+.arsenal-trigger-btn {
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 20px;
   font-family: var(--font-body);
   font-size: 0.95rem;
   font-weight: 700;
-  background: none;
-  border: none;
-  border-bottom: none;
-  cursor: pointer;
+  padding: 13px 20px;
+  border: var(--border);
+  border-radius: 12px;
+  background: var(--white);
   color: var(--black);
+  cursor: pointer;
   text-align: left;
-  transition: background 0.15s;
+  box-shadow: 4px 4px 0 var(--black);
+  transition: box-shadow 0.1s, transform 0.1s, background 0.15s;
 }
 
-.saved-toggle-btn:hover { background: #fff0f8; }
+.arsenal-trigger-btn:hover {
+  background: #fff0f8;
+  box-shadow: 2px 2px 0 var(--black);
+  transform: translate(2px, 2px);
+}
 
-.saved-toggle-btn.open {
+.arsenal-trigger-btn:active {
+  box-shadow: 0 0 0 var(--black);
+  transform: translate(4px, 4px);
+}
+
+/* ======================================
+   Arsenal modal popup
+   ====================================== */
+.arsenal-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.arsenal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(26, 10, 46, 0.55);
+}
+
+.arsenal-popup {
+  position: relative;
+  z-index: 1;
+  background: var(--white);
+  border: var(--border);
+  border-radius: 16px;
+  box-shadow: 8px 8px 0 var(--black);
+  width: 100%;
+  max-width: 500px;
+  max-height: 72vh;
+  display: flex;
+  flex-direction: column;
+  animation: popup-appear 0.2s ease both;
+}
+
+@keyframes popup-appear {
+  from { opacity: 0; transform: scale(0.92) translateY(8px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);   }
+}
+
+.arsenal-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
   border-bottom: var(--border);
-}
-
-.saved-chevron {
-  font-size: 0.7rem;
-  transition: transform 0.2s;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--black);
   flex-shrink: 0;
 }
 
-.saved-toggle-btn.open .saved-chevron {
-  transform: rotate(180deg);
+.arsenal-close-btn {
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--black);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 8px;
+  border-radius: 6px;
+  transition: background 0.15s;
 }
 
-.saved-dropdown {
+.arsenal-close-btn:hover { background: #fff0f8; }
+
+.arsenal-popup-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
 
+.arsenal-popup-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 20px;
+  border-top: var(--border);
+  flex-shrink: 0;
+}
+
+/* Saved items inside modal */
 .saved-item {
   display: flex;
   align-items: flex-start;
@@ -609,12 +687,6 @@ footer {
 }
 
 .delete-saved-btn:hover { color: var(--hot-pink); }
-
-.saved-footer {
-  display: flex;
-  justify-content: flex-end;
-  padding: 12px 20px;
-}
 
 .copy-all-btn {
   font-family: var(--font-body);
