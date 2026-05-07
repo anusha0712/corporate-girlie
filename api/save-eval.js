@@ -1,19 +1,15 @@
 // Vercel serverless function — writes eval session to GitHub repo
 // Browser → this function → GitHub API → eval-sessions/latest.json committed
 
-const ALLOWED_ORIGINS = [
-  "https://corporate-girlie-85ts.vercel.app",
-  "https://corporate-girlie.vercel.app",
-];
-
 export default async function handler(req, res) {
 
-  // 1. Origin check
-  const origin      = req.headers.origin || "";
-  const isLocalhost = origin.startsWith("http://localhost") ||
-                      origin.startsWith("http://127.0.0.1");
-  const isAllowed   = ALLOWED_ORIGINS.includes(origin);
-  if (!isLocalhost && !isAllowed) {
+  // 1. Origin check — allow same-origin (no Origin header), localhost, or our domains
+  const origin = req.headers.origin || "";
+  const blocked = origin !== "" &&
+                  !origin.startsWith("http://localhost") &&
+                  !origin.startsWith("http://127.0.0.1") &&
+                  !origin.startsWith("https://corporate-girlie");
+  if (blocked) {
     return res.status(403).json({ error: "nice try bestie" });
   }
 
