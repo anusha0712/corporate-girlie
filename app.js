@@ -175,29 +175,55 @@ function savePhraseToList(phrase, usage) {
   if (savedPhrases.length === 1) {
     savedList.hidden = false;
     savedToggleBtn.setAttribute('aria-expanded', 'true');
+    savedToggleBtn.classList.add('open');
   }
 }
 
 function renderSavedList() {
+  // Remove all items but keep the footer
+  const footer = savedList.querySelector('.saved-footer');
   savedList.innerHTML = '';
+  if (footer) savedList.appendChild(footer);
 
-  savedPhrases.forEach(({ phrase, usage }) => {
+  savedPhrases.forEach(({ phrase, usage }, index) => {
     const item = document.createElement('div');
     item.className = 'saved-item';
+
+    const content = document.createElement('div');
+    content.className = 'saved-item-content';
 
     const phraseEl = document.createElement('p');
     phraseEl.className   = 'saved-phrase-text';
     phraseEl.textContent = phrase;
-    item.appendChild(phraseEl);
+    content.appendChild(phraseEl);
 
     if (usage) {
       const usageEl = document.createElement('p');
       usageEl.className   = 'saved-usage-text';
       usageEl.textContent = usage;
-      item.appendChild(usageEl);
+      content.appendChild(usageEl);
     }
 
-    savedList.appendChild(item);
+    const deleteBtn = document.createElement('button');
+    deleteBtn.type      = 'button';
+    deleteBtn.className = 'delete-saved-btn';
+    deleteBtn.setAttribute('aria-label', 'Remove from arsenal');
+    deleteBtn.textContent = '×';
+    deleteBtn.addEventListener('click', () => {
+      savedPhrases.splice(index, 1);
+      savedCountEl.textContent = savedPhrases.length;
+      if (savedPhrases.length === 0) {
+        savedSection.hidden = true;
+      } else {
+        renderSavedList();
+      }
+    });
+
+    item.appendChild(content);
+    item.appendChild(deleteBtn);
+
+    // Insert before footer
+    savedList.insertBefore(item, footer);
   });
 
   savedCountEl.textContent = savedPhrases.length;
@@ -208,6 +234,7 @@ savedToggleBtn.addEventListener('click', () => {
   const isHidden = savedList.hidden;
   savedList.hidden = !isHidden;
   savedToggleBtn.setAttribute('aria-expanded', String(isHidden));
+  savedToggleBtn.classList.toggle('open', isHidden);
 });
 
 // Copy all — phrases only, one per line

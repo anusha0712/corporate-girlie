@@ -104,13 +104,16 @@
         </div>
 
         <div class="saved-section" id="saved-section" hidden>
-          <div class="saved-header">
-            <button type="button" class="saved-toggle-btn" id="saved-toggle-btn" aria-expanded="false">
-              Your Arsenal ✦ (<span id="saved-count">0</span>)
-            </button>
-            <button type="button" class="copy-all-btn" id="copy-all-btn">Copy all</button>
+          <button type="button" class="saved-toggle-btn" id="saved-toggle-btn" aria-expanded="false">
+            <span>Your Arsenal ✦ (<span id="saved-count">0</span>)</span>
+            <span class="saved-chevron" aria-hidden="true">▼</span>
+          </button>
+          <div class="saved-dropdown" id="saved-list" hidden aria-label="Saved phrases">
+            <!-- items injected by JS -->
+            <div class="saved-footer">
+              <button type="button" class="copy-all-btn" id="copy-all-btn">Copy all</button>
+            </div>
           </div>
-          <div class="saved-list" id="saved-list" hidden aria-label="Saved phrases"></div>
         </div>
 
       </div>
