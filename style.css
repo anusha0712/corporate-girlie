@@ -10,6 +10,11 @@
   padding: 0;
 }
 
+html {
+  height: 100%;
+  overflow: hidden;
+}
+
 [hidden] { display: none !important; }
 
 /* Remove tap flash and delay on all interactive elements */
