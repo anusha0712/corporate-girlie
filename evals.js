@@ -179,8 +179,8 @@ function renderCards() {
     card.innerHTML = `
       <div class="eval-card-top">
         <span class="eval-badge ${tc.mode}">${tc.mode}</span>
-        <span class="eval-input">${tc.label}</span>
       </div>
+      <div class="eval-input-sentence">${tc.input}</div>
       <div class="eval-output pending" id="output-${cardId(tc.input)}">not run yet</div>
       <div class="eval-card-bottom">
         <button class="rating-btn ${existingRating === 'up' ? 'selected-up' : ''}"
