@@ -5,29 +5,109 @@ import { PROMPT_VERSION } from './prompt.js';
 // ======================================
 
 const TEST_CASES = [
-  // Generate mode
-  { mode: 'generate', label: 'Morning standup',         input: 'morning standup' },
-  { mode: 'generate', label: 'Deadline pressure',       input: 'deadline pressure' },
-  { mode: 'generate', label: 'Scope creep',             input: 'scope creep' },
-  { mode: 'generate', label: 'Firing someone',          input: 'firing someone' },
-  { mode: 'generate', label: 'Giving feedback',         input: 'giving feedback' },
-  { mode: 'generate', label: 'Team is burnt out',       input: 'team is burnt out' },
-  { mode: 'generate', label: 'Launch is slipping',      input: 'launch is slipping' },
-  { mode: 'generate', label: 'Need more budget',        input: 'need more budget' },
-  { mode: 'generate', label: 'Two teams disagree',      input: 'two teams disagree' },
-  { mode: 'generate', label: 'Hiring freeze',           input: 'hiring freeze' },
-  { mode: 'generate', label: 'Stakeholder pressure',    input: 'stakeholder presentation pressure' },
-  { mode: 'generate', label: 'Over-engineered',         input: 'project is over-engineered' },
-  { mode: 'generate', label: 'Team needs alignment',    input: 'team needs alignment' },
+  // Generate mode — full sentences a user would actually type as a topic hint
+  {
+    mode: 'generate',
+    label: 'Going in circles',
+    input: 'we\'ve been debating the same decision for three weeks and nothing is moving',
+  },
+  {
+    mode: 'generate',
+    label: 'No headcount',
+    input: 'I have to tell my team we\'re not getting the additional headcount we asked for',
+  },
+  {
+    mode: 'generate',
+    label: 'Shifting priorities',
+    input: 'leadership keeps changing the priorities mid-sprint and the team is frustrated',
+  },
+  {
+    mode: 'generate',
+    label: 'Not launch-ready',
+    input: 'we\'re supposed to launch next week but the product still has too many rough edges',
+  },
+  {
+    mode: 'generate',
+    label: 'Architecture fight',
+    input: 'two senior engineers fundamentally disagree on the technical approach and it\'s blocking the whole team',
+  },
+  {
+    mode: 'generate',
+    label: 'Client scope creep',
+    input: 'the client keeps adding requirements without adjusting the timeline or budget',
+  },
+  {
+    mode: 'generate',
+    label: 'Crunch for months',
+    input: 'the team has been in crunch mode for two months and morale is tanking',
+  },
+  {
+    mode: 'generate',
+    label: 'Cut features',
+    input: 'we have to cut features before launch but we can\'t agree on which ones to cut',
+  },
+  {
+    mode: 'generate',
+    label: 'Strategy too cautious',
+    input: 'we got feedback that our roadmap is too conservative and we need to take bigger swings',
+  },
+  {
+    mode: 'generate',
+    label: 'Behind on everything',
+    input: 'we are three sprints behind and the big stakeholder review is tomorrow morning',
+  },
 
-  // Reframe mode
-  { mode: 'reframe', label: 'Fix before launch',        input: 'we need to fix this before launch' },
-  { mode: 'reframe', label: 'Data doesn\'t support it', input: 'the data doesn\'t support that conclusion' },
-  { mode: 'reframe', label: 'Revisit next quarter',     input: 'can we revisit this next quarter' },
-  { mode: 'reframe', label: 'Team underperforming',     input: 'this team is underperforming' },
-  { mode: 'reframe', label: 'Need more resources',      input: 'we need more resources to do this properly' },
-  { mode: 'reframe', label: 'Taking too long',          input: 'this is taking too long' },
-  { mode: 'reframe', label: 'Strategy keeps changing',  input: 'the strategy keeps changing' },
+  // Reframe mode — full sentences someone would paste in
+  {
+    mode: 'reframe',
+    label: 'Move faster',
+    input: 'we need to move faster, this pace is not acceptable',
+  },
+  {
+    mode: 'reframe',
+    label: 'No alignment',
+    input: 'I don\'t think we have alignment on the direction yet and we keep relitigating the same points',
+  },
+  {
+    mode: 'reframe',
+    label: 'Performance issue',
+    input: 'this person is not performing at the level we need and we\'ve been avoiding the conversation',
+  },
+  {
+    mode: 'reframe',
+    label: 'Over-engineered',
+    input: 'this solution is way over-engineered for what we actually need to ship',
+  },
+  {
+    mode: 'reframe',
+    label: 'Too many meetings',
+    input: 'we\'re spending too much time in meetings and not enough time doing actual work',
+  },
+  {
+    mode: 'reframe',
+    label: 'Will miss deadline',
+    input: 'I need everyone to know we are going to miss the deadline',
+  },
+  {
+    mode: 'reframe',
+    label: 'Users not engaging',
+    input: 'the data shows our users are not engaging with this feature the way we expected',
+  },
+  {
+    mode: 'reframe',
+    label: 'Been in dev too long',
+    input: 'this feature has been in development for six months and it\'s still not done',
+  },
+  {
+    mode: 'reframe',
+    label: 'Covering up problems',
+    input: 'I feel like we keep presenting things as fine when they\'re not actually fine',
+  },
+  {
+    mode: 'reframe',
+    label: 'Starting over',
+    input: 'I think we need to scrap what we have and start from scratch',
+  },
 ];
 
 // ======================================
@@ -197,7 +277,7 @@ async function runAll() {
   }
 
   btn.disabled = false;
-  btn.textContent = 'Run All 20';
+  btn.textContent = 'Run All';
   updateSummary();
 }
 
