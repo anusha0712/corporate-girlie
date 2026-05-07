@@ -1,29 +1,113 @@
 /* ======================================
-   Evals page — dev tool, same tokens
-   as style.css but simpler layout
+   Evals — phone-first rating UI
+   Uses CSS vars from style.css.
+   No .container class — own layout.
    ====================================== */
 
-.evals-container {
-  max-width: 900px;
-  align-items: flex-start;
-  padding-top: 40px;
-}
-
-.evals-header {
-  width: 100%;
-  text-align: left;
-  gap: 8px;
-}
-
-.evals-title-row {
+/* Full-viewport flex column shell */
+.eval-shell {
+  position: relative;
+  z-index: 1;
+  height: 100svh;
+  max-width: 540px;
+  margin: 0 auto;
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 4px;
+  flex-direction: column;
 }
 
-.evals-title {
+/* ======================================
+   Top bar
+   ====================================== */
+.eval-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  flex-shrink: 0;
+  border-bottom: 1.5px solid #f0e0f0;
+}
+
+.eval-back-link {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #b0a0c0;
+  text-decoration: none;
+  white-space: nowrap;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.15s;
+}
+
+.eval-back-link:hover { color: var(--hot-pink); }
+
+.eval-stats {
+  flex: 1;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--black);
+  letter-spacing: 0.01em;
+}
+
+.send-btn {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 10px 16px;
+  border: var(--border);
+  border-radius: 10px;
+  background: var(--sky);
+  color: var(--black);
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--black);
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-height: 44px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: box-shadow 0.1s, transform 0.1s;
+}
+
+.send-btn:hover:not(:disabled) {
+  box-shadow: 2px 2px 0 var(--black);
+  transform: translate(1px, 1px);
+}
+
+.send-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ======================================
+   Card area — fills middle
+   ====================================== */
+.eval-card-area {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  overflow-y: auto;
+}
+
+/* ======================================
+   Start screen
+   ====================================== */
+.eval-start {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.eval-start-title {
   font-family: var(--font-display);
   font-size: 2rem;
   color: var(--hot-pink);
@@ -32,209 +116,172 @@
   filter: drop-shadow(3px 3px 0 var(--black));
 }
 
-.back-link {
-  font-size: 0.82rem;
-  color: #b0a0c0;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.back-link:hover { color: var(--hot-pink); }
-
-.evals-version {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--lavender);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.evals-summary {
-  font-size: 0.9rem;
-  font-weight: 500;
+.eval-start-sub {
+  font-size: 1rem;
   color: #7a4a6a;
-  margin-bottom: 4px;
+  max-width: 280px;
+  line-height: 1.55;
 }
 
-.evals-controls {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-top: 8px;
-  margin-bottom: 4px;
-}
-
-.evals-controls .submit-btn {
-  font-size: 0.9rem;
-  padding: 10px 28px;
-}
-
-.share-btn {
+.start-btn {
   font-family: var(--font-body);
-  font-size: 0.9rem;
-  font-weight: 700;
-  padding: 10px 22px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  padding: 16px 48px;
   border: var(--border);
   border-radius: 12px;
   cursor: pointer;
-  background: var(--sky);
+  background: var(--pink);
   color: var(--black);
-  box-shadow: 3px 3px 0 var(--black);
+  box-shadow: 5px 5px 0 var(--black);
+  animation: hue-shift 5s linear infinite;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   transition: box-shadow 0.1s, transform 0.1s;
-  animation: none;
 }
 
-.share-btn:hover {
+.start-btn:hover {
+  box-shadow: 3px 3px 0 var(--black);
+  transform: translate(2px, 2px);
+}
+
+/* ======================================
+   Loading state
+   ====================================== */
+.eval-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  color: #b0a0c0;
+  font-weight: 500;
+}
+
+/* ======================================
+   Error state
+   ====================================== */
+.eval-error {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.eval-error-msg {
+  font-size: 1rem;
+  color: #9070a0;
+  line-height: 1.5;
+}
+
+.retry-btn {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 12px 28px;
+  min-height: 44px;
+  border: var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  background: var(--white);
+  color: var(--black);
+  box-shadow: 3px 3px 0 var(--black);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: box-shadow 0.1s, transform 0.1s;
+}
+
+.retry-btn:hover {
   box-shadow: 2px 2px 0 var(--black);
   transform: translate(1px, 1px);
 }
 
-.version-select-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.version-label-text {
-  font-size: 0.8rem;
-  color: #b0a0c0;
-}
-
-.version-select {
-  font-family: var(--font-body);
-  font-size: 0.82rem;
-  padding: 6px 10px;
-  border: var(--border);
-  border-radius: 8px;
-  background: var(--white);
-  color: var(--black);
-  cursor: pointer;
-}
-
 /* ======================================
-   Results grid
+   Phrase card
    ====================================== */
-.results-grid {
+.eval-phrase-card {
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 8px;
-}
-
-.eval-card {
   background: var(--white);
   border: var(--border);
-  border-radius: 14px;
-  padding: 16px 18px;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 5px 5px 0 var(--hot-pink);
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  box-shadow: 3px 3px 0 var(--black);
+  gap: 14px;
+  animation: card-appear 0.28s ease both;
 }
 
-.eval-card-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+@keyframes card-appear {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.eval-badge {
-  font-size: 0.68rem;
+.eval-topic {
+  font-size: 0.73rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  color: var(--lavender);
   text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 6px;
-  border: 1.5px solid var(--black);
-}
-
-.eval-badge.generate { background: var(--sky); }
-.eval-badge.reframe  { background: var(--pink); }
-
-.eval-input {
-  font-size: 0.78rem;
-  color: #9070a0;
-  font-style: italic;
-  flex: 1;
-  text-align: right;
-}
-
-.eval-input-sentence {
-  font-size: 0.82rem;
-  color: #9070a0;
-  font-style: italic;
+  letter-spacing: 0.07em;
   line-height: 1.4;
 }
 
-.eval-output {
-  font-size: 0.95rem;
-  font-weight: 500;
-  line-height: 1.5;
+.eval-phrase-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.55;
   color: var(--black);
-  min-height: 1.5em;
 }
 
-.eval-output.pending { color: #c0a0c0; font-style: italic; }
-.eval-output.loading { color: #c0a0c0; }
-
-.eval-card-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 6px;
-}
-
-.rating-btn {
-  font-size: 1rem;
-  padding: 4px 10px;
-  border: 1.5px solid var(--black);
-  border-radius: 8px;
-  background: var(--white);
-  cursor: pointer;
-  box-shadow: 2px 2px 0 var(--black);
-  transition: box-shadow 0.1s, transform 0.1s, background 0.1s;
-  line-height: 1;
-}
-
-.rating-btn:hover {
-  background: #fff0f8;
-}
-
-.rating-btn:active {
-  box-shadow: 0 0 0 var(--black);
-  transform: translate(2px, 2px);
-}
-
-.rating-btn.selected-good {
-  background: #d4f5d4;
-  border-color: #4caf50;
-  box-shadow: 2px 2px 0 #4caf50;
-}
-
-.rating-btn.selected-eh {
-  background: #fff3cd;
-  border-color: #e0a800;
-  box-shadow: 2px 2px 0 #e0a800;
-}
-
-.rating-btn.selected-bad {
-  background: #ffd4d4;
-  border-color: #e8267a;
-  box-shadow: 2px 2px 0 #e8267a;
-}
-
-.rating-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+.eval-usage-text {
+  font-size: 0.9rem;
+  color: #9070a0;
+  font-style: italic;
+  line-height: 1.5;
 }
 
 /* ======================================
-   Responsive
+   Rating row — pinned to bottom
    ====================================== */
-@media (max-width: 600px) {
-  .results-grid { grid-template-columns: 1fr; }
-  .evals-container { padding-top: 28px; }
+.eval-rating-row {
+  display: flex;
+  flex-shrink: 0;
+  border-top: var(--border);
+  /* respect iPhone home indicator */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
+
+.rate-btn {
+  flex: 1;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 800;
+  height: 72px;
+  border: none;
+  background: var(--white);
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.12s;
+}
+
+.rate-btn + .rate-btn {
+  border-left: 1.5px solid #e0d0e8;
+}
+
+.rate-bad  { color: var(--hot-pink); }
+.rate-eh   { color: #9070a0; }
+.rate-good { color: #2a7a2a; }
+
+.rate-btn:active:not(:disabled) { opacity: 0.8; }
+
+.rate-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Flash colors — triggered for 400ms on rating */
+.rate-bad.flash-bad   { background: #ffd4d4; }
+.rate-eh.flash-eh     { background: #fff3cd; }
+.rate-good.flash-good { background: #d4f5d4; }

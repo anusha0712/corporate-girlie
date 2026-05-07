@@ -1,378 +1,267 @@
 import { PROMPT_VERSION } from './prompt.js';
 
 // ======================================
-// Test cases — ~20 across both modes
+// Topic pool — generate mode only
 // ======================================
-
-const TEST_CASES = [
-  // Generate mode — full sentences a user would actually type as a topic hint
-  {
-    mode: 'generate',
-    label: 'Going in circles',
-    input: 'we\'ve been debating the same decision for three weeks and nothing is moving',
-  },
-  {
-    mode: 'generate',
-    label: 'No headcount',
-    input: 'I have to tell my team we\'re not getting the additional headcount we asked for',
-  },
-  {
-    mode: 'generate',
-    label: 'Shifting priorities',
-    input: 'leadership keeps changing the priorities mid-sprint and the team is frustrated',
-  },
-  {
-    mode: 'generate',
-    label: 'Not launch-ready',
-    input: 'we\'re supposed to launch next week but the product still has too many rough edges',
-  },
-  {
-    mode: 'generate',
-    label: 'Architecture fight',
-    input: 'two senior engineers fundamentally disagree on the technical approach and it\'s blocking the whole team',
-  },
-  {
-    mode: 'generate',
-    label: 'Client scope creep',
-    input: 'the client keeps adding requirements without adjusting the timeline or budget',
-  },
-  {
-    mode: 'generate',
-    label: 'Crunch for months',
-    input: 'the team has been in crunch mode for two months and morale is tanking',
-  },
-  {
-    mode: 'generate',
-    label: 'Cut features',
-    input: 'we have to cut features before launch but we can\'t agree on which ones to cut',
-  },
-  {
-    mode: 'generate',
-    label: 'Strategy too cautious',
-    input: 'we got feedback that our roadmap is too conservative and we need to take bigger swings',
-  },
-  {
-    mode: 'generate',
-    label: 'Behind on everything',
-    input: 'we are three sprints behind and the big stakeholder review is tomorrow morning',
-  },
-
-  // Reframe mode — full sentences someone would paste in
-  {
-    mode: 'reframe',
-    label: 'Move faster',
-    input: 'we need to move faster, this pace is not acceptable',
-  },
-  {
-    mode: 'reframe',
-    label: 'No alignment',
-    input: 'I don\'t think we have alignment on the direction yet and we keep relitigating the same points',
-  },
-  {
-    mode: 'reframe',
-    label: 'Performance issue',
-    input: 'this person is not performing at the level we need and we\'ve been avoiding the conversation',
-  },
-  {
-    mode: 'reframe',
-    label: 'Over-engineered',
-    input: 'this solution is way over-engineered for what we actually need to ship',
-  },
-  {
-    mode: 'reframe',
-    label: 'Too many meetings',
-    input: 'we\'re spending too much time in meetings and not enough time doing actual work',
-  },
-  {
-    mode: 'reframe',
-    label: 'Will miss deadline',
-    input: 'I need everyone to know we are going to miss the deadline',
-  },
-  {
-    mode: 'reframe',
-    label: 'Users not engaging',
-    input: 'the data shows our users are not engaging with this feature the way we expected',
-  },
-  {
-    mode: 'reframe',
-    label: 'Been in dev too long',
-    input: 'this feature has been in development for six months and it\'s still not done',
-  },
-  {
-    mode: 'reframe',
-    label: 'Covering up problems',
-    input: 'I feel like we keep presenting things as fine when they\'re not actually fine',
-  },
-  {
-    mode: 'reframe',
-    label: 'Starting over',
-    input: 'I think we need to scrap what we have and start from scratch',
-  },
+const TOPICS = [
+  "we've been debating the same decision for three weeks and nothing is moving",
+  "I have to tell my team we're not getting the additional headcount we asked for",
+  "leadership keeps changing the priorities mid-sprint and the team is frustrated",
+  "we're supposed to launch next week but the product still has too many rough edges",
+  "two senior engineers fundamentally disagree on the technical approach and it's blocking the whole team",
+  "the client keeps adding requirements without adjusting the timeline or budget",
+  "the team has been in crunch mode for two months and morale is tanking",
+  "we have to cut features before launch but we can't agree on which ones to cut",
+  "we got feedback that our roadmap is too conservative and we need to take bigger swings",
+  "we are three sprints behind and the big stakeholder review is tomorrow morning",
 ];
 
 // ======================================
-// localStorage helpers
+// State
 // ======================================
+let session        = null;
+let currentPhrase  = null;   // { phrase, usage, topic }
+let prefetched     = null;   // pre-loaded next phrase
+let isFetching     = false;
+let topicQueue     = [];
+let topicIndex     = 0;
+let recentPhrases  = [];     // last 3, passed to API to avoid repetition
 
-function ratingKey(version, input) {
-  return `cg_${version}_${input}`;
-}
+// ======================================
+// Elements
+// ======================================
+const evalStatsEl    = document.getElementById('eval-stats');
+const sendBtn        = document.getElementById('send-btn');
+const evalStart      = document.getElementById('eval-start');
+const evalLoading    = document.getElementById('eval-loading');
+const evalError      = document.getElementById('eval-error');
+const evalPhraseCard = document.getElementById('eval-phrase-card');
+const evalTopicEl    = document.getElementById('eval-topic');
+const evalPhraseText = document.getElementById('eval-phrase-text');
+const evalUsageText  = document.getElementById('eval-usage-text');
+const evalRatingRow  = document.getElementById('eval-rating-row');
+const startBtn       = document.getElementById('start-btn');
+const retryBtn       = document.getElementById('retry-btn');
 
-function getRating(input, version = PROMPT_VERSION) {
-  const stored = localStorage.getItem(ratingKey(version, input));
-  if (!stored) return null;
-  try { return JSON.parse(stored).rating; } catch { return stored; }
-}
-
-function getRatingData(input, version = PROMPT_VERSION) {
-  const stored = localStorage.getItem(ratingKey(version, input));
-  if (!stored) return null;
-  try { return JSON.parse(stored); } catch { return { rating: stored, output: '' }; }
-}
-
-function setRating(input, value, output = '') {
-  localStorage.setItem(ratingKey(PROMPT_VERSION, input), JSON.stringify({ rating: value, output }));
-  updateSummary();
-}
-
-function getPastVersions() {
-  const versions = new Set();
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (key && key.startsWith('cg_')) {
-      const parts = key.split('_');
-      if (parts.length >= 3) versions.add(parts[1]); // cg_<version>_<input>
-    }
+// ======================================
+// Helpers
+// ======================================
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
   }
-  versions.delete(PROMPT_VERSION); // current version shown separately
-  return [...versions].sort();
+  return a;
+}
+
+function getNextTopic() {
+  if (topicIndex >= topicQueue.length) {
+    topicQueue = shuffle(TOPICS);
+    topicIndex = 0;
+  }
+  return topicQueue[topicIndex++];
+}
+
+// Show one panel, hide the rest
+function showArea(id) {
+  for (const el of [evalStart, evalLoading, evalError, evalPhraseCard]) {
+    el.hidden = (el.id !== id);
+  }
+}
+
+function setRatingBtnsDisabled(disabled) {
+  document.querySelectorAll('.rate-btn').forEach(b => { b.disabled = disabled; });
 }
 
 // ======================================
-// Summary line
+// API
 // ======================================
+async function fetchPhrase(topic) {
+  const body = { mode: 'generate', input: topic };
+  if (recentPhrases.length > 0) body.recentPhrases = recentPhrases.slice(-3);
 
-function updateSummary(version = PROMPT_VERSION) {
-  let good = 0, eh = 0, bad = 0, total = 0;
-
-  TEST_CASES.forEach(({ input }) => {
-    const r = getRating(input, version);
-    if (r === 'good') { good++; total++; }
-    if (r === 'eh')   { eh++;   total++; }
-    if (r === 'bad')  { bad++;  total++; }
+  const res  = await fetch('/api/generate', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(body),
   });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'API error');
+  return { phrase: data.phrase, usage: data.usage || '', topic };
+}
 
-  const summaryEl = document.getElementById('summary-line');
-  if (total === 0) {
-    summaryEl.textContent = 'run all cases to start rating';
+// Start fetching the next phrase silently in the background
+function prefetchNext() {
+  if (isFetching || prefetched) return;
+  isFetching = true;
+  fetchPhrase(getNextTopic())
+    .then(p => { prefetched = p; isFetching = false; })
+    .catch(()  => { isFetching = false; });
+}
+
+// ======================================
+// Display
+// ======================================
+function showPhrase(phraseData) {
+  currentPhrase = phraseData;
+  recentPhrases.push(phraseData.phrase);
+  if (recentPhrases.length > 3) recentPhrases.shift();
+
+  evalTopicEl.textContent  = phraseData.topic;
+  evalPhraseText.textContent = phraseData.phrase;
+
+  if (phraseData.usage) {
+    evalUsageText.textContent = phraseData.usage;
+    evalUsageText.hidden = false;
   } else {
-    summaryEl.textContent = `${version}: ${good} good / ${eh} eh / ${bad} bad (${total} of ${TEST_CASES.length} rated)`;
+    evalUsageText.hidden = true;
+  }
+
+  // Restart entrance animation
+  evalPhraseCard.style.animation = 'none';
+  evalPhraseCard.offsetHeight;   // trigger reflow
+  evalPhraseCard.style.animation = '';
+
+  showArea('eval-phrase-card');
+  setRatingBtnsDisabled(false);
+}
+
+function updateStats() {
+  if (!session) return;
+  const n    = session.results.length;
+  const good = session.results.filter(r => r.rating === 'good').length;
+  const eh   = session.results.filter(r => r.rating === 'eh').length;
+  const bad  = session.results.filter(r => r.rating === 'bad').length;
+
+  evalStatsEl.textContent = n === 0
+    ? '0 rated'
+    : `${n} — ${good} good / ${eh} eh / ${bad} bad`;
+
+  // Show send button once there's enough data to be useful
+  if (n >= 5) sendBtn.hidden = false;
+}
+
+// ======================================
+// Session start
+// ======================================
+async function startSession() {
+  session       = { version: PROMPT_VERSION, startedAt: new Date().toISOString(), results: [] };
+  topicQueue    = shuffle(TOPICS);
+  topicIndex    = 0;
+  recentPhrases = [];
+  prefetched    = null;
+
+  evalRatingRow.hidden = false;
+  setRatingBtnsDisabled(true);
+  updateStats();
+  showArea('eval-loading');
+
+  try {
+    const p = await fetchPhrase(getNextTopic());
+    showPhrase(p);
+    prefetchNext();
+  } catch {
+    showArea('eval-error');
+  }
+}
+
+// Retry after an error — keeps current session data
+async function retryFetch() {
+  setRatingBtnsDisabled(true);
+  showArea('eval-loading');
+  try {
+    const p = await fetchPhrase(getNextTopic());
+    showPhrase(p);
+    prefetchNext();
+  } catch {
+    showArea('eval-error');
   }
 }
 
 // ======================================
-// Card rendering
+// Rating + advance
 // ======================================
+async function rate(rating) {
+  if (!currentPhrase || !session) return;
 
-function renderCards() {
-  const grid = document.getElementById('results-grid');
-  grid.innerHTML = '';
-
-  TEST_CASES.forEach((tc) => {
-    const card = document.createElement('div');
-    card.className = 'eval-card';
-    card.id = `card-${tc.input.replace(/\s+/g, '-')}`;
-
-    const existingRating = getRating(tc.input);
-    const isRated = !!existingRating;
-
-    card.innerHTML = `
-      <div class="eval-card-top">
-        <span class="eval-badge ${tc.mode}">${tc.mode}</span>
-      </div>
-      <div class="eval-input-sentence">${tc.input}</div>
-      <div class="eval-output pending" id="output-${cardId(tc.input)}">not run yet</div>
-      <div class="eval-card-bottom">
-        <button class="rating-btn ${existingRating === 'good' ? 'selected-good' : ''}"
-                id="good-${cardId(tc.input)}"
-                data-input="${tc.input}"
-                data-dir="good"
-                ${isRated ? '' : 'disabled'}>Good</button>
-        <button class="rating-btn ${existingRating === 'eh' ? 'selected-eh' : ''}"
-                id="eh-${cardId(tc.input)}"
-                data-input="${tc.input}"
-                data-dir="eh"
-                ${isRated ? '' : 'disabled'}>Eh</button>
-        <button class="rating-btn ${existingRating === 'bad' ? 'selected-bad' : ''}"
-                id="bad-${cardId(tc.input)}"
-                data-input="${tc.input}"
-                data-dir="bad"
-                ${isRated ? '' : 'disabled'}>Bad</button>
-      </div>
-    `;
-
-    grid.appendChild(card);
+  // Record result
+  session.results.push({
+    phrase:  currentPhrase.phrase,
+    usage:   currentPhrase.usage,
+    topic:   currentPhrase.topic,
+    rating,
   });
 
-  // Wire up rating buttons — also capture output text at click time
-  grid.querySelectorAll('.rating-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const input    = btn.dataset.input;
-      const dir      = btn.dataset.dir;
-      const outputEl = document.getElementById(`output-${cardId(input)}`);
-      const output   = outputEl ? outputEl.textContent : '';
-      setRating(input, dir, output);
-      applyRatingUI(input, dir);
-    });
-  });
-}
+  // Flash the tapped button for 400ms
+  setRatingBtnsDisabled(true);
+  const btn = document.querySelector(`.rate-btn[data-rating="${rating}"]`);
+  btn.classList.add(`flash-${rating}`);
 
-function cardId(input) {
-  return input.replace(/[^a-z0-9]/gi, '-');
-}
+  updateStats();
 
-function applyRatingUI(input, dir) {
-  const goodBtn = document.getElementById(`good-${cardId(input)}`);
-  const ehBtn   = document.getElementById(`eh-${cardId(input)}`);
-  const badBtn  = document.getElementById(`bad-${cardId(input)}`);
-  if (!goodBtn || !ehBtn || !badBtn) return;
+  await new Promise(r => setTimeout(r, 400));
+  btn.classList.remove(`flash-${rating}`);
 
-  goodBtn.classList.toggle('selected-good', dir === 'good');
-  ehBtn.classList.toggle('selected-eh',     dir === 'eh');
-  badBtn.classList.toggle('selected-bad',   dir === 'bad');
-
-  goodBtn.disabled = false;
-  ehBtn.disabled   = false;
-  badBtn.disabled  = false;
-}
-
-function setCardOutput(input, text, isError = false) {
-  const el = document.getElementById(`output-${cardId(input)}`);
-  if (!el) return;
-  el.className = 'eval-output' + (isError ? ' pending' : '');
-  el.textContent = text;
-
-  // Enable rating buttons once we have output
-  const goodBtn = document.getElementById(`good-${cardId(input)}`);
-  const ehBtn   = document.getElementById(`eh-${cardId(input)}`);
-  const badBtn  = document.getElementById(`bad-${cardId(input)}`);
-  if (goodBtn) goodBtn.disabled = false;
-  if (ehBtn)   ehBtn.disabled   = false;
-  if (badBtn)  badBtn.disabled  = false;
-
-  // Restore saved rating if any
-  const saved = getRating(input);
-  if (saved) applyRatingUI(input, saved);
-}
-
-// ======================================
-// Run all
-// ======================================
-
-async function runAll() {
-  const btn = document.getElementById('run-all-btn');
-  btn.disabled = true;
-  btn.textContent = 'Running...';
-
-  for (let i = 0; i < TEST_CASES.length; i++) {
-    const tc = TEST_CASES[i];
-
-    // Show loading state
-    const el = document.getElementById(`output-${cardId(tc.input)}`);
-    if (el) { el.className = 'eval-output loading'; el.textContent = '✦ generating...'; }
-
+  // Show next phrase (instant if pre-fetched, otherwise load)
+  if (prefetched) {
+    const next = prefetched;
+    prefetched = null;
+    showPhrase(next);
+    prefetchNext();
+  } else {
+    showArea('eval-loading');
+    setRatingBtnsDisabled(true);
     try {
-      const res = await fetch('/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mode: tc.mode, input: tc.input }),
-      });
-      const data = await res.json();
-      setCardOutput(tc.input, res.ok ? data.phrase : (data.error || 'error'));
+      const p = await fetchPhrase(getNextTopic());
+      showPhrase(p);
+      prefetchNext();
     } catch {
-      setCardOutput(tc.input, 'network error', true);
-    }
-
-    // Stagger requests — 300ms apart so we don't hammer the function
-    if (i < TEST_CASES.length - 1) {
-      await new Promise(r => setTimeout(r, 300));
+      showArea('eval-error');
     }
   }
-
-  btn.disabled = false;
-  btn.textContent = 'Run All';
-  updateSummary();
 }
 
 // ======================================
-// Share with Claude
+// Send to Claude via GitHub
 // ======================================
+async function sendToClaude() {
+  if (!session || session.results.length === 0) return;
 
-function compileForSharing() {
-  let good = 0, eh = 0, bad = 0;
-  const lines = [];
+  sendBtn.disabled    = true;
+  sendBtn.textContent = 'Sending...';
 
-  TEST_CASES.forEach(({ input, mode }) => {
-    const data = getRatingData(input);
-    if (!data) return;
-    if (data.rating === 'good') good++;
-    if (data.rating === 'eh')   eh++;
-    if (data.rating === 'bad')  bad++;
-  });
+  try {
+    const res  = await fetch('/api/save-eval', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ session }),
+    });
+    const data = await res.json();
 
-  lines.push(`Prompt version: ${PROMPT_VERSION}`);
-  lines.push(`Summary: ${good} good / ${eh} eh / ${bad} bad`);
-  lines.push('');
-
-  TEST_CASES.forEach(({ input, mode }) => {
-    const data = getRatingData(input);
-    if (!data || !data.rating) return;
-    lines.push(`[${mode}] ${data.rating.toUpperCase()}`);
-    lines.push(`Input: ${input}`);
-    lines.push(`Output: ${data.output || '(not recorded)'}`);
-    lines.push('');
-  });
-
-  return lines.join('\n').trim();
+    if (res.ok) {
+      sendBtn.textContent = 'Sent ✦';
+      setTimeout(() => {
+        sendBtn.disabled    = false;
+        sendBtn.textContent = 'Send to Claude';
+      }, 3000);
+    } else {
+      sendBtn.textContent = 'Error — try again';
+      sendBtn.disabled    = false;
+    }
+  } catch {
+    sendBtn.textContent = 'Error — try again';
+    sendBtn.disabled    = false;
+  }
 }
 
 // ======================================
-// Past version dropdown
+// Event listeners
 // ======================================
+startBtn.addEventListener('click', startSession);
+retryBtn.addEventListener('click', retryFetch);
+sendBtn.addEventListener('click',  sendToClaude);
 
-function populateVersionDropdown() {
-  const select = document.getElementById('version-select');
-  const past = getPastVersions();
-  past.forEach(v => {
-    const opt = document.createElement('option');
-    opt.value = v;
-    opt.textContent = v;
-    select.appendChild(opt);
-  });
-
-  select.addEventListener('change', () => {
-    const v = select.value;
-    if (v) updateSummary(v);
-    else   updateSummary();
-  });
-}
-
-// ======================================
-// Init
-// ======================================
-
-document.getElementById('version-label').textContent = `prompt version: ${PROMPT_VERSION}`;
-
-renderCards();
-updateSummary();
-populateVersionDropdown();
-
-document.getElementById('run-all-btn').addEventListener('click', runAll);
-
-document.getElementById('share-btn').addEventListener('click', () => {
-  const text = compileForSharing();
-  const btn  = document.getElementById('share-btn');
-  navigator.clipboard.writeText(text)
-    .then(() => { btn.textContent = 'Copied! Paste into chat ✦'; setTimeout(() => { btn.textContent = 'Share with Claude'; }, 2000); })
-    .catch(() => { btn.textContent = 'Copied! Paste into chat ✦'; setTimeout(() => { btn.textContent = 'Share with Claude'; }, 2000); });
+document.querySelectorAll('.rate-btn').forEach(btn => {
+  btn.addEventListener('click', () => rate(btn.dataset.rating));
 });

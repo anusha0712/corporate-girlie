@@ -12,6 +12,12 @@
 
 [hidden] { display: none !important; }
 
+/* Remove tap flash and delay on all interactive elements */
+button, a, input, textarea, select {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
 :root {
   --hot-pink:  #e8267a;
   --pink:      #ff9de6;
@@ -371,7 +377,8 @@ main {
   font-family: var(--font-body);
   font-size: 0.78rem;
   font-weight: 700;
-  padding: 7px 16px;
+  padding: 10px 16px;
+  min-height: 44px;
   border: 2px solid var(--black);
   border-radius: 8px;
   background: var(--white);
@@ -426,10 +433,28 @@ footer {
 /* ======================================
    Responsive
    ====================================== */
+
+/* Desktop: collapse main so controls sit just below the header */
+@media (min-width: 600px) {
+  main {
+    flex: 0 0 auto;
+    padding: 32px 0;
+  }
+
+  footer {
+    margin-top: auto;
+  }
+}
+
+/* Arsenal modal: full-width on mobile */
+@media (max-width: 540px) {
+  .arsenal-modal { padding: 12px; }
+  .arsenal-popup { max-width: 100%; }
+}
+
 @media (max-width: 480px) {
   .container {
-    padding: 32px 14px 28px;
-    gap: 18px;
+    padding: 24px 14px 16px;
   }
 
   .title {
@@ -439,9 +464,22 @@ footer {
 
   .title-row { gap: 8px; }
 
+  /* Smaller header on mobile to free up space for the form */
+  .instructions {
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+
   .star       { width: 22px; height: 22px; }
   .star.small { width: 14px; height: 14px; }
   .star.tiny  { width: 9px;  height: 9px;  }
+
+  /* Mode toggle: ensure comfortable tap height */
+  .mode-btn {
+    padding: 14px 20px;
+    min-height: 48px;
+    font-size: 0.95rem;
+  }
 
   .submit-btn {
     width: 100%;
@@ -454,6 +492,12 @@ footer {
   }
 
   .copy-btn { align-self: flex-end; }
+
+  /* Current card actions stack better on narrow screens */
+  .current-card-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
 }
 
 /* ======================================
@@ -497,7 +541,8 @@ footer {
   font-family: var(--font-body);
   font-size: 0.78rem;
   font-weight: 700;
-  padding: 7px 16px;
+  padding: 10px 16px;
+  min-height: 44px;
   border: 2px solid var(--black);
   border-radius: 8px;
   background: var(--lavender);
@@ -620,7 +665,12 @@ footer {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 2px 8px;
+  padding: 8px 12px;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 6px;
   transition: background 0.15s;
 }

@@ -12,29 +12,47 @@
 </head>
 <body>
 
-  <div class="container evals-container">
+  <div class="eval-shell">
 
-    <header class="evals-header">
-      <div class="evals-title-row">
-        <h1 class="evals-title">Evals ✦</h1>
-        <a href="index.html" class="back-link">← back to app</a>
+    <!-- Top bar: back link + session stats + send button -->
+    <div class="eval-top">
+      <a href="index.html" class="eval-back-link">← back</a>
+      <div class="eval-stats" id="eval-stats">0 rated</div>
+      <button type="button" class="send-btn" id="send-btn" hidden>Send to Claude</button>
+    </div>
+
+    <!-- Middle: one of start / loading / error / phrase card -->
+    <div class="eval-card-area" id="eval-card-area">
+
+      <div class="eval-start" id="eval-start">
+        <p class="eval-start-title">Rate a phrase ✦</p>
+        <p class="eval-start-sub">One phrase at a time. Good / Eh / Bad. Next one loads instantly.</p>
+        <button type="button" class="start-btn" id="start-btn">Start Session ✦</button>
       </div>
-      <p class="evals-version" id="version-label">loading...</p>
-      <p class="evals-summary" id="summary-line">run all cases to start rating</p>
 
-      <div class="evals-controls">
-        <button type="button" id="run-all-btn" class="submit-btn">Run All</button>
-        <button type="button" id="share-btn" class="share-btn">Share with Claude</button>
-        <div class="version-select-wrap">
-          <label for="version-select" class="version-label-text">past versions:</label>
-          <select id="version-select" class="version-select">
-            <option value="">— select —</option>
-          </select>
-        </div>
+      <div class="eval-loading" id="eval-loading" hidden>
+        <span class="spin-star" aria-hidden="true">✦</span> generating...
       </div>
-    </header>
 
-    <div id="results-grid" class="results-grid"></div>
+      <div class="eval-error" id="eval-error" hidden>
+        <p class="eval-error-msg">Something went wrong loading a phrase.</p>
+        <button type="button" class="retry-btn" id="retry-btn">Try again</button>
+      </div>
+
+      <div class="eval-phrase-card" id="eval-phrase-card" hidden>
+        <div class="eval-topic" id="eval-topic"></div>
+        <p class="eval-phrase-text" id="eval-phrase-text"></p>
+        <p class="eval-usage-text" id="eval-usage-text"></p>
+      </div>
+
+    </div>
+
+    <!-- Bottom: rating buttons, always pinned -->
+    <div class="eval-rating-row" id="eval-rating-row" hidden>
+      <button type="button" class="rate-btn rate-bad"  data-rating="bad"  id="rate-bad"  disabled>Bad</button>
+      <button type="button" class="rate-btn rate-eh"   data-rating="eh"   id="rate-eh"   disabled>Eh</button>
+      <button type="button" class="rate-btn rate-good" data-rating="good" id="rate-good" disabled>Good</button>
+    </div>
 
   </div>
 
