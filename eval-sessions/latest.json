@@ -1,35 +1,35 @@
 {
   "version": "v1",
-  "startedAt": "2026-05-07T06:38:36.267Z",
+  "startedAt": "2026-05-07T00:00:00Z",
   "results": [
     {
-      "phrase": "t1",
-      "usage": "u1",
-      "topic": "test",
+      "phrase": "t",
+      "usage": "t",
+      "topic": "t",
       "rating": "good"
     },
     {
       "phrase": "t2",
-      "usage": "u2",
-      "topic": "test",
-      "rating": "bad"
+      "usage": "t2",
+      "topic": "t",
+      "rating": "good"
     },
     {
       "phrase": "t3",
-      "usage": "u3",
-      "topic": "test",
+      "usage": "t3",
+      "topic": "t",
       "rating": "eh"
     },
     {
       "phrase": "t4",
-      "usage": "u4",
-      "topic": "test",
+      "usage": "t4",
+      "topic": "t",
       "rating": "good"
     },
     {
       "phrase": "t5",
-      "usage": "u5",
-      "topic": "test",
+      "usage": "t5",
+      "topic": "t",
       "rating": "good"
     }
   ]
