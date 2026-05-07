@@ -1,0 +1,36 @@
+{
+  "version": "v1",
+  "startedAt": "2026-05-07T06:00:00Z",
+  "results": [
+    {
+      "phrase": "test",
+      "usage": "test",
+      "topic": "test",
+      "rating": "good"
+    },
+    {
+      "phrase": "test2",
+      "usage": "test2",
+      "topic": "test",
+      "rating": "bad"
+    },
+    {
+      "phrase": "test3",
+      "usage": "test3",
+      "topic": "test",
+      "rating": "eh"
+    },
+    {
+      "phrase": "test4",
+      "usage": "test4",
+      "topic": "test",
+      "rating": "good"
+    },
+    {
+      "phrase": "test5",
+      "usage": "test5",
+      "topic": "test",
+      "rating": "good"
+    }
+  ]
+}
