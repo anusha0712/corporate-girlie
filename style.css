@@ -434,15 +434,40 @@ footer {
    Responsive
    ====================================== */
 
-/* Desktop: collapse main so controls sit just below the header */
+/* Desktop layout — values tuned via layout-dev.html */
 @media (min-width: 600px) {
+  .title {
+    font-size: 4.2rem;
+  }
+
+  /* Empty state: title + controls centered with generous top padding */
+  .container {
+    padding-top: 184px;
+    transition: padding-top 0.45s ease;
+  }
+
+  header {
+    margin-bottom: 32px;
+  }
+
   main {
     flex: 0 0 auto;
-    padding: 32px 0;
+    padding: 0;
+    gap: 26px;
   }
 
   footer {
-    margin-top: auto;
+    margin-top: 164px;
+    transition: margin-top 0.45s ease;
+  }
+
+  /* After generate: slide everything up to make room for the phrase card */
+  body.has-output .container {
+    padding-top: 60px;
+  }
+
+  body.has-output footer {
+    margin-top: 48px;
   }
 }
 

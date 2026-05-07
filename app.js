@@ -139,6 +139,7 @@ function showCurrentPhrase(phrase, usage) {
   currentUsage.hidden       = !usage;
 
   generateOutput.hidden = false;
+  document.body.classList.add('has-output');
 
   // Reset save button
   saveBtn.textContent = 'Save';
@@ -254,6 +255,7 @@ function showCopiedAll() {
 
 function addReframeCard(phrase) {
   reframeOutput.hidden = false;
+  document.body.classList.add('has-output');
 
   const card = document.createElement('div');
   card.className = 'phrase-card';
