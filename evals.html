@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corporate Girlie — Evals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="evals.css">
+</head>
+<body>
+
+  <div class="container evals-container">
+
+    <header class="evals-header">
+      <div class="evals-title-row">
+        <h1 class="evals-title">Evals ✦</h1>
+        <a href="index.html" class="back-link">← back to app</a>
+      </div>
+      <p class="evals-version" id="version-label">loading...</p>
+      <p class="evals-summary" id="summary-line">run all cases to start rating</p>
+
+      <div class="evals-controls">
+        <button type="button" id="run-all-btn" class="submit-btn">Run All 20</button>
+        <div class="version-select-wrap">
+          <label for="version-select" class="version-label-text">past versions:</label>
+          <select id="version-select" class="version-select">
+            <option value="">— select —</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <div id="results-grid" class="results-grid"></div>
+
+  </div>
+
+  <script type="module" src="evals.js"></script>
+</body>
+</html>
