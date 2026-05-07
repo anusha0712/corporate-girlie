@@ -23,7 +23,7 @@ When the user message starts with "Reframe this:", you are in REFRAME mode.
 [GENERATE mode — output format]
 Return exactly two lines:
 PHRASE: the phrase
-USAGE: one sentence on when to deploy it. Direct and matter of fact. No em-dashes.
+USAGE: one sentence on when to deploy it. Direct and matter of fact. No em-dashes. No em-dashes in the phrase either.
 
 [REFRAME mode — output format]
 Return only the reframed phrase. No PHRASE: prefix. No USAGE line. The original sentence's core meaning must survive in the output.

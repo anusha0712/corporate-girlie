@@ -81,13 +81,13 @@ body {
 .container {
   position: relative;
   z-index: 1;
-  max-width: 600px;
+  max-width: 720px;
   margin: 0 auto;
-  padding: 52px 24px 40px;
+  padding: 44px 20px 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 28px;
+  gap: 24px;
 }
 
 /* ======================================
@@ -164,11 +164,11 @@ header {
 }
 
 .instructions {
-  font-size: 0.85rem;
+  font-size: 1rem;
   color: #7a4a6a;
   font-weight: 400;
-  line-height: 1.55;
-  max-width: 480px;
+  line-height: 1.6;
+  max-width: 560px;
   text-align: center;
 }
 
@@ -199,9 +199,9 @@ main {
 .mode-btn {
   flex: 1;
   font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 700;
-  padding: 12px 28px;
+  padding: 13px 32px;
   border: none;
   border-right: var(--border);
   cursor: pointer;
@@ -209,6 +209,7 @@ main {
   color: var(--black);
   transition: background 0.15s, color 0.15s;
   letter-spacing: 0.01em;
+  white-space: nowrap;
 }
 
 .mode-btn:last-child {
@@ -234,12 +235,12 @@ main {
 
 .text-input {
   width: 100%;
-  padding: 13px 18px;
+  padding: 14px 20px;
   border: var(--border);
   border-radius: 12px;
   background: var(--white);
   font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: var(--black);
   outline: none;
   transition: box-shadow 0.12s;
@@ -349,8 +350,8 @@ main {
 }
 
 .phrase-text {
-  font-size: 1rem;
-  line-height: 1.55;
+  font-size: 1.1rem;
+  line-height: 1.6;
   font-weight: 500;
   flex: 1;
 }
@@ -414,8 +415,8 @@ footer {
    ====================================== */
 @media (max-width: 480px) {
   .container {
-    padding: 36px 16px 28px;
-    gap: 20px;
+    padding: 32px 14px 28px;
+    gap: 18px;
   }
 
   .title {
@@ -467,10 +468,10 @@ footer {
 }
 
 .phrase-usage {
-  font-size: 0.82rem;
+  font-size: 0.95rem;
   color: #9070a0;
   font-style: italic;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 .current-card-actions {

@@ -32,8 +32,9 @@ const copyAllBtn      = document.getElementById('copy-all-btn');
 const reframeOutput   = document.getElementById('reframe-output');
 
 // -- State --
-let currentMode  = 'generate';
-let savedPhrases = []; // { phrase, usage }
+let currentMode   = 'generate';
+let savedPhrases  = []; // { phrase, usage }
+let recentPhrases = []; // last 3 generated phrases for repetition avoidance
 
 // ======================================
 // Mode toggle
@@ -88,10 +89,15 @@ async function handleSubmit() {
   setLoading(true);
 
   try {
+    const body = { mode: currentMode, input };
+    if (currentMode === 'generate' && recentPhrases.length > 0) {
+      body.recentPhrases = recentPhrases.slice(-3);
+    }
+
     const res  = await fetch('/api/generate', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ mode: currentMode, input }),
+      body:    JSON.stringify(body),
     });
 
     const data = await res.json();
@@ -99,6 +105,8 @@ async function handleSubmit() {
     if (!res.ok) {
       showError(data.error || "the mirror's a little foggy — try again in a sec");
     } else if (currentMode === 'generate') {
+      recentPhrases.push(data.phrase);
+      if (recentPhrases.length > 3) recentPhrases.shift();
       showCurrentPhrase(data.phrase, data.usage || '');
     } else {
       addReframeCard(data.phrase);
@@ -160,8 +168,14 @@ function savePhraseToList(phrase, usage) {
 
   renderSavedList();
 
-  savedSection.hidden  = false;
+  savedSection.hidden = false;
   savedCountEl.textContent = savedPhrases.length;
+
+  // Auto-expand on first save
+  if (savedPhrases.length === 1) {
+    savedList.hidden = false;
+    savedToggleBtn.setAttribute('aria-expanded', 'true');
+  }
 }
 
 function renderSavedList() {

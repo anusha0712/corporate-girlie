@@ -55,7 +55,7 @@ export default async function handler(req, res) {
   }
 
   // 3. Input length cap
-  const { mode, input = "" } = req.body || {};
+  const { mode, input = "", recentPhrases = [] } = req.body || {};
 
   if (typeof input === "string" && input.length > 500) {
     return res.status(400).json({
@@ -81,9 +81,13 @@ export default async function handler(req, res) {
   }
 
   // 5. Anthropic call
-  const userMessage = mode === 'reframe'
+  let userMessage = mode === 'reframe'
     ? `Reframe this: "${input}"`
     : input ? `Topic: ${input}` : 'Generate a phrase.';
+
+  if (mode === 'generate' && recentPhrases.length > 0) {
+    userMessage += `\n\nAvoid repeating the beauty concepts or vocabulary used in these recent phrases: ${recentPhrases.join(' / ')}`;
+  }
 
   try {
     const message = await client.messages.create({
