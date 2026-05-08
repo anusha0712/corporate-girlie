@@ -36,7 +36,6 @@ const evalStart      = document.getElementById('eval-start');
 const evalLoading    = document.getElementById('eval-loading');
 const evalError      = document.getElementById('eval-error');
 const evalPhraseCard = document.getElementById('eval-phrase-card');
-const evalTopicEl    = document.getElementById('eval-topic');
 const evalPhraseText = document.getElementById('eval-phrase-text');
 const evalUsageText  = document.getElementById('eval-usage-text');
 const evalRatingRow  = document.getElementById('eval-rating-row');
@@ -108,7 +107,6 @@ function showPhrase(phraseData) {
   recentPhrases.push(phraseData.phrase);
   if (recentPhrases.length > 3) recentPhrases.shift();
 
-  evalTopicEl.textContent  = phraseData.topic;
   evalPhraseText.textContent = phraseData.phrase;
 
   if (phraseData.usage) {
