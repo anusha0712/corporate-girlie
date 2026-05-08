@@ -8,23 +8,30 @@
 .eval-shell {
   position: relative;
   z-index: 1;
-  height: 100svh;
+  height: 100vh;
+  height: 100svh; /* svh = stable small viewport, ignores keyboard on iOS */
   max-width: 540px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 /* ======================================
    Top bar
    ====================================== */
 .eval-top {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: 12px;
   padding: 14px 20px;
   flex-shrink: 0;
   border-bottom: 1.5px solid #f0e0f0;
+}
+
+.eval-top-right {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .eval-back-link {
@@ -45,7 +52,6 @@
 .eval-back-link:hover { color: var(--hot-pink); }
 
 .eval-stats {
-  flex: 1;
   text-align: center;
   font-size: 0.85rem;
   font-weight: 700;
@@ -89,10 +95,12 @@
   flex: 1;
   min-height: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 24px 20px;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* ======================================
@@ -254,7 +262,7 @@
 
 .eval-note {
   font-family: var(--font-body);
-  font-size: 0.88rem;
+  font-size: 1rem; /* must be ≥16px to prevent iOS auto-zoom on focus */
   color: var(--black);
   background: #faf5fc;
   border: 1.5px solid #e0d0e8;
@@ -265,6 +273,7 @@
   box-sizing: border-box;
   line-height: 1.5;
   outline: none;
+  touch-action: manipulation;
 }
 
 .eval-note::placeholder { color: #c0a8d0; }
