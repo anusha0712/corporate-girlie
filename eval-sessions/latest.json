@@ -1,11 +1,35 @@
 {
-  "version": "v1",
-  "startedAt": "2026-05-07T00:00:00Z",
+  "version": "v0.1",
+  "startedAt": "2026-05-08T02:44:29.821Z",
   "results": [
     {
-      "phrase": "test",
-      "usage": "u",
-      "topic": "t",
+      "phrase": "We need to edit this look. Not everything makes it to the final face.",
+      "usage": "Use this when a team needs to make cuts but is stalling because no one wants to be the one to remove their feature.",
+      "topic": "we have to cut features before launch but we can't agree on which ones to cut",
+      "rating": "good"
+    },
+    {
+      "phrase": "We're doing a full face in ten minutes. Everyone knows their job.",
+      "usage": "Use this when the team needs to stop deliberating and move into fast, coordinated execution under real time pressure.",
+      "topic": "we are three sprints behind and the big stakeholder review is tomorrow morning",
+      "rating": "bad"
+    },
+    {
+      "phrase": "We've been standing at the mirror too long. At some point you just have to set it and go.",
+      "usage": "Use this when a team has been deliberating past the point of usefulness and needs someone to call time on the discussion.",
+      "topic": "we've been debating the same decision for three weeks and nothing is moving",
+      "rating": "eh"
+    },
+    {
+      "phrase": "You can't go out with your liner not blended. We need another day.",
+      "usage": "Use this when a launch deadline is being held to even though the product visibly isn't ready.",
+      "topic": "we're supposed to launch next week but the product still has too many rough edges",
+      "rating": "good"
+    },
+    {
+      "phrase": "We keep changing the part mid-blow-dry. Everyone ends up with a different result every time.",
+      "usage": "Use this when shifting direction mid-execution is causing inconsistent outcomes and team frustration.",
+      "topic": "leadership keeps changing the priorities mid-sprint and the team is frustrated",
       "rating": "good"
     }
   ]
