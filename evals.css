@@ -21,8 +21,8 @@
    Top bar
    ====================================== */
 .eval-top {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  position: relative;
+  display: flex;
   align-items: center;
   padding: 14px 20px;
   flex-shrink: 0;
@@ -30,8 +30,7 @@
 }
 
 .eval-top-right {
-  display: flex;
-  justify-content: flex-end;
+  margin-left: auto;
 }
 
 .eval-back-link {
@@ -52,11 +51,15 @@
 .eval-back-link:hover { color: var(--hot-pink); }
 
 .eval-stats {
-  text-align: center;
-  font-size: 0.85rem;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 0.82rem;
   font-weight: 700;
   color: var(--black);
   letter-spacing: 0.01em;
+  pointer-events: none;
 }
 
 .send-btn {
