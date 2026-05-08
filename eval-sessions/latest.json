@@ -1,79 +1,12 @@
 {
-  "version": "v0.1",
-  "startedAt": "2026-05-08T01:54:14.764Z",
+  "version": "v1",
+  "startedAt": "2026-05-07T00:00:00Z",
   "results": [
     {
-      "phrase": "We don't have time for a full routine. Let's figure out what we can't walk out without.",
-      "usage": "Use this when a deadline is imminent and the team needs to immediately triage what is essential versus what has to be cut.",
-      "topic": "we are three sprints behind and the big stakeholder review is tomorrow morning",
-      "rating": "eh"
-    },
-    {
-      "phrase": "We need to tweeze, not wax. Let's agree on what we're actually removing before we take off too much.",
-      "usage": "Use this when a team needs to make precise, deliberate cuts rather than letting someone make a broad call that can't be undone.",
-      "topic": "we have to cut features before launch but we can't agree on which ones to cut",
-      "rating": "bad"
-    },
-    {
-      "phrase": "We've been buffing the same spot for three weeks. At some point you just have to set it and move on.",
-      "usage": "Use this when a decision has been over-deliberated and the team needs permission to stop refining and commit.",
-      "topic": "we've been debating the same decision for three weeks and nothing is moving",
-      "rating": "bad"
-    },
-    {
-      "phrase": "This isn't ready to leave the house. We need to talk about the timeline.",
-      "usage": "Use this when a launch date is approaching but the product has too many unresolved issues to ship with confidence.",
-      "topic": "we're supposed to launch next week but the product still has too many rough edges",
-      "rating": "bad",
-      "note": "Things about house, bag, chair etc. really don’t work. They don’t make any sense. This is still too random and cringe"
-    },
-    {
-      "phrase": "We've been on our feet since open. The team needs a sit-down before we lose them.",
-      "usage": "Use this when sustained pressure has depleted the team and leadership needs to acknowledge it before people start checking out.",
-      "topic": "the team has been in crunch mode for two months and morale is tanking",
-      "rating": "bad",
-      "note": "How is this beauty?"
-    },
-    {
-      "phrase": "I know we wanted the full glam team. We're going to have to do it ourselves.",
-      "usage": "Use this when you need to tell your team that requested resources were denied and they will have to absorb the work with what they have.",
-      "topic": "I have to tell my team we're not getting the additional headcount we asked for",
-      "rating": "bad",
-      "note": "Don’t use random structural things like team, crew, bag, chair it more about technique, products, brands."
-    },
-    {
-      "phrase": "We started with a base coat and now we're doing a full nail art set — on the same time and budget.",
-      "usage": "Use this when a client keeps expanding the scope of a project without acknowledging that additional work requires additional resources.",
-      "topic": "the client keeps adding requirements without adjusting the timeline or budget",
-      "rating": "eh",
-      "note": "The vibe is fine but they are long and unseemly and really cringe. Like why would u say this vs what is normal talk. The point is that it’s catchy and can actually replace metaphors."
-    },
-    {
-      "phrase": "We've been doing no-makeup makeup. It's time to actually go bold.",
-      "usage": "Use this when stakeholders are pushing for more ambitious moves after the team has been playing it safe.",
-      "topic": "we got feedback that our roadmap is too conservative and we need to take bigger swings",
-      "rating": "eh",
-      "note": "Alternate: They don’t like the soft-glam, they want a full beat"
-    },
-    {
-      "phrase": "We can't keep changing the part mid-blowout.",
-      "usage": "Use this when leadership is redirecting the team before they have had a chance to finish what was already in motion.",
-      "topic": "leadership keeps changing the priorities mid-sprint and the team is frustrated",
-      "rating": "eh",
-      "note": "I like the vibe but part?? Who will get it??"
-    },
-    {
-      "phrase": "Two lead artists both grabbing for the same brush isn't a creative process. It's just a stalled chair.",
-      "usage": "Use this when a standoff between two senior people has become the blocker and someone needs to name it directly.",
-      "topic": "two senior engineers fundamentally disagree on the technical approach and it's blocking the whole team",
-      "rating": "bad",
-      "note": "This has to be the worst."
-    },
-    {
-      "phrase": "We've been on set since 6 a.m. The team needs a touch-up break before the next look.",
-      "usage": "Use this when sustained pressure has visibly worn people down and a deliberate reset is needed before the next push.",
-      "topic": "the team has been in crunch mode for two months and morale is tanking",
-      "rating": "bad"
+      "phrase": "test",
+      "usage": "test usage",
+      "topic": "test topic",
+      "rating": "good"
     }
   ]
 }
