@@ -13,7 +13,7 @@ import { SYSTEM_PROMPT } from '../prompt.js';
 // ── Rate limiter ────────────────────────────────────────────────
 // Simple in-memory map. Resets on every deploy — fine for a toy.
 const rateLimitMap = new Map(); // ip → { count, resetAt }
-const RATE_LIMIT      = 20;
+const RATE_LIMIT      = 300;
 const RATE_WINDOW_MS  = 60 * 60 * 1000; // 1 hour
 
 function isRateLimited(ip) {

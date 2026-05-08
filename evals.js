@@ -275,37 +275,38 @@ async function rate(rating) {
 }
 
 // ======================================
-// Send to Claude via GitHub
+// Save session — downloads JSON to device (always works) +
+// silently attempts GitHub commit as a bonus
 // ======================================
-async function sendToClaude() {
+function saveSession() {
   if (!session || session.results.length === 0) return;
 
-  sendBtn.disabled    = true;
-  sendBtn.textContent = 'Sending...';
+  // Download to device — this never fails
+  const json    = JSON.stringify(session, null, 2);
+  const blob    = new Blob([json], { type: 'application/json' });
+  const url     = URL.createObjectURL(blob);
+  const a       = document.createElement('a');
+  const dateStr = new Date().toISOString().slice(0, 10);
+  a.href        = url;
+  a.download    = `evals-${dateStr}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 
-  try {
-    const res  = await fetch('/api/save-eval', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ session }),
-    });
-    const data = await res.json();
+  // Silently try GitHub too — ignore if it fails
+  fetch('/api/save-eval', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify({ session }),
+  }).catch(() => {});
 
-    if (res.ok) {
-      clearSessionLocal();
-      sendBtn.textContent = 'Sent ✦';
-      setTimeout(() => {
-        sendBtn.disabled    = false;
-        sendBtn.textContent = 'Send to Claude';
-      }, 3000);
-    } else {
-      sendBtn.textContent = 'Error — try again';
-      sendBtn.disabled    = false;
-    }
-  } catch {
-    sendBtn.textContent = 'Error — try again';
+  clearSessionLocal();
+  sendBtn.textContent = 'Saved ✦';
+  setTimeout(() => {
     sendBtn.disabled    = false;
-  }
+    sendBtn.textContent = 'Save session';
+  }, 2500);
 }
 
 // ======================================
@@ -323,7 +324,7 @@ if (savedDraft && savedDraft.results && savedDraft.results.length > 0) {
 startBtn.addEventListener('click', startSession);
 resumeBtn.addEventListener('click', resumeSession);
 retryBtn.addEventListener('click', retryFetch);
-sendBtn.addEventListener('click',  sendToClaude);
+sendBtn.addEventListener('click',  saveSession);
 
 document.querySelectorAll('.rate-btn').forEach(btn => {
   btn.addEventListener('click', () => rate(btn.dataset.rating));
