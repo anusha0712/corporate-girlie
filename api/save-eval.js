@@ -32,9 +32,6 @@ export default async function handler(req, res) {
   const path  = "eval-sessions/latest.json";
   const branch = "main";
 
-  console.log('[save-eval] GITHUB_TOKEN:', token ? `present (${token.length} chars, starts: ${token.slice(0,10)})` : 'MISSING');
-  console.log('[save-eval] GITHUB_OWNER:', owner);
-
   if (!token) {
     return res.status(500).json({ error: "GITHUB_TOKEN not configured" });
   }

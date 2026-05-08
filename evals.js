@@ -275,37 +275,50 @@ async function rate(rating) {
 }
 
 // ======================================
-// Save session — downloads JSON to device (always works) +
-// silently attempts GitHub commit as a bonus
+// Send to Claude — GitHub primary, download as fallback
 // ======================================
-function saveSession() {
-  if (!session || session.results.length === 0) return;
-
-  // Download to device — this never fails
+function downloadSessionJson() {
   const json    = JSON.stringify(session, null, 2);
   const blob    = new Blob([json], { type: 'application/json' });
   const url     = URL.createObjectURL(blob);
   const a       = document.createElement('a');
-  const dateStr = new Date().toISOString().slice(0, 10);
   a.href        = url;
-  a.download    = `evals-${dateStr}.json`;
+  a.download    = `evals-${new Date().toISOString().slice(0, 10)}.json`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
 
-  // Silently try GitHub too — ignore if it fails
-  fetch('/api/save-eval', {
-    method:  'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body:    JSON.stringify({ session }),
-  }).catch(() => {});
+async function saveSession() {
+  if (!session || session.results.length === 0) return;
+
+  sendBtn.disabled    = true;
+  sendBtn.textContent = 'Sending...';
+
+  let sent = false;
+  try {
+    const res = await fetch('/api/save-eval', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ session }),
+    });
+    if (res.ok) sent = true;
+  } catch {}
 
   clearSessionLocal();
-  sendBtn.textContent = 'Saved ✦';
+
+  if (sent) {
+    sendBtn.textContent = 'Sent ✦';
+  } else {
+    // GitHub failed — download so data isn't lost
+    downloadSessionJson();
+    sendBtn.textContent = 'Saved locally ✦';
+  }
+
   setTimeout(() => {
     sendBtn.disabled    = false;
-    sendBtn.textContent = 'Save session';
+    sendBtn.textContent = 'Send to Claude';
   }, 2500);
 }
 
@@ -324,7 +337,7 @@ if (savedDraft && savedDraft.results && savedDraft.results.length > 0) {
 startBtn.addEventListener('click', startSession);
 resumeBtn.addEventListener('click', resumeSession);
 retryBtn.addEventListener('click', retryFetch);
-sendBtn.addEventListener('click',  saveSession);
+sendBtn.addEventListener('click', saveSession);
 
 document.querySelectorAll('.rate-btn').forEach(btn => {
   btn.addEventListener('click', () => rate(btn.dataset.rating));
