@@ -231,6 +231,24 @@
   line-height: 1.55;
 }
 
+.eval-note {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--black);
+  background: #faf5fc;
+  border: 1.5px solid #e0d0e8;
+  border-radius: 8px;
+  padding: 8px 10px;
+  resize: none;
+  width: 100%;
+  box-sizing: border-box;
+  line-height: 1.5;
+  outline: none;
+}
+
+.eval-note::placeholder { color: #c0a8d0; }
+.eval-note:focus { border-color: #b090c8; }
+
 /* ======================================
    Rating row — pinned to bottom
    ====================================== */

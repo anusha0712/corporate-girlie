@@ -38,6 +38,7 @@ const evalError      = document.getElementById('eval-error');
 const evalPhraseCard = document.getElementById('eval-phrase-card');
 const evalPhraseText = document.getElementById('eval-phrase-text');
 const evalUsageText  = document.getElementById('eval-usage-text');
+const evalNoteEl     = document.getElementById('eval-note');
 const evalRatingRow  = document.getElementById('eval-rating-row');
 const startBtn       = document.getElementById('start-btn');
 const retryBtn       = document.getElementById('retry-btn');
@@ -121,6 +122,7 @@ function showPhrase(phraseData) {
   evalPhraseCard.offsetHeight;   // trigger reflow
   evalPhraseCard.style.animation = '';
 
+  evalNoteEl.value = '';
   showArea('eval-phrase-card');
   setRatingBtnsDisabled(false);
 }
@@ -184,11 +186,13 @@ async function rate(rating) {
   if (!currentPhrase || !session) return;
 
   // Record result
+  const note = evalNoteEl.value.trim();
   session.results.push({
     phrase:  currentPhrase.phrase,
     usage:   currentPhrase.usage,
     topic:   currentPhrase.topic,
     rating,
+    ...(note ? { note } : {}),
   });
 
   // Flash the tapped button for 400ms
