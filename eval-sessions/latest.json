@@ -1,149 +1,338 @@
 {
-  "version": "v0.1",
-  "startedAt": "2026-05-08T02:32:53.184Z",
+  "version": "v0.2",
+  "startedAt": "2026-05-08T08:10:01.690Z",
   "results": [
     {
-      "phrase": "We can't go out without setting the foundation. It needs more time.",
-      "usage": "Use this when a launch deadline is approaching but the product is not actually ready to be seen.",
-      "topic": "we're supposed to launch next week but the product still has too many rough edges",
+      "phrase": "We keep changing the palette halfway through the look.",
+      "usage": "Use this when shifting priorities mid-execution are forcing the team to undo finished work and start over.",
+      "topic": "leadership keeps changing the priorities mid-sprint and the team is frustrated",
+      "rating": "good"
+    },
+    {
+      "phrase": "Two different base shades, and we're trying to blend them into one complexion.",
+      "usage": "Use this when two conflicting approaches are being forced to coexist instead of someone making a call on which one to commit to.",
+      "topic": "two senior engineers fundamentally disagree on the technical approach and it's blocking the whole team",
       "rating": "eh"
     },
     {
-      "phrase": "We keep changing the part before the hair dries.",
-      "usage": "Use this when leadership is resetting direction before any previous decision has had time to take effect.",
-      "topic": "leadership keeps changing the priorities mid-sprint and the team is frustrated",
-      "rating": "bad",
-      "note": "You can change your part nothing happens - maybe while styling or blow drying"
-    },
-    {
-      "phrase": "We've been on our feet in heels for two months. It's time to sit down.",
-      "usage": "Use this when a team has been pushing hard long enough that rest is no longer optional.",
-      "topic": "the team has been in crunch mode for two months and morale is tanking",
-      "rating": "bad",
-      "note": "Nothing about standing, chair, makeup bags, brushes nothing structural it literally doesn’t make any sense"
-    },
-    {
-      "phrase": "We need a deep conditioning treatment, not another serum.",
-      "usage": "Use this when a team that has been pushed hard needs real rest and recovery, not another productivity fix layered on top.",
-      "topic": "the team has been in crunch mode for two months and morale is tanking",
+      "phrase": "We can't launch with our cuticles looking like this.",
+      "usage": "Use this when a ship date is looming but the product is visibly unfinished.",
+      "topic": "we're supposed to launch next week but the product still has too many rough edges",
       "rating": "good"
     },
     {
-      "phrase": "We've been blending this out for three weeks. At some point you have to set it and move on.",
-      "usage": "Use this when a team has been endlessly refining or debating something that needs to be locked in and acted on.",
+      "phrase": "We've been buffing this for three weeks. At some point you have to set the powder.",
+      "usage": "Use this when a team has spent too long refining a decision and needs to commit and move forward.",
       "topic": "we've been debating the same decision for three weeks and nothing is moving",
-      "rating": "good"
+      "rating": "good",
+      "note": "Use blending not buffing"
     },
     {
-      "phrase": "We've been doing a no-makeup makeup look when the brief clearly called for a full glam.",
-      "usage": "Use this when feedback signals that the team has been playing it too safe and needs to show up with more ambition and scale.",
+      "phrase": "We need to edit this look, not defend every product on the counter.",
+      "usage": "Use this when the team is in agreement that cuts are needed but keeps stalling because everyone is attached to their own piece of the work.",
+      "topic": "we have to cut features before launch but we can't agree on which ones to cut",
+      "rating": "bad",
+      "note": "Doesn’t make any sense. The ones with edit don’t mean anything and hard to understand"
+    },
+    {
+      "phrase": "We keep adding steps but the appointment's still 45 minutes.",
+      "usage": "Use this when a client is expanding scope without acknowledging that more work requires more time or money.",
+      "topic": "the client keeps adding requirements without adjusting the timeline or budget",
+      "rating": "bad",
+      "note": "This is not beauty related. It’s just a statement. And cringe."
+    },
+    {
+      "phrase": "A no-makeup makeup look isn't going to cut it here. We need full glam.",
+      "usage": "Use this when stakeholders are pushing for bolder, more ambitious moves and the current plan is too understated to land.",
       "topic": "we got feedback that our roadmap is too conservative and we need to take bigger swings",
-      "rating": "eh",
-      "note": "Use soft glam for no make up look always. It’s better. And then you have to change full glam. So this should be soft glam when you want a full beat"
+      "rating": "eh"
     },
     {
-      "phrase": "We've got two architects and neither one is willing to be the base coat.",
-      "usage": "Use this when two senior people are each waiting for the other to yield, and the standoff is blocking everyone else from moving forward.",
+      "phrase": "We're doing a full beat in a 10-minute window. Let's triage.",
+      "usage": "Use this when the team has almost no time to get to a presentable state and needs to immediately decide what to cut.",
+      "topic": "we are three sprints behind and the big stakeholder review is tomorrow morning",
+      "rating": "eh"
+    },
+    {
+      "phrase": "We're getting one coat, not two. Let's make it count.",
+      "usage": "Use this when delivering news of a resource constraint and immediately pivoting the team toward making the most of what they have.",
+      "topic": "I have to tell my team we're not getting the additional headcount we asked for",
+      "rating": "bad",
+      "note": "Look at it at a standalone sentence. This doesn’t make any sense."
+    },
+    {
+      "phrase": "Two months in and we haven't done a single mask. Something's gotta give.",
+      "usage": "Use this when a team has been running hard without any real recovery and is starting to show it.",
+      "topic": "the team has been in crunch mode for two months and morale is tanking",
+      "rating": "bad",
+      "note": "Again, what does sentence mean? If I looked at this sentence in the wild it would make zero sense. Now even with context I don’t have any sense of it."
+    },
+    {
+      "phrase": "We've been blending this for three weeks. At some point you have to set it.",
+      "usage": "Use this when a decision has been discussed to exhaustion and the team needs to commit and move on.",
+      "topic": "we've been debating the same decision for three weeks and nothing is moving",
+      "rating": "bad",
+      "note": "This is good but there are WAAY too many of the same kind and the explanation wording is varied enough to sound like it is different but it is not. We need more variety - you’re only using a handful of actual beauty related. It’s really just hair mask, blending, nail base coat?"
+    },
+    {
+      "phrase": "We've got two different base shades and nobody's bothering to mix them.",
+      "usage": "Use this when two senior people are each committed to their own approach and the team is stuck waiting for a decision.",
       "topic": "two senior engineers fundamentally disagree on the technical approach and it's blocking the whole team",
       "rating": "bad",
-      "note": "All of this sucks. No makeup brushes no chairs no brushes , no standing terms or anything structural. This makes literally no sense like who is the architect here what is the relevance of base coat? Conceptually none of these metaphors make sense they are not true. They are fake and made up and really not worth using over just regular English. Things need to be concise clear and catchy. That’s what an idiom or saying or phrase does."
+      "note": "Doesn’t make sense. Standalone sentence doesn’t make sense. Why should we mix base shades?"
     },
     {
-      "phrase": "We have to decide what goes in the bag and what stays on the counter.",
-      "usage": "Use this when a team needs to make hard cuts but keeps avoiding the call on what actually makes it out the door.",
-      "topic": "we have to cut features before launch but we can't agree on which ones to cut",
-      "rating": "bad"
+      "phrase": "We can't launch with our cuticles looking like this.",
+      "usage": "Use this when a ship date is looming but the product is visibly unfinished.",
+      "topic": "we're supposed to launch next week but the product still has too many rough edges",
+      "rating": "good"
     },
     {
-      "phrase": "We can't set the look if someone keeps handing us a different reference photo mid-application.",
-      "usage": "Use this when leadership is changing direction mid-execution and the team needs that named clearly before the next sprint begins.",
+      "phrase": "We keep changing the liner before it's dry.",
+      "usage": "Use this when leadership is redirecting a team before any single direction has had time to take hold.",
       "topic": "leadership keeps changing the priorities mid-sprint and the team is frustrated",
       "rating": "bad",
-      "note": "Why is this so fucking intense with a FORCED analogy"
+      "note": "Again, practicality this makes no sense. Why do we care if we change liner before it is dry? Do we have to wait for it to dry to change it? We can’t actually change it even when it dries."
     },
     {
-      "phrase": "We're not getting more brushes. We have to make the ones we have work.",
-      "usage": "Use this when you need to tell a team that resources are fixed and they have to deliver within those constraints.",
+      "phrase": "We've been running on dry shampoo for two months. This team needs a full wash.",
+      "usage": "Use this when a team has been pushing through on surface-level energy management and genuinely needs rest, not another shortcut.",
+      "topic": "the team has been in crunch mode for two months and morale is tanking",
+      "rating": "good"
+    },
+    {
+      "phrase": "They want full glam on a tinted moisturizer budget.",
+      "usage": "Use this when a client is requesting a high-effort, high-complexity deliverable without adjusting the resources to match.",
+      "topic": "the client keeps adding requirements without adjusting the timeline or budget",
+      "rating": "good"
+    },
+    {
+      "phrase": "We're doing a full beat with the brushes we have.",
+      "usage": "Use this when delivering the news that no additional resources are coming and the team needs to make it work with what exists.",
+      "topic": "I have to tell my team we're not getting the additional headcount we asked for",
+      "rating": "bad",
+      "note": "I specially asked for nothing with chairs bags brushes standing."
+    },
+    {
+      "phrase": "Gel top coat over uncured polish — it's going to lift.",
+      "usage": "Use this when a team is trying to seal and present work that hasn't been given enough time to set, warning that the result won't hold.",
+      "topic": "we are three sprints behind and the big stakeholder review is tomorrow morning",
+      "rating": "good",
+      "note": "This is great but needs to be reworded to make it more catchy. Great analogy this is perfect example."
+    },
+    {
+      "phrase": "Stop doing a no-makeup makeup look and actually show up.",
+      "usage": "Use this when feedback is that the team's ambition is too hidden and they need to make a bolder, more visible statement.",
+      "topic": "we got feedback that our roadmap is too conservative and we need to take bigger swings",
+      "rating": "bad",
+      "note": "Makes absolutely no sense. This is a critical repeated feedback that needs to be fixed."
+    },
+    {
+      "phrase": "Not everything makes the final look. Pick your statement lip and edit the rest.",
+      "usage": "Use this when a team needs to prioritize one hero feature and cut everything else to match.",
+      "topic": "we have to cut features before launch but we can't agree on which ones to cut",
+      "rating": "bad",
+      "note": "This doesn’t match the explanation. A better analogy is needed"
+    },
+    {
+      "phrase": "We've been stripping our hair for two months. Time to bond-build.",
+      "usage": "Use this when a team has been pushed hard enough that morale is visibly degraded and they need real restoration, not just a break.",
+      "topic": "the team has been in crunch mode for two months and morale is tanking",
+      "rating": "bad",
+      "note": "Bad example badly worded. Needs a better fitted analogy"
+    },
+    {
+      "phrase": "Our roadmap is a soft glam when the moment calls for full beat.",
+      "usage": "Use this when stakeholders are pushing for bolder ambition and the current plan is too restrained to meet the moment.",
+      "topic": "we got feedback that our roadmap is too conservative and we need to take bigger swings",
+      "rating": "eh"
+    },
+    {
+      "phrase": "We need to decide what's getting left off the face before we walk out the door.",
+      "usage": "Use this when a team needs to commit to cutting features before launch but keeps stalling on which ones go.",
+      "topic": "we have to cut features before launch but we can't agree on which ones to cut",
+      "rating": "bad",
+      "note": "I don’t know why this is even relevant. This example sucks."
+    },
+    {
+      "phrase": "We asked for a full set. We're working with our natural nails.",
+      "usage": "Use this when delivering the news that a resource request was denied and the team has to make do with what they already have.",
+      "topic": "I have to tell my team we're not getting the additional headcount we asked for",
+      "rating": "bad",
+      "note": "Zero sense."
+    },
+    {
+      "phrase": "Two different base shades, and we're trying to blend them into one foundation.",
+      "usage": "Use this when two incompatible starting points are being forced into a single solution instead of choosing one.",
+      "topic": "two senior engineers fundamentally disagree on the technical approach and it's blocking the whole team",
+      "rating": "bad",
+      "note": "This needs to go this is terrible. Makes no sense. Stop repeating in a session."
+    },
+    {
+      "phrase": "We keep adding steps but the routine isn't getting any longer.",
+      "usage": "Use this when a client or stakeholder keeps expanding scope without acknowledging that more work requires more time or resources.",
+      "topic": "the client keeps adding requirements without adjusting the timeline or budget",
+      "rating": "bad",
+      "note": "Zero sense."
+    },
+    {
+      "phrase": "Pick a lip color and go.",
+      "usage": "Use this when a team has been deliberating too long and needs to commit and move.",
+      "topic": "we've been debating the same decision for three weeks and nothing is moving",
+      "rating": "bad",
+      "note": "Better analogy that fits the example."
+    },
+    {
+      "phrase": "We keep changing the part and then wondering why the blowout won't hold.",
+      "usage": "Use this when repeated last-minute direction changes are preventing the team from executing cleanly on anything.",
+      "topic": "leadership keeps changing the priorities mid-sprint and the team is frustrated",
+      "rating": "good"
+    },
+    {
+      "phrase": "We're doing a full beat with twenty minutes on the clock.",
+      "usage": "Use this when the team is severely behind with a high-stakes deadline imminent and needs to move fast without pretending there is more time than there is.",
+      "topic": "we are three sprints behind and the big stakeholder review is tomorrow morning",
+      "rating": "good"
+    },
+    {
+      "phrase": "We can't launch with our cuticles looking like this.",
+      "usage": "Use this when a ship date is looming but the product is visibly unfinished.",
+      "topic": "we're supposed to launch next week but the product still has too many rough edges",
+      "rating": "good"
+    },
+    {
+      "phrase": "We've been rubbing our eyes all day. The concealer stopped working a while ago.",
+      "usage": "Use this when a team has been grinding so long that surface-level morale fixes are visibly failing.",
+      "topic": "the team has been in crunch mode for two months and morale is tanking",
+      "rating": "bad",
+      "note": "I see the vision but the concealer is not making sense. Maybe mascara running? Or something else?"
+    },
+    {
+      "phrase": "Skip the eyeshadow. We're doing brows, lips, and out the door.",
+      "usage": "Use this when time has collapsed and the team needs to immediately cut scope to the non-negotiables.",
+      "topic": "we are three sprints behind and the big stakeholder review is tomorrow morning",
+      "rating": "bad",
+      "note": "Again none of these type ones are making any sense. It doesn’t make sense to pick any random things from the makeup steps."
+    },
+    {
+      "phrase": "Not every step makes it into a five-minute face.",
+      "usage": "Use this when the team needs to accept that a compressed timeline requires choosing only the essentials, and not everything planned can make the cut.",
+      "topic": "we have to cut features before launch but we can't agree on which ones to cut",
+      "rating": "bad",
+      "note": "Icky"
+    },
+    {
+      "phrase": "We're working with the brushes we have.",
+      "usage": "Use this when delivering news that a requested resource will not come through and the team needs to make do with what exists.",
       "topic": "I have to tell my team we're not getting the additional headcount we asked for",
       "rating": "bad"
     },
     {
-      "phrase": "It's primer and mascara only. We do not have time for a full face.",
-      "usage": "Use this when a deadline is hours away and the team needs to immediately triage to the absolute essentials.",
-      "topic": "we are three sprints behind and the big stakeholder review is tomorrow morning",
-      "rating": "eh",
-      "note": "A better use here is tinted moisturizer"
-    },
-    {
-      "phrase": "The appointment hasn't gotten longer, but the service menu keeps growing.",
-      "usage": "Use this when a client is expanding scope without acknowledging that time or budget needs to adjust accordingly.",
+      "phrase": "They keep adding layers, but it's still a one-coat budget.",
+      "usage": "Use this when a client is expanding scope without acknowledging that more coverage requires more product, time, and cost.",
       "topic": "the client keeps adding requirements without adjusting the timeline or budget",
       "rating": "bad",
-      "note": "None of this. Nothing about appointments or menus."
+      "note": "Again doesn’t make any sense. The nail ones are just bad except the ones I’ve approved. We need to get a LOT better with nail rhetoric. For example a good one is “it’s like trying to paint my nails with my left hand” or something like that. Or “our nails aren’t long enough to file yet”  etc. make it make sense."
     },
     {
-      "phrase": "We can't launch next week with chipped nails.",
-      "usage": "Use this when a ship date is looming but the product is visibly unfinished and needs more work before anyone sees it.",
+      "phrase": "We can't launch with our cuticles looking like this.",
+      "usage": "Use this when a ship date is looming but the product is visibly unfinished.",
       "topic": "we're supposed to launch next week but the product still has too many rough edges",
       "rating": "good"
     },
     {
-      "phrase": "We've been toning this hair for three weeks. At some point you commit to a color.",
-      "usage": "Use this when a team has been endlessly deliberating a decision that should have been made already.",
-      "topic": "we've been debating the same decision for three weeks and nothing is moving",
-      "rating": "bad",
-      "note": "Structurally everything is sounding the same. Three weeks, at some point. So repetitive, same grammatical structure. Same AI slop."
-    },
-    {
-      "phrase": "Not every product makes it into the travel bag. We need to decide what we're leaving behind.",
-      "usage": "Use this when the team needs to make hard prioritization calls before a deadline and is avoiding the conversation.",
-      "topic": "we have to cut features before launch but we can't agree on which ones to cut",
-      "rating": "bad"
-    },
-    {
-      "phrase": "Two months in, and we haven't let the conditioner sit. We're just rinsing and repeating.",
-      "usage": "Use this when a team has been pushing hard without any real recovery time built in, and it's starting to show.",
-      "topic": "the team has been in crunch mode for two months and morale is tanking",
-      "rating": "bad",
-      "note": "The metaphor doesn’t mean what the explanation says. Also why would we need to set conditioner as apparent rest and recovery???"
-    },
-    {
-      "phrase": "We don't have time for a full face. Pick three products and let's go.",
-      "usage": "Use this when a deadline is imminent and the team needs to stop deliberating and ship whatever is closest to ready.",
-      "topic": "we are three sprints behind and the big stakeholder review is tomorrow morning",
-      "rating": "good"
-    },
-    {
-      "phrase": "We started with a base coat and now we're doing a full nail art set.",
-      "usage": "Use this when a project has expanded well beyond its original scope without anyone formally agreeing to that.",
-      "topic": "the client keeps adding requirements without adjusting the timeline or budget",
-      "rating": "bad",
-      "note": "We started with a manicure but now we’re doing acrylics."
-    },
-    {
-      "phrase": "If the feedback is that we're too neutral, it's time to pick an actual lip color.",
-      "usage": "Use this when stakeholders are pushing the team to make bolder, more committed choices instead of safe, inoffensive ones.",
-      "topic": "we got feedback that our roadmap is too conservative and we need to take bigger swings",
-      "rating": "bad",
-      "note": "? This is simply a statement. Your problem is that you’re not thinking creative and conceptually. You pick a sentence structure or you first pick a theme and hence you inset random things into it trying to make it make sense. Whereas you need to look around first and see what is most appropriate and then construct the sentence."
-    },
-    {
-      "phrase": "Two lead artists, two completely different techniques. Someone has to pick a brush and start.",
-      "usage": "Use this when a technical or strategic deadlock between senior people needs a decision-maker to step in and end the stalemate.",
+      "phrase": "Two lead artists, two completely different techniques. Someone has to call the look.",
+      "usage": "Use this when a leadership-level disagreement on approach needs a decision-maker to step in and resolve it before the team can move forward.",
       "topic": "two senior engineers fundamentally disagree on the technical approach and it's blocking the whole team",
       "rating": "bad"
     },
     {
-      "phrase": "We can't keep switching fragrances mid-application. You have to commit to a scent.",
-      "usage": "Use this when leadership is changing direction so frequently that nothing has time to settle or take effect.",
+      "phrase": "We've been blending this out for three weeks. At some point you set the powder and move on.",
+      "usage": "Use this when a decision has been over-deliberated and the team needs permission to commit and stop revisiting it.",
+      "topic": "we've been debating the same decision for three weeks and nothing is moving",
+      "rating": "good"
+    },
+    {
+      "phrase": "Every time we get close, someone changes the lip color.",
+      "usage": "Use this when leadership keeps shifting direction mid-execution, forcing the team to restart work that was almost finished.",
+      "topic": "leadership keeps changing the priorities mid-sprint and the team is frustrated",
+      "rating": "bad",
+      "note": "No sense. Your lip colors analogy or lipstick lip gloss stuff need to make it much better. Why is there such few variety?? What in the Claude md of spec or prompt is not properly including a wide range of makeup products?"
+    },
+    {
+      "phrase": "Our roadmap is a no-makeup makeup look when they want full glam.",
+      "usage": "Use this when stakeholders are pushing for bolder, more visible ambition after seeing a plan that is technically solid but too understated.",
+      "topic": "we got feedback that our roadmap is too conservative and we need to take bigger swings",
+      "rating": "good"
+    },
+    {
+      "phrase": "This look isn't getting better by staring at it in the mirror.",
+      "usage": "Use this when a team keeps revisiting a decision without new information, and the deliberation itself has become the blocker.",
+      "topic": "we've been debating the same decision for three weeks and nothing is moving",
+      "rating": "good"
+    },
+    {
+      "phrase": "They don't want soft glam. They want a full beat.",
+      "usage": "Use this when stakeholders have signaled that the current plan is too restrained and they are expecting something more ambitious.",
+      "topic": "we got feedback that our roadmap is too conservative and we need to take bigger swings",
+      "rating": "good"
+    },
+    {
+      "phrase": "We need to do our nails in the car.",
+      "usage": "Use this when the team is out of time and has to finish something in motion rather than waiting for ideal conditions.",
+      "topic": "we are three sprints behind and the big stakeholder review is tomorrow morning",
+      "rating": "eh"
+    },
+    {
+      "phrase": "We're working with the brushes we have.",
+      "usage": "Use this when delivering the news that resources are fixed and the team needs to make do with what exists.",
+      "topic": "I have to tell my team we're not getting the additional headcount we asked for",
+      "rating": "bad"
+    },
+    {
+      "phrase": "We can't keep changing the color halfway through the dye job.",
+      "usage": "Use this when leadership is shifting direction mid-execution and the team needs them to understand the real cost of that.",
       "topic": "leadership keeps changing the priorities mid-sprint and the team is frustrated",
       "rating": "bad"
     },
     {
+      "phrase": "Two different base shades and we're trying to blend them into one foundation.",
+      "usage": "Use this when two incompatible technical positions are holding up progress and someone needs to make a call instead of trying to merge them.",
+      "topic": "two senior engineers fundamentally disagree on the technical approach and it's blocking the whole team",
+      "rating": "bad"
+    },
+    {
       "phrase": "We can't launch with our cuticles looking like this.",
-      "usage": "Use this when a ship date is approaching but the product clearly needs more finishing work before it's ready to be seen.",
+      "usage": "Use this when a ship date is looming but the product is visibly unfinished.",
       "topic": "we're supposed to launch next week but the product still has too many rough edges",
       "rating": "good"
+    },
+    {
+      "phrase": "Somebody has to decide what stays in the bag before we walk out the door.",
+      "usage": "Use this when the team needs to accept that cuts are necessary and someone has to make the call on what stays.",
+      "topic": "we have to cut features before launch but we can't agree on which ones to cut",
+      "rating": "bad"
+    },
+    {
+      "phrase": "They keep adding layers but the dry time hasn't changed.",
+      "usage": "Use this when a client is expanding scope without acknowledging that more work requires more time.",
+      "topic": "the client keeps adding requirements without adjusting the timeline or budget",
+      "rating": "bad",
+      "note": "No sense."
+    },
+    {
+      "phrase": "We've been asking a lot from this skin. It needs more than a touch-up right now.",
+      "usage": "Use this when a team that has been pushed hard is being offered a superficial fix instead of real recovery time.",
+      "topic": "the team has been in crunch mode for two months and morale is tanking",
+      "rating": "bad",
+      "note": "It makes no sense. This is skin or makeup? Why would it need a touch up if we need something from the skin? Think things like “consistency is key” as like “retinol doesn’t work in a day!” Think much wider. This is critical. WE NEED MORE TERMS MORE MAKEUP STUFF NOT REVISITING THE SAME THREE ITEMS. EVEN BEAUTY."
+    },
+    {
+      "phrase": "We can't set the liner if the face keeps moving.",
+      "usage": "Use this when frequent priority shifts are preventing the team from executing on anything they've already started.",
+      "topic": "leadership keeps changing the priorities mid-sprint and the team is frustrated",
+      "rating": "bad",
+      "note": "We don’t set liner???"
     }
   ]
 }
