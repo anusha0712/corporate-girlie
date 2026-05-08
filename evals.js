@@ -21,13 +21,14 @@ const DRAFT_KEY = 'eval-session-draft';
 // ======================================
 // State
 // ======================================
-let session        = null;
-let currentPhrase  = null;   // { phrase, usage, topic }
-let prefetched     = null;   // pre-loaded next phrase
-let isFetching     = false;
-let topicQueue     = [];
-let topicIndex     = 0;
-let recentPhrases  = [];     // last 3, passed to API to avoid repetition
+let session           = null;
+let currentPhrase     = null;   // { phrase, usage, category, topic }
+let prefetched        = null;   // pre-loaded next phrase
+let isFetching        = false;
+let topicQueue        = [];
+let topicIndex        = 0;
+let recentPhrases     = [];     // last 3 phrases — prevents exact repetition
+let recentCategories  = [];     // last 10 categories — enforces beauty domain rotation
 
 // ======================================
 // Elements
@@ -104,7 +105,8 @@ function setRatingBtnsDisabled(disabled) {
 // ======================================
 async function fetchPhrase(topic) {
   const body = { mode: 'generate', input: topic };
-  if (recentPhrases.length > 0) body.recentPhrases = recentPhrases.slice(-3);
+  if (recentPhrases.length > 0)    body.recentPhrases    = recentPhrases.slice(-3);
+  if (recentCategories.length > 0) body.recentCategories = recentCategories.slice(-10);
 
   const res  = await fetch('/api/generate', {
     method:  'POST',
@@ -113,7 +115,7 @@ async function fetchPhrase(topic) {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'API error');
-  return { phrase: data.phrase, usage: data.usage || '', topic };
+  return { phrase: data.phrase, usage: data.usage || '', category: data.category || '', topic };
 }
 
 // Start fetching the next phrase silently in the background
@@ -132,6 +134,10 @@ function showPhrase(phraseData) {
   currentPhrase = phraseData;
   recentPhrases.push(phraseData.phrase);
   if (recentPhrases.length > 3) recentPhrases.shift();
+  if (phraseData.category) {
+    recentCategories.push(phraseData.category);
+    if (recentCategories.length > 10) recentCategories.shift();
+  }
 
   evalPhraseText.textContent = phraseData.phrase;
 
@@ -171,11 +177,12 @@ function updateStats() {
 // ======================================
 async function startSession() {
   clearSessionLocal();
-  session       = { version: PROMPT_VERSION, startedAt: new Date().toISOString(), results: [] };
-  topicQueue    = shuffle(TOPICS);
-  topicIndex    = 0;
-  recentPhrases = [];
-  prefetched    = null;
+  session          = { version: PROMPT_VERSION, startedAt: new Date().toISOString(), results: [] };
+  topicQueue       = shuffle(TOPICS);
+  topicIndex       = 0;
+  recentPhrases    = [];
+  recentCategories = [];
+  prefetched       = null;
 
   evalRatingRow.hidden = false;
   setRatingBtnsDisabled(true);
@@ -195,11 +202,12 @@ async function resumeSession() {
   const saved = loadSessionLocal();
   if (!saved) { startSession(); return; }
 
-  session       = saved;
-  topicQueue    = shuffle(TOPICS);
-  topicIndex    = 0;
-  recentPhrases = session.results.slice(-3).map(r => r.phrase);
-  prefetched    = null;
+  session          = saved;
+  topicQueue       = shuffle(TOPICS);
+  topicIndex       = 0;
+  recentPhrases    = session.results.slice(-3).map(r => r.phrase);
+  recentCategories = session.results.slice(-10).map(r => r.category).filter(Boolean);
+  prefetched       = null;
 
   evalRatingRow.hidden = false;
   setRatingBtnsDisabled(true);
@@ -236,9 +244,10 @@ async function rate(rating) {
 
   const note = evalNoteEl.value.trim();
   session.results.push({
-    phrase:  currentPhrase.phrase,
-    usage:   currentPhrase.usage,
-    topic:   currentPhrase.topic,
+    phrase:    currentPhrase.phrase,
+    usage:     currentPhrase.usage,
+    category:  currentPhrase.category,
+    topic:     currentPhrase.topic,
     rating,
     ...(note ? { note } : {}),
   });

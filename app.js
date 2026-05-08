@@ -37,9 +37,10 @@ const arsenalCloseBtn = document.getElementById('arsenal-close-btn');
 const reframeOutput   = document.getElementById('reframe-output');
 
 // -- State --
-let currentMode   = 'generate';
-let savedPhrases  = []; // { phrase, usage }
-let recentPhrases = []; // last 3 generated phrases for repetition avoidance
+let currentMode       = 'generate';
+let savedPhrases      = []; // { phrase, usage }
+let recentPhrases     = []; // last 3 phrases — prevents exact repetition
+let recentCategories  = []; // last 10 categories — enforces beauty domain rotation
 
 // ======================================
 // Mode toggle
@@ -95,8 +96,9 @@ async function handleSubmit() {
 
   try {
     const body = { mode: currentMode, input };
-    if (currentMode === 'generate' && recentPhrases.length > 0) {
-      body.recentPhrases = recentPhrases.slice(-3);
+    if (currentMode === 'generate') {
+      if (recentPhrases.length > 0)    body.recentPhrases    = recentPhrases.slice(-3);
+      if (recentCategories.length > 0) body.recentCategories = recentCategories.slice(-10);
     }
 
     const res  = await fetch('/api/generate', {
@@ -112,6 +114,10 @@ async function handleSubmit() {
     } else if (currentMode === 'generate') {
       recentPhrases.push(data.phrase);
       if (recentPhrases.length > 3) recentPhrases.shift();
+      if (data.category) {
+        recentCategories.push(data.category);
+        if (recentCategories.length > 10) recentCategories.shift();
+      }
       showCurrentPhrase(data.phrase, data.usage || '');
     } else {
       addReframeCard(data.phrase);

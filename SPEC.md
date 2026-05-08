@@ -61,20 +61,43 @@ The full beauty vocabulary is fair game — the AI should choose whichever sub-d
 
 ### Prompt structure (`prompt.js`)
 
-```js
-export const PROMPT_VERSION = "v0.1";
+Two separate prompts, exported individually. Splitting prevents the model from juggling both modes at once.
 
-export const SYSTEM_PROMPT = `
-[Identity]
-[The mapping principle, with 2–3 worked examples showing technique → business concept]
-[The beauty vocabulary list]
-[6–10 few-shot examples]
-[Anti-patterns, framed as "do not produce"]
-[Output format: just the phrase. No preamble, quotes, explanation, or emoji.]
-`;
+```js
+export const PROMPT_VERSION = "v0.3";
+export const GENERATE_PROMPT = `...`;
+export const REFRAME_PROMPT  = `...`;
 ```
 
-For Generate mode, user message is empty or `"Topic: <topic>"`. For Reframe mode, user message is `Reframe this in corporate beauty language: "<their sentence>"`.
+**`GENERATE_PROMPT` structure:**
+1. Identity — one short paragraph.
+2. Reasoning procedure — six explicit steps the model works through before writing: (a) name the business mechanism (cause-and-effect, not surface situation); (b) search beauty knowledge for the same mechanism; (c) if no genuine match, abandon and try a different angle — do not force; (d) state the beauty fact as a standalone sentence with no business context and verify it is literally true; (e) write the phrase; (f) verify it makes sense without the original input.
+3. Output format — three lines: `CATEGORY:`, `PHRASE:`, `USAGE:`. The CATEGORY is a specific subcategory and technique (e.g. "skincare — skin cycling"), used by the app layer to enforce rotation.
+4. Rotation instruction — if `recentCategories` is provided, every category on that list is off-limits. `/api/generate.js` appends this dynamically when present.
+5. Starter seeds — a short list showing the specificity level expected (slugging, skin cycling, cast, sillage, dry-down, hitting pan, etc.). Explicit instruction: "Your beauty knowledge is much larger than this list. Search it. This is not the menu."
+6. Four examples chosen for reasoning-pattern diversity, not topic diversity: (1) specific product knowledge, (2) technique-as-verb, (3) failure-state mapping, (4) two-depth-intervention distinction. Each example is labeled with its pattern. Explicit instruction: "These teach the reasoning pattern. Do not reuse the phrasing, vocabulary, or sentence structure from any of them."
+7. Do not produce list.
+
+**`REFRAME_PROMPT` structure:**
+1. Identity.
+2. Reasoning procedure — four steps: identify the original claim, search for a beauty equivalent with the same dynamic, verify the original meaning survives, verify the beauty version is decodable without the original.
+3. Output format — single phrase only, no prefix.
+4. Two examples labeled by reasoning pattern.
+5. Do not produce list (shorter).
+
+For Generate mode, user message is `"Topic: <topic>"` or `"Generate a phrase."` For Reframe mode, user message is `"Reframe this: \"<sentence>\""`.
+
+### Category rotation (app layer)
+
+The frontend keeps a rolling list of the last 10 `CATEGORY` values returned from `/api/generate`. On every Generate request it sends `recentCategories: [...]` in the request body. `/api/generate.js` appends these to `GENERATE_PROMPT` before the API call:
+
+```js
+if (recentCategories?.length) {
+  systemPrompt += `\n\nCategories used recently — do not use any of these:\n${recentCategories.join('\n')}`;
+}
+```
+
+This is the primary variety enforcement mechanism. It is mechanical, not hoped-for.
 
 ## The serverless function (`/api/generate.js`)
 
@@ -84,8 +107,8 @@ This is where the API key lives and where all four abuse protections happen. Ord
 2. **Method check.** Only POST.
 3. **Input length cap.** If `input` > 500 characters, reject with a friendly error.
 4. **Rate limit.** 20 requests per IP per hour. v1: in-memory `Map` keyed by IP from `x-forwarded-for`. Resets on deploy — fine for a toy. Bypass for `localhost` so evals work.
-5. **Call Anthropic.** Use `@anthropic-ai/sdk`. Model: `claude-sonnet-4-6` (current Sonnet as of writing — verify at the docs link in CLAUDE.md if much time has passed). `max_tokens: 300`. Pass `SYSTEM_PROMPT` from `prompt.js` as the `system` parameter.
-6. **Return** `{ phrase: "..." }`. On error, return a friendly message like "the mirror's a little foggy, try again in a sec" with the right HTTP status.
+5. **Call Anthropic.** Use `@anthropic-ai/sdk`. Model: `claude-sonnet-4-6` (current Sonnet as of writing — verify at the docs link in CLAUDE.md if much time has passed). `max_tokens: 300`. Select `GENERATE_PROMPT` or `REFRAME_PROMPT` from `prompt.js` based on `mode`. For generate requests, if `recentCategories` is present in the body, append them to the system prompt before the call (see rotation section in prompt spec above).
+6. **Return** `{ phrase, usage, category }` for generate; `{ phrase }` for reframe. Parse `CATEGORY:`, `PHRASE:`, and `USAGE:` lines from the model response. On error, return a friendly message like "the mirror's a little foggy, try again in a sec" with the right HTTP status.
 
 ### The fifth protection — manual but critical
 
@@ -97,16 +120,13 @@ Build `evals.html` as a developer tool, linked from the main page footer in tiny
 
 **What it does:**
 
-1. Hardcoded list of ~20 test cases:
-   - **Generate cases**: `"morning standup"`, `"deadline pressure"`, `"scope creep"`, `"firing someone"`, `"giving feedback"`, `"team is burnt out"`, `"launch is slipping"`, `"need more budget"`, `"two teams disagree"`, `"hiring freeze"`, etc.
-   - **Reframe cases**: `"we need to fix this before launch"`, `"the data doesn't support that conclusion"`, `"can we revisit this next quarter"`, `"this team is underperforming"`, etc.
-2. **"Run all"** button fires every case against `/api/generate` and shows results in a grid. Stagger requests slightly to avoid rate limit even with the localhost bypass.
-3. Each result card has 👍 / 👎 buttons. Ratings save to `localStorage` keyed by `<PROMPT_VERSION>:<test-case>`.
-4. Prompt version label at the top, read from `prompt.js`.
-5. Summary line: `"v0.3: 14 👍 / 6 👎"` — lets you see if a new version is actually better.
-6. Dropdown to view past versions' scores on the same cases.
+1. **No hardcoded topic list.** Topics are generated fresh from the API on demand — the eval session calls `/api/generate` with a randomly constructed or open-ended prompt, just as the main app does. This makes variety infinite and prevents the evals from training the model against a finite scenario set that it eventually saturates.
+2. **Session-based rating.** The user generates phrases one at a time, rates each (good / eh / bad), optionally adds a note, and the session accumulates until sent.
+3. **Category tracking.** The eval frontend tracks returned `CATEGORY` values and sends `recentCategories` with every generate call — same rotation enforcement as the main app.
+4. **Send session** commits the rated results to the repo via `/api/save-eval`, so sessions are preserved for prompt analysis.
+5. Prompt version label at the top, read from `prompt.js`.
 
-The implementer should seed the test cases but **not** rate them — the human running the project rates, because their taste is the actual training signal.
+The human running the project rates, because their taste is the actual training signal. The iteration loop: generate → rate → cluster the failures → update `prompt.js` → bump version → repeat.
 
 ### The iteration loop
 

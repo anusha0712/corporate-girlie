@@ -8,7 +8,7 @@
 //   4. Rate limit (20 req / IP / hour, in-memory)
 
 import Anthropic from '@anthropic-ai/sdk';
-import { SYSTEM_PROMPT } from '../prompt.js';
+import { GENERATE_PROMPT, REFRAME_PROMPT } from '../prompt.js';
 
 // ── Rate limiter ────────────────────────────────────────────────
 // Simple in-memory map. Resets on every deploy — fine for a toy.
@@ -55,7 +55,7 @@ export default async function handler(req, res) {
   }
 
   // 3. Input length cap
-  const { mode, input = "", recentPhrases = [] } = req.body || {};
+  const { mode, input = "", recentPhrases = [], recentCategories = [] } = req.body || {};
 
   if (typeof input === "string" && input.length > 500) {
     return res.status(400).json({
@@ -81,6 +81,13 @@ export default async function handler(req, res) {
   }
 
   // 5. Anthropic call
+  let systemPrompt = mode === 'reframe' ? REFRAME_PROMPT : GENERATE_PROMPT;
+
+  // Append category rotation constraint to the system prompt dynamically
+  if (mode === 'generate' && recentCategories.length > 0) {
+    systemPrompt += `\n\nCategories used recently — do not use any of these:\n${recentCategories.join('\n')}`;
+  }
+
   let userMessage = mode === 'reframe'
     ? `Reframe this: "${input}"`
     : input ? `Topic: ${input}` : 'Generate a phrase.';
@@ -93,18 +100,20 @@ export default async function handler(req, res) {
     const message = await client.messages.create({
       model: 'claude-sonnet-4-6',
       max_tokens: 300,
-      system: SYSTEM_PROMPT,
+      system: systemPrompt,
       messages: [{ role: 'user', content: userMessage }],
     });
 
     const text = message.content[0].text.trim();
 
     if (mode === 'generate') {
-      const phraseMatch = text.match(/^PHRASE:\s*(.+?)$/m);
-      const usageMatch  = text.match(/^USAGE:\s*(.+?)$/m);
-      const phrase = phraseMatch ? phraseMatch[1].trim() : text;
-      const usage  = usageMatch  ? usageMatch[1].trim()  : '';
-      return res.status(200).json({ phrase, usage });
+      const categoryMatch = text.match(/^CATEGORY:\s*(.+?)$/m);
+      const phraseMatch   = text.match(/^PHRASE:\s*(.+?)$/m);
+      const usageMatch    = text.match(/^USAGE:\s*(.+?)$/m);
+      const category = categoryMatch ? categoryMatch[1].trim() : '';
+      const phrase   = phraseMatch   ? phraseMatch[1].trim()   : text;
+      const usage    = usageMatch    ? usageMatch[1].trim()    : '';
+      return res.status(200).json({ phrase, usage, category });
     } else {
       return res.status(200).json({ phrase: text });
     }
