@@ -145,6 +145,27 @@
   transform: translate(2px, 2px);
 }
 
+.resume-btn {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 12px 28px;
+  border: var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  background: var(--white);
+  color: #9070a0;
+  box-shadow: 3px 3px 0 var(--black);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: box-shadow 0.1s, transform 0.1s;
+}
+
+.resume-btn:hover {
+  box-shadow: 2px 2px 0 var(--black);
+  transform: translate(1px, 1px);
+}
+
 /* ======================================
    Loading state
    ====================================== */

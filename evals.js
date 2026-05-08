@@ -16,6 +16,8 @@ const TOPICS = [
   "we are three sprints behind and the big stakeholder review is tomorrow morning",
 ];
 
+const DRAFT_KEY = 'eval-session-draft';
+
 // ======================================
 // State
 // ======================================
@@ -41,7 +43,30 @@ const evalUsageText  = document.getElementById('eval-usage-text');
 const evalNoteEl     = document.getElementById('eval-note');
 const evalRatingRow  = document.getElementById('eval-rating-row');
 const startBtn       = document.getElementById('start-btn');
+const resumeBtn      = document.getElementById('resume-btn');
 const retryBtn       = document.getElementById('retry-btn');
+
+// ======================================
+// Local persistence
+// ======================================
+function saveSessionLocal() {
+  if (session) {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(session));
+  }
+}
+
+function clearSessionLocal() {
+  localStorage.removeItem(DRAFT_KEY);
+}
+
+function loadSessionLocal() {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
 
 // ======================================
 // Helpers
@@ -138,18 +163,42 @@ function updateStats() {
     ? '0 rated'
     : `${n} — ${good} good / ${eh} eh / ${bad} bad`;
 
-  // Show send button once there's enough data to be useful
   if (n >= 5) sendBtn.hidden = false;
 }
 
 // ======================================
-// Session start
+// Session start / resume
 // ======================================
 async function startSession() {
+  clearSessionLocal();
   session       = { version: PROMPT_VERSION, startedAt: new Date().toISOString(), results: [] };
   topicQueue    = shuffle(TOPICS);
   topicIndex    = 0;
   recentPhrases = [];
+  prefetched    = null;
+
+  evalRatingRow.hidden = false;
+  setRatingBtnsDisabled(true);
+  updateStats();
+  showArea('eval-loading');
+
+  try {
+    const p = await fetchPhrase(getNextTopic());
+    showPhrase(p);
+    prefetchNext();
+  } catch {
+    showArea('eval-error');
+  }
+}
+
+async function resumeSession() {
+  const saved = loadSessionLocal();
+  if (!saved) { startSession(); return; }
+
+  session       = saved;
+  topicQueue    = shuffle(TOPICS);
+  topicIndex    = 0;
+  recentPhrases = session.results.slice(-3).map(r => r.phrase);
   prefetched    = null;
 
   evalRatingRow.hidden = false;
@@ -185,7 +234,6 @@ async function retryFetch() {
 async function rate(rating) {
   if (!currentPhrase || !session) return;
 
-  // Record result
   const note = evalNoteEl.value.trim();
   session.results.push({
     phrase:  currentPhrase.phrase,
@@ -194,6 +242,8 @@ async function rate(rating) {
     rating,
     ...(note ? { note } : {}),
   });
+
+  saveSessionLocal();
 
   // Flash the tapped button for 400ms
   setRatingBtnsDisabled(true);
@@ -242,6 +292,7 @@ async function sendToClaude() {
     const data = await res.json();
 
     if (res.ok) {
+      clearSessionLocal();
       sendBtn.textContent = 'Sent ✦';
       setTimeout(() => {
         sendBtn.disabled    = false;
@@ -258,9 +309,19 @@ async function sendToClaude() {
 }
 
 // ======================================
+// On load — check for saved draft
+// ======================================
+const savedDraft = loadSessionLocal();
+if (savedDraft && savedDraft.results && savedDraft.results.length > 0) {
+  resumeBtn.textContent = `Resume (${savedDraft.results.length} rated)`;
+  resumeBtn.hidden = false;
+}
+
+// ======================================
 // Event listeners
 // ======================================
 startBtn.addEventListener('click', startSession);
+resumeBtn.addEventListener('click', resumeSession);
 retryBtn.addEventListener('click', retryFetch);
 sendBtn.addEventListener('click',  sendToClaude);
 
