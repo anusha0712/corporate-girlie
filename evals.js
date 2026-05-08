@@ -161,7 +161,7 @@ function updateStats() {
 
   evalStatsEl.textContent = n === 0
     ? '0 rated'
-    : `${n} — ${good} good / ${eh} eh / ${bad} bad`;
+    : `${n} — ✓${good} ○${eh} ✗${bad}`;
 
   if (n >= 5) sendBtn.hidden = false;
 }
