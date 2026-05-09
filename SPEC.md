@@ -107,7 +107,7 @@ This is where the API key lives and where all four abuse protections happen. Ord
 2. **Method check.** Only POST.
 3. **Input length cap.** If `input` > 500 characters, reject with a friendly error.
 4. **Rate limit.** 20 requests per IP per hour. v1: in-memory `Map` keyed by IP from `x-forwarded-for`. Resets on deploy — fine for a toy. Bypass for `localhost` so evals work.
-5. **Call Anthropic.** Use `@anthropic-ai/sdk`. Model: `claude-sonnet-4-6` (current Sonnet as of writing — verify at the docs link in CLAUDE.md if much time has passed). `max_tokens: 300`. Select `GENERATE_PROMPT` or `REFRAME_PROMPT` from `prompt.js` based on `mode`. For generate requests, if `recentCategories` is present in the body, append them to the system prompt before the call (see rotation section in prompt spec above).
+5. **Call Anthropic.** Use `@anthropic-ai/sdk`. Model: `claude-opus-4-7` (current most-capable Opus as of writing — verify at the docs link in CLAUDE.md if much time has passed). `max_tokens: 300`. Select `GENERATE_PROMPT` or `REFRAME_PROMPT` from `prompt.js` based on `mode`. For generate requests, if `recentCategories` is present in the body, append them to the system prompt before the call (see rotation section in prompt spec above).
 6. **Return** `{ phrase, usage, category }` for generate; `{ phrase }` for reframe. Parse `CATEGORY:`, `PHRASE:`, and `USAGE:` lines from the model response. On error, return a friendly message like "the mirror's a little foggy, try again in a sec" with the right HTTP status.
 
 ### The fifth protection — manual but critical

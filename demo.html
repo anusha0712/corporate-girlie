@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corporate Girlie ✦ Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="bg-sparkles" aria-hidden="true">
+    <span class="bg-sparkle s1">✦</span>
+    <span class="bg-sparkle s2">♥</span>
+    <span class="bg-sparkle s3">✦</span>
+    <span class="bg-sparkle s4">◆</span>
+    <span class="bg-sparkle s5">✦</span>
+    <span class="bg-sparkle s6">♥</span>
+    <span class="bg-sparkle s7">◆</span>
+    <span class="bg-sparkle s8">✦</span>
+    <span class="bg-sparkle s9">♥</span>
+    <span class="bg-sparkle s10">✦</span>
+  </div>
+
+  <div class="container">
+
+    <header>
+      <div class="title-row">
+        <div class="star-group" aria-hidden="true">
+          <svg class="star tiny" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
+          <svg class="star small" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
+        </div>
+
+        <h1 class="title">Corporate Girlie</h1>
+
+        <div class="star-group" aria-hidden="true">
+          <svg class="star" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
+          <svg class="star small" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
+          <svg class="star tiny" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
+        </div>
+      </div>
+
+      <p class="header-dec" aria-hidden="true">♥ ✦ ♥</p>
+      <p class="instructions">Type a topic or leave it blank to get a beauty-coded phrase for your next meeting. Save the ones you like and copy them all when you're done.</p>
+    </header>
+
+    <main>
+
+      <div class="input-section" id="topic-section">
+        <input
+          type="text"
+          id="topic-input"
+          class="text-input"
+          placeholder="Topic hint (optional) — e.g. we keep avoiding the hard decision, budget cuts..."
+          maxlength="100"
+          aria-label="Topic hint for phrase generation"
+        >
+      </div>
+
+      <button type="button" class="submit-btn" id="submit-btn">
+        <span id="btn-text">Generate ✨</span>
+        <span id="btn-loading" hidden>
+          <span class="spin-star" aria-hidden="true">✦</span> generating...
+        </span>
+      </button>
+
+      <div id="generate-output" hidden>
+
+        <div class="phrase-card current-card" id="current-card">
+          <div class="current-card-body">
+            <p class="phrase-text" id="current-phrase"></p>
+            <p class="phrase-usage" id="current-usage"></p>
+          </div>
+          <div class="current-card-actions">
+            <button type="button" class="copy-btn" id="copy-current-btn" aria-label="Copy phrase">Copy</button>
+            <button type="button" class="save-btn" id="save-btn">Save</button>
+          </div>
+        </div>
+
+        <div class="saved-section" id="saved-section" hidden>
+          <button type="button" class="arsenal-trigger-btn" id="saved-toggle-btn">
+            Your Arsenal ✦ (<span id="saved-count">0</span>)
+          </button>
+        </div>
+
+      </div>
+
+    </main>
+
+    <footer>
+      <span>made with ✦ and SPF 50</span>
+    </footer>
+
+  </div>
+
+  <div id="arsenal-modal" class="arsenal-modal" hidden>
+    <div class="arsenal-backdrop" id="arsenal-backdrop"></div>
+    <div class="arsenal-popup">
+      <div class="arsenal-popup-header">
+        <span>Your Arsenal ✦</span>
+        <button type="button" class="arsenal-close-btn" id="arsenal-close-btn" aria-label="Close arsenal">×</button>
+      </div>
+      <div class="arsenal-popup-body" id="saved-list"></div>
+      <div class="arsenal-popup-footer">
+        <button type="button" class="copy-all-btn" id="copy-all-btn">Copy all</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="demo.js"></script>
+</body>
+</html>
