@@ -532,31 +532,43 @@ footer {
   }
 }
 
-/* Mid-short viewports (481px-700px tall): keep the original
-   spacious feel BUT compact the desktop padding/footer-margin
-   enough that the form + footer always fit. The luxurious
-   18vh padding on tall screens (>700px) is preserved. */
+/* Mid-short viewports (481px-700px tall): force a tight compact
+   layout with fixed (not clamp) values so the title, form, button
+   and footer ALL fit guaranteed. The luxurious 18vh padding on
+   tall screens (>700px) is preserved. */
 @media (min-width: 600px) and (max-height: 700px) and (min-height: 481px) {
   .container {
-    padding-top: clamp(24px, 7vh, 60px) !important;
+    padding-top: 16px !important;
+    padding-bottom: 12px !important;
+  }
+  header {
+    margin-bottom: 12px !important;
+  }
+  .header-dec { display: none; }
+  .title {
+    font-size: clamp(2rem, 4.5vw, 3.2rem) !important;
+  }
+  .instructions {
+    font-size: 0.88rem;
+    line-height: 1.4;
   }
   footer {
-    margin-top: clamp(20px, 5vh, 40px) !important;
+    margin-top: 12px !important;
   }
   /* When a phrase card is showing, drop the instructions paragraph
      and tighten the card so the card + Copy/Save + footer all fit
      without anything getting clipped. */
   body.has-output .container {
-    padding-top: 24px !important;
+    padding-top: 12px !important;
   }
   body.has-output .instructions { display: none; }
-  body.has-output header { margin-bottom: 12px; }
+  body.has-output header { margin-bottom: 8px !important; }
   body.has-output footer {
-    margin-top: 16px !important;
+    margin-top: 8px !important;
   }
-  .current-card { padding: 14px 22px; }
-  .phrase-text { font-size: 1.05rem; line-height: 1.4; }
-  .phrase-usage { font-size: 0.9rem; line-height: 1.4; }
+  .current-card { padding: 12px 18px !important; }
+  .phrase-text { font-size: 1rem !important; line-height: 1.35; }
+  .phrase-usage { font-size: 0.88rem !important; line-height: 1.35; }
   .current-card-actions { margin-top: 4px; }
 }
 
