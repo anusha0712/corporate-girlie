@@ -197,8 +197,7 @@ main {
   align-items: center;
   justify-content: safe center;
   gap: 14px;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
   padding: 8px 0;
 }
 
@@ -446,9 +445,11 @@ footer {
     font-size: 4.2rem;
   }
 
-  /* Empty state: title + controls centered with generous top padding */
+  /* Empty state: title + controls centered with generous top padding.
+     clamp() keeps the airy 184/164 on tall viewports but shrinks
+     proportionally on short ones so nothing ever overflows. */
   .container {
-    padding-top: 184px;
+    padding-top: clamp(24px, 18vh, 184px);
     transition: padding-top 0.45s ease;
   }
 
@@ -463,7 +464,7 @@ footer {
   }
 
   footer {
-    margin-top: 164px;
+    margin-top: clamp(24px, 16vh, 164px);
     transition: margin-top 0.45s ease;
   }
 
@@ -528,6 +529,43 @@ footer {
   .current-card-actions {
     width: 100%;
     justify-content: flex-end;
+  }
+}
+
+/* Ultra-short viewports: drop decoration, tighten everything so
+   every element fits without ever needing to scroll or clip.
+   Placed last so it wins the cascade against width-keyed mobile rules. */
+@media (max-height: 480px) {
+  .container {
+    padding-top: 10px !important;
+    padding-bottom: 8px !important;
+  }
+  header {
+    margin-bottom: 4px;
+    gap: 0;
+  }
+  .header-dec { display: none; }
+  .title {
+    font-size: clamp(1.4rem, 6vw, 2rem) !important;
+  }
+  .instructions {
+    font-size: 0.78rem !important;
+    line-height: 1.3 !important;
+  }
+  main {
+    gap: 8px;
+    padding: 0;
+  }
+  .mode-btn {
+    padding: 8px 16px !important;
+    min-height: 36px !important;
+    font-size: 0.9rem !important;
+  }
+  .text-input { padding: 9px 16px !important; }
+  .submit-btn { padding: 9px 32px !important; }
+  footer {
+    margin-top: 6px !important;
+    padding: 6px 0 !important;
   }
 }
 
