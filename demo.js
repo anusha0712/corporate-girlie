@@ -9,70 +9,70 @@
 // --- Curated phrase list ---
 // Sourced from prompt.js canonical examples + phrases rated "good" in
 // eval-sessions/latest.json. Edit freely before an event.
+//
+// `theme` is a short tag for the beauty domain. The shuffler below avoids
+// placing two phrases with the same theme back-to-back so the demo doesn't
+// feel like 8 variations of the same idea.
 const CURATED_PHRASES = [
   {
+    theme: "dry-shampoo",
     phrase: "We can't dry shampoo our way out of this.",
     usage: "Use this when a quick cosmetic fix is being substituted for the real work the situation requires.",
   },
   {
+    theme: "concealer",
     phrase: "Are we color correcting or just concealing?",
     usage: "Use this to challenge whether a solution addresses the root issue or just makes it less visible.",
   },
   {
-    phrase: "We're hitting pan on this.",
+    theme: "pressed-powder",
+    phrase: "We're hitting pan on the budget.",
     usage: "Use this when budget, runway, or goodwill is close to gone and the bottom is becoming visible.",
   },
   {
+    theme: "blending",
     phrase: "We're over-blending. Step back.",
     usage: "Use this when continued iteration is actively degrading the work rather than improving it.",
   },
   {
+    theme: "palette",
     phrase: "We keep changing the palette halfway through the look.",
     usage: "Use this when shifting priorities mid-execution are forcing the team to undo finished work and start over.",
   },
   {
+    theme: "cuticles",
     phrase: "We can't launch with our cuticles looking like this.",
     usage: "Use this when a ship date is looming but the product is visibly unfinished.",
   },
   {
+    theme: "setting-powder",
     phrase: "We've been buffing this for three weeks. At some point you have to set the powder.",
     usage: "Use this when a team has spent too long refining a decision and needs to commit and move forward.",
   },
   {
-    phrase: "We've been running on dry shampoo for two months. This team needs a full wash.",
-    usage: "Use this when a team has been pushing through on surface-level energy management and genuinely needs rest, not another shortcut.",
-  },
-  {
+    theme: "glam-budget",
     phrase: "They want full glam on a tinted moisturizer budget.",
     usage: "Use this when a client is requesting a high-effort, high-complexity deliverable without adjusting the resources to match.",
   },
   {
+    theme: "gel-polish",
     phrase: "Gel top coat over uncured polish — it's going to lift.",
     usage: "Use this when a team is trying to seal and present work that hasn't been given enough time to set, warning that the result won't hold.",
   },
   {
+    theme: "blowout",
     phrase: "We keep changing the part and then wondering why the blowout won't hold.",
     usage: "Use this when repeated last-minute direction changes are preventing the team from executing cleanly on anything.",
   },
   {
+    theme: "full-beat-clock",
     phrase: "We're doing a full beat with twenty minutes on the clock.",
     usage: "Use this when the team is severely behind with a high-stakes deadline imminent and needs to move fast without pretending there is more time than there is.",
   },
   {
-    phrase: "Our roadmap is a no-makeup makeup look when they want full glam.",
-    usage: "Use this when stakeholders are pushing for bolder, more visible ambition after seeing a plan that is technically solid but too understated.",
-  },
-  {
+    theme: "mirror",
     phrase: "This look isn't getting better by staring at it in the mirror.",
     usage: "Use this when a team keeps revisiting a decision without new information, and the deliberation itself has become the blocker.",
-  },
-  {
-    phrase: "They don't want soft glam. They want a full beat.",
-    usage: "Use this when stakeholders have signaled that the current plan is too restrained and they are expecting something more ambitious.",
-  },
-  {
-    phrase: "We've been blending this out for three weeks. At some point you set the powder and move on.",
-    usage: "Use this when a decision has been over-deliberated and the team needs permission to commit and stop revisiting it.",
   },
 ];
 
@@ -103,15 +103,49 @@ let savedPhrases     = [];
 let recentPhrases    = [];
 let recentCategories = [];
 
-// Shuffle the curated list once on load so each demo session orders differently
-let demoQueue = shuffle([...CURATED_PHRASES]);
+// Shuffle the curated list once on load so each demo session orders differently.
+// Same rotation rule as the live API: no two adjacent phrases share a theme.
+let demoQueue = shuffleNoAdjacentTheme([...CURATED_PHRASES]);
 
-function shuffle(arr) {
+function shuffleInPlace(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
+}
+
+// Random shuffle, then walk the array and swap any back-to-back same-theme
+// items with a later item that fixes the adjacency. Up to 50 reshuffle attempts
+// before falling back to a greedy single-pass repair.
+function shuffleNoAdjacentTheme(arr) {
+  for (let attempt = 0; attempt < 50; attempt++) {
+    const candidate = shuffleInPlace([...arr]);
+    if (!hasAdjacentTheme(candidate)) return candidate;
+  }
+  // Greedy repair fallback
+  const result = shuffleInPlace([...arr]);
+  for (let i = 1; i < result.length; i++) {
+    if (result[i].theme === result[i - 1].theme) {
+      for (let j = i + 1; j < result.length; j++) {
+        const swapOk =
+          result[j].theme !== result[i - 1].theme &&
+          (j + 1 >= result.length || result[j + 1].theme !== result[i].theme);
+        if (swapOk) {
+          [result[i], result[j]] = [result[j], result[i]];
+          break;
+        }
+      }
+    }
+  }
+  return result;
+}
+
+function hasAdjacentTheme(arr) {
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i].theme === arr[i - 1].theme) return true;
+  }
+  return false;
 }
 
 // ======================================
