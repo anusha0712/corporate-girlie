@@ -532,6 +532,28 @@ footer {
   }
 }
 
+/* Mid-short viewports (481px-700px tall): keep the original
+   spacious feel BUT compact the desktop padding/footer-margin
+   enough that the form + footer always fit. The luxurious
+   18vh padding on tall screens (>700px) is preserved. */
+@media (min-width: 600px) and (max-height: 700px) and (min-height: 481px) {
+  .container {
+    padding-top: clamp(24px, 7vh, 60px) !important;
+  }
+  footer {
+    margin-top: clamp(20px, 5vh, 40px) !important;
+  }
+  body.has-output .container {
+    padding-top: 30px !important;
+  }
+  body.has-output footer {
+    margin-top: 24px !important;
+  }
+  .current-card { padding: 16px 22px; }
+  .phrase-text { font-size: 1.1rem; line-height: 1.4; }
+  .phrase-usage { font-size: 0.92rem; }
+}
+
 /* Ultra-short viewports: drop decoration, tighten everything so
    every element fits without ever needing to scroll or clip.
    Placed last so it wins the cascade against width-keyed mobile rules. */
