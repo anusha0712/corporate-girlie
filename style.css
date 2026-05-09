@@ -543,15 +543,21 @@ footer {
   footer {
     margin-top: clamp(20px, 5vh, 40px) !important;
   }
+  /* When a phrase card is showing, drop the instructions paragraph
+     and tighten the card so the card + Copy/Save + footer all fit
+     without anything getting clipped. */
   body.has-output .container {
-    padding-top: 30px !important;
+    padding-top: 24px !important;
   }
+  body.has-output .instructions { display: none; }
+  body.has-output header { margin-bottom: 12px; }
   body.has-output footer {
-    margin-top: 24px !important;
+    margin-top: 16px !important;
   }
-  .current-card { padding: 16px 22px; }
-  .phrase-text { font-size: 1.1rem; line-height: 1.4; }
-  .phrase-usage { font-size: 0.92rem; }
+  .current-card { padding: 14px 22px; }
+  .phrase-text { font-size: 1.05rem; line-height: 1.4; }
+  .phrase-usage { font-size: 0.9rem; line-height: 1.4; }
+  .current-card-actions { margin-top: 4px; }
 }
 
 /* Ultra-short viewports: drop decoration, tighten everything so
