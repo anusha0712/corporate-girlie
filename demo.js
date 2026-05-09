@@ -135,6 +135,13 @@ const CURATED_PHRASES = [
 ];
 
 // --- Elements ---
+const btnGenerate    = document.getElementById('btn-generate');
+const btnReframe     = document.getElementById('btn-reframe');
+const topicSection   = document.getElementById('topic-section');
+const reframeSection = document.getElementById('reframe-section');
+const reframeInput   = document.getElementById('reframe-input');
+const charCount      = document.getElementById('char-count');
+
 const submitBtn      = document.getElementById('submit-btn');
 const btnText        = document.getElementById('btn-text');
 const btnLoading     = document.getElementById('btn-loading');
@@ -156,7 +163,10 @@ const arsenalModal   = document.getElementById('arsenal-modal');
 const arsenalBackdrop= document.getElementById('arsenal-backdrop');
 const arsenalCloseBtn= document.getElementById('arsenal-close-btn');
 
+const reframeOutput  = document.getElementById('reframe-output');
+
 // --- State ---
+let currentMode      = 'generate';
 let savedPhrases     = [];
 let recentPhrases    = [];
 let recentCategories = [];
@@ -207,6 +217,44 @@ function hasAdjacentTheme(arr) {
 }
 
 // ======================================
+// Mode toggle
+// ======================================
+
+btnGenerate.addEventListener('click', () => setMode('generate'));
+btnReframe.addEventListener('click',  () => setMode('reframe'));
+
+function setMode(mode) {
+  currentMode = mode;
+  const isGenerate = mode === 'generate';
+
+  btnGenerate.classList.toggle('active', isGenerate);
+  btnGenerate.setAttribute('aria-pressed', String(isGenerate));
+  btnReframe.classList.toggle('active', !isGenerate);
+  btnReframe.setAttribute('aria-pressed', String(!isGenerate));
+
+  topicSection.hidden   = !isGenerate;
+  reframeSection.hidden = isGenerate;
+
+  btnText.textContent = isGenerate ? 'Generate ✨' : 'Reframe 💄';
+
+  if (isGenerate) {
+    reframeOutput.hidden  = true;
+    generateOutput.hidden = currentPhrase.textContent === '' && savedPhrases.length === 0;
+  } else {
+    generateOutput.hidden = true;
+    reframeOutput.hidden  = reframeOutput.children.length === 0;
+  }
+}
+
+// ======================================
+// Character counter (reframe textarea)
+// ======================================
+
+reframeInput.addEventListener('input', () => {
+  charCount.textContent = reframeInput.value.length;
+});
+
+// ======================================
 // Submit
 // ======================================
 
@@ -215,8 +263,8 @@ submitBtn.addEventListener('click', handleSubmit);
 async function handleSubmit() {
   setLoading(true);
 
-  if (demoQueue.length > 0) {
-    // Curated path — pop next phrase, simulate generate latency
+  // Generate mode + curated queue still has phrases → use the curated path.
+  if (currentMode === 'generate' && demoQueue.length > 0) {
     const next = demoQueue.shift();
     await new Promise(r => setTimeout(r, 600));
     showCurrentPhrase(next.phrase, next.usage);
@@ -224,12 +272,17 @@ async function handleSubmit() {
     return;
   }
 
-  // Fallback: real API once curated queue is empty
-  const input = topicInput.value.trim();
+  // Otherwise (Reframe mode, or Generate after queue is empty) → live API.
+  const input = currentMode === 'reframe'
+    ? reframeInput.value.trim()
+    : topicInput.value.trim();
+
   try {
-    const body = { mode: 'generate', input };
-    if (recentPhrases.length > 0)    body.recentPhrases    = recentPhrases.slice(-3);
-    if (recentCategories.length > 0) body.recentCategories = recentCategories.slice(-10);
+    const body = { mode: currentMode, input };
+    if (currentMode === 'generate') {
+      if (recentPhrases.length > 0)    body.recentPhrases    = recentPhrases.slice(-3);
+      if (recentCategories.length > 0) body.recentCategories = recentCategories.slice(-10);
+    }
 
     const res  = await fetch('/api/generate', {
       method:  'POST',
@@ -240,7 +293,11 @@ async function handleSubmit() {
     const data = await res.json();
 
     if (!res.ok) {
-      showCurrentPhrase(data.error || "the mirror's a little foggy — try again in a sec", '');
+      const errMsg = data.error || "the mirror's a little foggy — try again in a sec";
+      if (currentMode === 'reframe') addReframeCard(errMsg);
+      else showCurrentPhrase(errMsg, '');
+    } else if (currentMode === 'reframe') {
+      addReframeCard(data.phrase);
     } else {
       recentPhrases.push(data.phrase);
       if (recentPhrases.length > 3) recentPhrases.shift();
@@ -251,7 +308,9 @@ async function handleSubmit() {
       showCurrentPhrase(data.phrase, data.usage || '');
     }
   } catch {
-    showCurrentPhrase("the mirror's a little foggy — try again in a sec", '');
+    const errMsg = "the mirror's a little foggy — try again in a sec";
+    if (currentMode === 'reframe') addReframeCard(errMsg);
+    else showCurrentPhrase(errMsg, '');
   }
 
   setLoading(false);
@@ -261,6 +320,34 @@ function setLoading(loading) {
   submitBtn.disabled = loading;
   btnText.hidden     = loading;
   btnLoading.hidden  = !loading;
+}
+
+// ======================================
+// Reframe mode — growing card list
+// ======================================
+
+function addReframeCard(phrase) {
+  reframeOutput.hidden = false;
+  document.body.classList.add('has-output');
+
+  const card = document.createElement('div');
+  card.className = 'phrase-card';
+
+  const p = document.createElement('p');
+  p.className   = 'phrase-text';
+  p.textContent = phrase;
+
+  const btn = document.createElement('button');
+  btn.type      = 'button';
+  btn.className = 'copy-btn';
+  btn.setAttribute('aria-label', 'Copy phrase');
+  btn.textContent = 'Copy';
+  btn.addEventListener('click', () => copyPhrase(phrase, btn));
+
+  card.appendChild(p);
+  card.appendChild(btn);
+
+  reframeOutput.insertBefore(card, reframeOutput.firstChild);
 }
 
 // ======================================

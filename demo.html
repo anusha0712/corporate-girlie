@@ -44,10 +44,19 @@
       </div>
 
       <p class="header-dec" aria-hidden="true">♥ ✦ ♥</p>
-      <p class="instructions">Type a topic or leave it blank to get a beauty-coded phrase for your next meeting. Save the ones you like and copy them all when you're done.</p>
+      <p class="instructions">Type a topic or leave it blank to get a beauty-coded phrase for your next meeting. Save the ones you like and copy them all when you're done. Switch to Reframe to translate a corporate sentence into beauty language.</p>
     </header>
 
     <main>
+
+      <div class="mode-toggle" role="group" aria-label="Mode selection">
+        <button type="button" class="mode-btn active" id="btn-generate" aria-pressed="true">
+          Generate ✨
+        </button>
+        <button type="button" class="mode-btn" id="btn-reframe" aria-pressed="false">
+          Reframe 💄
+        </button>
+      </div>
 
       <div class="input-section" id="topic-section">
         <input
@@ -58,6 +67,19 @@
           maxlength="100"
           aria-label="Topic hint for phrase generation"
         >
+      </div>
+
+      <div class="input-section" id="reframe-section" hidden>
+        <textarea
+          id="reframe-input"
+          class="text-input reframe-textarea"
+          placeholder="Paste your corporate sentence here — we'll translate it into beauty language..."
+          maxlength="500"
+          aria-label="Business language to reframe"
+        ></textarea>
+        <div class="char-counter" aria-live="polite">
+          <span id="char-count">0</span><span class="char-max">/500</span>
+        </div>
       </div>
 
       <button type="button" class="submit-btn" id="submit-btn">
@@ -87,6 +109,8 @@
         </div>
 
       </div>
+
+      <div class="output-area" id="reframe-output" aria-live="polite" aria-label="Reframed phrases" hidden></div>
 
     </main>
 
