@@ -445,11 +445,11 @@ footer {
     font-size: 4.2rem;
   }
 
-  /* Empty state: title at top, footer at bottom, main fills the
-     middle and centers its form. Container padding stays modest;
-     the natural flex:1 on main handles the centering. */
+  /* Empty state: title + controls centered with generous top padding.
+     clamp() keeps the airy 184/164 on tall viewports but shrinks
+     proportionally on short ones so nothing ever overflows. */
   .container {
-    padding-top: clamp(28px, 6vh, 64px);
+    padding-top: clamp(24px, 18vh, 184px);
     transition: padding-top 0.45s ease;
   }
 
@@ -458,13 +458,13 @@ footer {
   }
 
   main {
-    flex: 1;
+    flex: 0 0 auto;
     padding: 0;
     gap: 26px;
   }
 
   footer {
-    margin-top: clamp(20px, 4vh, 40px);
+    margin-top: clamp(24px, 16vh, 164px);
     transition: margin-top 0.45s ease;
   }
 
@@ -826,79 +826,4 @@ footer {
 .copy-all-btn:active {
   box-shadow: 0 0 0 var(--black);
   transform: translate(2px, 2px);
-}
-
-/* ======================================
-   Medium-short viewports — compact the
-   header / card so the with-output state
-   on a typical laptop (600–700px tall)
-   doesn't push the footer off-screen.
-   ====================================== */
-@media (max-height: 700px) and (min-width: 481px) {
-  header { margin-bottom: 16px; }
-  .header-dec { display: none; }
-  .title { font-size: clamp(2.2rem, 4vw, 3.4rem) !important; }
-  .instructions { font-size: 0.92rem; line-height: 1.5; }
-
-  main { gap: 14px !important; }
-
-  .current-card { padding: 16px 22px; }
-  .phrase-text { font-size: 1.1rem; line-height: 1.4; }
-  .phrase-usage { font-size: 0.92rem; }
-
-  body.has-output .container { padding-top: 30px !important; }
-  body.has-output footer { margin-top: 24px !important; }
-}
-
-/* ======================================
-   Demo page — bigger, more dominating.
-   Triggered by <body class="demo"> in demo.html.
-   Scales with viewport height so it fills more
-   of a typical desktop screen without overflowing
-   on shorter ones.
-   ====================================== */
-body.demo .title {
-  font-size: clamp(2rem, 8vh, 5.2rem);
-}
-
-body.demo .instructions {
-  font-size: clamp(0.95rem, 1.7vh, 1.18rem);
-  max-width: 640px;
-}
-
-body.demo .text-input {
-  font-size: clamp(0.95rem, 1.6vh, 1.1rem);
-  padding: clamp(12px, 1.8vh, 20px) clamp(18px, 2.5vw, 28px);
-}
-
-body.demo .submit-btn {
-  font-size: clamp(1rem, 2vh, 1.3rem);
-  padding: clamp(12px, 2vh, 20px) clamp(40px, 6vw, 80px);
-  min-width: clamp(220px, 26vw, 360px);
-}
-
-body.demo .input-section,
-body.demo .output-area {
-  width: 100%;
-  max-width: 640px;
-}
-
-body.demo .text-input { width: 100%; }
-
-body.demo .current-card {
-  padding: clamp(18px, 2.5vh, 28px) clamp(20px, 2.5vw, 32px);
-}
-
-body.demo .phrase-text {
-  font-size: clamp(1.1rem, 2.4vh, 1.6rem);
-  line-height: 1.4;
-}
-
-body.demo .phrase-usage {
-  font-size: clamp(0.9rem, 1.6vh, 1.05rem);
-}
-
-@media (min-width: 600px) {
-  body.demo header { margin-bottom: clamp(20px, 3.5vh, 40px); }
-  body.demo main { gap: clamp(18px, 3vh, 32px); }
 }
