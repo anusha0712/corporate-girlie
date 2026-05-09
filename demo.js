@@ -14,6 +14,7 @@
 // placing two phrases with the same theme back-to-back so the demo doesn't
 // feel like 8 variations of the same idea.
 const CURATED_PHRASES = [
+  // --- Canonical examples from prompt.js (v0.1) ---
   {
     theme: "dry-shampoo",
     phrase: "We can't dry shampoo our way out of this.",
@@ -34,6 +35,7 @@ const CURATED_PHRASES = [
     phrase: "We're over-blending. Step back.",
     usage: "Use this when continued iteration is actively degrading the work rather than improving it.",
   },
+  // --- Good-rated phrases from v0.2 evals ---
   {
     theme: "palette",
     phrase: "We keep changing the palette halfway through the look.",
@@ -45,7 +47,7 @@ const CURATED_PHRASES = [
     usage: "Use this when a ship date is looming but the product is visibly unfinished.",
   },
   {
-    theme: "setting-powder",
+    theme: "setting",
     phrase: "We've been buffing this for three weeks. At some point you have to set the powder.",
     usage: "Use this when a team has spent too long refining a decision and needs to commit and move forward.",
   },
@@ -55,7 +57,7 @@ const CURATED_PHRASES = [
     usage: "Use this when a client is requesting a high-effort, high-complexity deliverable without adjusting the resources to match.",
   },
   {
-    theme: "gel-polish",
+    theme: "wet-polish",
     phrase: "Gel top coat over uncured polish — it's going to lift.",
     usage: "Use this when a team is trying to seal and present work that hasn't been given enough time to set, warning that the result won't hold.",
   },
@@ -73,6 +75,62 @@ const CURATED_PHRASES = [
     theme: "mirror",
     phrase: "This look isn't getting better by staring at it in the mirror.",
     usage: "Use this when a team keeps revisiting a decision without new information, and the deliberation itself has become the blocker.",
+  },
+  // --- Good-rated phrases from v0.3.1 evals ---
+  {
+    theme: "foundation-prep",
+    phrase: "We're putting foundation over unexfoliated skin.",
+    usage: "Use this when a launch or rollout is moving forward before the underlying roughness has actually been smoothed out.",
+  },
+  {
+    theme: "sheet-mask",
+    phrase: "A sheet mask isn't going to fix three weeks of bad sleep.",
+    usage: "Use this when a last-minute push is being framed as enough to compensate for sustained underdelivery before a high-stakes moment.",
+  },
+  {
+    theme: "burnout",
+    phrase: "We've stripped the barrier. Everything's going to sting now.",
+    usage: "Use this when sustained pressure has worn down the team's resilience and even small asks are now triggering outsized reactions.",
+  },
+  {
+    theme: "skin-as-is",
+    phrase: "We're going to have to work with the skin we have.",
+    usage: "Use this when a request for more resources has been denied and the team needs to deliver with what is already on hand.",
+  },
+  {
+    theme: "curl-pinning",
+    phrase: "We keep curling without pinning.",
+    usage: "Use this when discussion keeps shaping a decision but nothing locks it in place, so it falls back open every time.",
+  },
+  {
+    theme: "stacking-actives",
+    phrase: "They keep stacking actives without a buffer.",
+    usage: "Say this when scope keeps growing without any added time, budget, or recovery built in between demands.",
+  },
+  {
+    theme: "incompatible",
+    phrase: "You can't run a relaxer and a perm on the same head.",
+    usage: "Use this when two opposing technical approaches cannot coexist and a choice has to be made before anyone can move forward.",
+  },
+  {
+    theme: "burnout",
+    phrase: "We've been soaking in acetone for two months. The nail bed is raw.",
+    usage: "Use this when a prolonged high-intensity push has stripped the team's resilience and the damage is now visible in their output and morale.",
+  },
+  {
+    theme: "incompatible",
+    phrase: "Retinol and glycolic in the same routine. Something's going to burn.",
+    usage: "Use this when two strong but incompatible approaches are being forced together and the collision is what's actually damaging the team.",
+  },
+  {
+    theme: "wet-polish",
+    phrase: "They keep wiping the polish off before it sets.",
+    usage: "Use this when leadership scraps in-progress work and restarts direction before the team can finish anything.",
+  },
+  {
+    theme: "setting",
+    phrase: "We're setting what we have. Nothing new is going on.",
+    usage: "Use this when announcing that the current resources are locked in and no additions are coming, so the focus shifts to making what exists hold.",
   },
 ];
 
