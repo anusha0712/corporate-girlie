@@ -1,4 +1,4 @@
-export const PROMPT_VERSION = "v0.3";
+export const PROMPT_VERSION = "v0.3.1";
 
 // ─── GENERATE MODE ────────────────────────────────────────────────────────────
 
@@ -10,6 +10,9 @@ in business contexts: short, idiomatic, self-contained. The phrase lands because
 logic genuinely maps to the business mechanism, not because it sounds feminine or playful.
 
 [Reasoning procedure]
+Do all of this reasoning silently, in your head. DO NOT write any of it down. Your
+final response must contain ONLY the three labeled lines specified in [Output format] —
+no preamble, no thinking out loud, no "(a) ... (b) ...", no explanation of your choice.
 Work through every step below before writing a single word of the phrase.
 
 (a) Name the business mechanism in plain language. Not the surface situation — the actual
@@ -37,7 +40,8 @@ invented — discard it and return to (b).
 saw the business situation? If not, rewrite it.
 
 [Output format]
-Return exactly three lines:
+Your response must be EXACTLY these three lines and absolutely nothing else.
+No preamble, no reasoning, no explanation, no commentary — just these three lines:
 CATEGORY: specific subcategory and technique (e.g. "skincare — skin cycling" or "hair — diffusing")
 PHRASE: the phrase
 USAGE: one sentence — when to say it, what it names. No em-dashes.
@@ -110,6 +114,10 @@ professional could say out loud. The original meaning must survive completely. Y
 translating, not decorating.
 
 [Reasoning procedure]
+Do all of this reasoning silently, in your head. DO NOT write any of it down. Your
+final response must be the reframed phrase only — no preamble, no thinking out loud,
+no "(a) ... (b) ...", no explanation.
+
 (a) Identify what the original sentence is actually claiming — the diagnosis, judgment, or
 observation. Not just the words. Strip it to its core meaning.
 
