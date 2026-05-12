@@ -6,119 +6,120 @@
   <title>Corporate Girlie ✦ Demo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-state="empty" data-mode="generate">
 
   <div class="bg-sparkles" aria-hidden="true">
-    <span class="bg-sparkle s1">✦</span>
-    <span class="bg-sparkle s2">♥</span>
-    <span class="bg-sparkle s3">✦</span>
-    <span class="bg-sparkle s4">◆</span>
-    <span class="bg-sparkle s5">✦</span>
-    <span class="bg-sparkle s6">♥</span>
-    <span class="bg-sparkle s7">◆</span>
-    <span class="bg-sparkle s8">✦</span>
-    <span class="bg-sparkle s9">♥</span>
-    <span class="bg-sparkle s10">✦</span>
+    <svg class="memphis-sticker s1" width="68" height="68" viewBox="0 0 68 68">
+      <polygon class="f-accent2 s-text" points="34,4 64,60 4,60" stroke-width="3.5"/>
+    </svg>
+    <svg class="memphis-sticker s2" width="80" height="38" viewBox="0 0 80 38">
+      <path class="f-none s-accent1" d="M4 20 Q15 4 26 20 T48 20 T74 20" stroke-width="5" stroke-linecap="round"/>
+    </svg>
+    <svg class="memphis-sticker s3" width="58" height="58" viewBox="0 0 58 58">
+      <circle class="f-none s-text" cx="29" cy="29" r="24" stroke-width="4"/>
+      <circle class="f-accent3" cx="29" cy="29" r="10"/>
+    </svg>
+    <svg class="memphis-sticker s4" width="64" height="40" viewBox="0 0 64 40">
+      <path class="f-none s-accent4" d="M4 36 L20 4 L36 36 L52 4 L60 36" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <svg class="memphis-sticker s5" width="60" height="60" viewBox="0 0 60 60">
+      <rect class="f-text" x="4" y="4" width="52" height="52"/>
+      <rect class="f-bg" x="4" y="4" width="26" height="26"/>
+      <rect class="f-bg" x="30" y="30" width="26" height="26"/>
+    </svg>
+    <svg class="memphis-sticker s6" width="60" height="36" viewBox="0 0 60 36">
+      <path class="f-accent1 s-text" d="M0 36 A30 30 0 0 1 60 36 Z" stroke-width="3"/>
+    </svg>
+    <svg class="memphis-sticker s7" width="46" height="46" viewBox="0 0 46 46">
+      <polygon class="f-accent2 s-text" points="23,2 28,17 44,17 31,27 36,42 23,33 10,42 15,27 2,17 18,17" stroke-width="2.5"/>
+    </svg>
+    <svg class="memphis-sticker s8" width="34" height="34" viewBox="0 0 34 34">
+      <circle class="f-accent3 s-text" cx="17" cy="17" r="14" stroke-width="3"/>
+    </svg>
   </div>
 
   <div class="container">
 
     <header>
-      <div class="title-row">
-        <div class="star-group" aria-hidden="true">
-          <svg class="star tiny" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
-          <svg class="star small" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
-          <svg class="star" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
-        </div>
-
-        <h1 class="title">Corporate Girlie</h1>
-
-        <div class="star-group" aria-hidden="true">
-          <svg class="star" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
-          <svg class="star small" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
-          <svg class="star tiny" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
-        </div>
-      </div>
-
-      <p class="header-dec" aria-hidden="true">♥ ✦ ♥</p>
-      <p class="instructions">Type a topic or leave it blank to get a beauty-coded phrase for your next meeting. Save the ones you like and copy them all when you're done. Switch to Reframe to translate a corporate sentence into beauty language.</p>
+      <h1 class="title">Corporate Girlie</h1>
+      <p class="tagline">corporate language, finally beat to the gods.</p>
     </header>
 
-    <main>
+    <div class="form-stack">
 
       <div class="mode-toggle" role="group" aria-label="Mode selection">
-        <button type="button" class="mode-btn active" id="btn-generate" aria-pressed="true">
+        <button type="button" class="mode-btn active" id="btn-generate" data-mode="generate" aria-pressed="true">
           Generate ✨
         </button>
-        <button type="button" class="mode-btn" id="btn-reframe" aria-pressed="false">
+        <button type="button" class="mode-btn" id="btn-reframe" data-mode="reframe" aria-pressed="false">
           Reframe 💄
         </button>
       </div>
 
-      <div class="input-section" id="topic-section">
+      <div class="input-section" id="topic-section" data-mode-section="generate">
         <input
           type="text"
           id="topic-input"
           class="text-input"
-          placeholder="Topic hint (optional) — e.g. we keep avoiding the hard decision, budget cuts..."
+          placeholder="Topic hint (optional) — e.g. budget cuts, hard decisions…"
           maxlength="100"
           aria-label="Topic hint for phrase generation"
         >
       </div>
 
-      <div class="input-section" id="reframe-section" hidden>
+      <div class="input-section" id="reframe-section" data-mode-section="reframe" hidden>
         <textarea
           id="reframe-input"
           class="text-input reframe-textarea"
-          placeholder="Paste your corporate sentence here — we'll translate it into beauty language..."
+          placeholder="Paste a corporate sentence — we'll translate it into beauty language…"
           maxlength="500"
           aria-label="Business language to reframe"
         ></textarea>
         <div class="char-counter" aria-live="polite">
-          <span id="char-count">0</span><span class="char-max">/500</span>
+          <span id="char-count">0</span>/500
         </div>
       </div>
 
       <button type="button" class="submit-btn" id="submit-btn">
-        <span id="btn-text">Generate ✨</span>
+        <span id="btn-text">Generate <span aria-hidden="true">✦</span></span>
         <span id="btn-loading" hidden>
-          <span class="spin-star" aria-hidden="true">✦</span> generating...
+          <span class="spin-star" aria-hidden="true">✦</span> generating…
         </span>
       </button>
 
-      <div id="generate-output" hidden>
+    </div>
 
-        <div class="phrase-card current-card" id="current-card">
-          <div class="current-card-body">
-            <p class="phrase-text" id="current-phrase"></p>
-            <p class="phrase-usage" id="current-usage"></p>
-          </div>
-          <div class="current-card-actions">
-            <button type="button" class="copy-btn" id="copy-current-btn" aria-label="Copy phrase">Copy</button>
-            <button type="button" class="save-btn" id="save-btn">Save</button>
-          </div>
+    <div class="output-stack" id="output-stack">
+      <article class="phrase-card current-card" id="current-card">
+        <svg class="phrase-card-squiggle" viewBox="0 0 60 60" aria-hidden="true">
+          <path class="f-none s-text" d="M5 30 Q15 10 25 30 T45 30 T65 30" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+        <div class="current-card-body">
+          <p class="phrase-text" id="current-phrase"></p>
+          <p class="phrase-usage" id="current-usage" hidden></p>
         </div>
-
-        <div class="saved-section" id="saved-section" hidden>
-          <button type="button" class="arsenal-trigger-btn" id="saved-toggle-btn">
-            Your Arsenal ✦ (<span id="saved-count">0</span>)
-          </button>
+        <div class="current-card-actions">
+          <button type="button" class="copy-btn" id="copy-current-btn" aria-label="Copy phrase">Copy</button>
+          <button type="button" class="save-btn" id="save-btn">Save</button>
         </div>
+      </article>
+    </div>
 
-      </div>
-
-      <div class="output-area" id="reframe-output" aria-live="polite" aria-label="Reframed phrases" hidden></div>
-
-    </main>
-
-    <footer>
-      <span>made with ✦ and SPF 50</span>
-    </footer>
+    <!-- Arsenal trigger: independent of state, only depends on saved phrases -->
+    <div class="saved-section" id="saved-section" hidden>
+      <button type="button" class="arsenal-trigger-btn" id="saved-toggle-btn">
+        <span>Your Arsenal ✦ &nbsp;(<span id="saved-count">0</span>)</span>
+      </button>
+    </div>
 
   </div>
+
+  <footer>
+    <span>made with ✦ and SPF 50</span>
+  </footer>
 
   <div id="arsenal-modal" class="arsenal-modal" hidden>
     <div class="arsenal-backdrop" id="arsenal-backdrop"></div>

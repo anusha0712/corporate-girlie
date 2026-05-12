@@ -13,8 +13,7 @@ const submitBtn       = document.getElementById('submit-btn');
 const btnText         = document.getElementById('btn-text');
 const btnLoading      = document.getElementById('btn-loading');
 
-// Generate mode output
-const generateOutput  = document.getElementById('generate-output');
+// Single output stack (used by both modes)
 const currentCard     = document.getElementById('current-card');
 const currentPhrase   = document.getElementById('current-phrase');
 const currentUsage    = document.getElementById('current-usage');
@@ -33,17 +32,19 @@ const arsenalModal    = document.getElementById('arsenal-modal');
 const arsenalBackdrop = document.getElementById('arsenal-backdrop');
 const arsenalCloseBtn = document.getElementById('arsenal-close-btn');
 
-// Reframe output
-const reframeOutput   = document.getElementById('reframe-output');
-
 // -- State --
 let currentMode       = 'generate';
 let savedPhrases      = []; // { phrase, usage }
 let recentPhrases     = []; // last 3 phrases — prevents exact repetition
 let recentCategories  = []; // last 10 categories — enforces beauty domain rotation
+// Per-mode card memory: each mode keeps its own last result so switching
+// modes restores that mode's card instead of clearing it.
+let lastResults       = { generate: null, reframe: null };
 
 // ======================================
 // Mode toggle
+// Swaps body[data-mode] so CSS picks up the right filled-state values,
+// toggles which input section is visible, and updates submit text.
 // ======================================
 
 btnGenerate.addEventListener('click', () => setMode('generate'));
@@ -58,18 +59,24 @@ function setMode(mode) {
   btnReframe.classList.toggle('active', !isGenerate);
   btnReframe.setAttribute('aria-pressed', String(!isGenerate));
 
-  topicSection.hidden   = !isGenerate;
-  reframeSection.hidden = isGenerate;
+  // Toggle every section keyed to this mode (input wraps)
+  document.querySelectorAll('[data-mode-section]').forEach(el => {
+    el.hidden = el.dataset.modeSection !== mode;
+  });
 
-  btnText.textContent = isGenerate ? 'Generate ✨' : 'Reframe 💄';
+  // Body data-mode drives CSS variable cascade for filled-mode layouts
+  document.body.dataset.mode = mode;
 
-  // Show the output area for the active mode
-  if (isGenerate) {
-    reframeOutput.hidden  = true;
-    generateOutput.hidden = currentPhrase.textContent === '' && savedPhrases.length === 0;
+  btnText.innerHTML = isGenerate
+    ? 'Generate <span aria-hidden="true">✦</span>'
+    : 'Reframe <span aria-hidden="true">✦</span>';
+
+  // Restore this mode's last result, or fall back to the empty screen.
+  const last = lastResults[mode];
+  if (last) {
+    showCurrentPhrase(last.phrase, last.usage);
   } else {
-    generateOutput.hidden = true;
-    reframeOutput.hidden  = reframeOutput.children.length === 0;
+    document.body.dataset.state = 'empty';
   }
 }
 
@@ -120,7 +127,8 @@ async function handleSubmit() {
       }
       showCurrentPhrase(data.phrase, data.usage || '');
     } else {
-      addReframeCard(data.phrase);
+      // Reframe also uses the single-card pattern
+      showCurrentPhrase(data.phrase, '');
     }
   } catch {
     showError("the mirror's a little foggy — try again in a sec");
@@ -136,39 +144,42 @@ function setLoading(loading) {
 }
 
 // ======================================
-// Generate mode — current phrase display
+// Single current-phrase card (shared by both modes)
 // ======================================
 
 function showCurrentPhrase(phrase, usage) {
+  // Remember per-mode so switching modes restores this card.
+  lastResults[currentMode] = { phrase, usage };
+
   currentPhrase.textContent = phrase;
   currentUsage.textContent  = usage;
   currentUsage.hidden       = !usage;
 
-  generateOutput.hidden = false;
-  document.body.classList.add('has-output');
+  // Body state flip — CSS swaps in filled-state values
+  document.body.dataset.state = 'filled';
 
-  // Reset save button
-  saveBtn.textContent = 'Save';
-  saveBtn.disabled    = false;
-  saveBtn.classList.remove('saved');
+  // If this phrase has already been saved, reflect that on the Save button.
+  const alreadySaved = savedPhrases.some(p => p.phrase === phrase);
+  if (alreadySaved) {
+    saveBtn.textContent = 'Saved ✦';
+    saveBtn.disabled    = true;
+    saveBtn.classList.add('saved');
+  } else {
+    saveBtn.textContent = 'Save';
+    saveBtn.disabled    = false;
+    saveBtn.classList.remove('saved');
+  }
 
-  // Wire copy button to this specific phrase
   copyCurrent.onclick = () => copyPhrase(phrase, copyCurrent);
-
-  // Wire save button
-  saveBtn.onclick = () => savePhraseToList(phrase, usage);
+  saveBtn.onclick     = () => savePhraseToList(phrase, usage);
 }
 
 function showError(message) {
-  if (currentMode === 'generate') {
-    showCurrentPhrase(message, '');
-  } else {
-    addReframeCard(message);
-  }
+  showCurrentPhrase(message, '');
 }
 
 // ======================================
-// Save phrase
+// Save phrase + arsenal
 // ======================================
 
 function savePhraseToList(phrase, usage) {
@@ -228,7 +239,6 @@ function renderSavedList() {
   savedCountEl.textContent = savedPhrases.length;
 }
 
-// Arsenal modal — open / close
 function openArsenal() {
   renderSavedList();
   arsenalModal.hidden = false;
@@ -251,36 +261,8 @@ copyAllBtn.addEventListener('click', () => {
 });
 
 function showCopiedAll() {
-  copyAllBtn.textContent = 'Copied! ✨';
+  copyAllBtn.textContent = 'Copied! ✦';
   setTimeout(() => { copyAllBtn.textContent = 'Copy all'; }, 1500);
-}
-
-// ======================================
-// Reframe mode — growing card list
-// ======================================
-
-function addReframeCard(phrase) {
-  reframeOutput.hidden = false;
-  document.body.classList.add('has-output');
-
-  const card = document.createElement('div');
-  card.className = 'phrase-card';
-
-  const p = document.createElement('p');
-  p.className   = 'phrase-text';
-  p.textContent = phrase;
-
-  const btn = document.createElement('button');
-  btn.type      = 'button';
-  btn.className = 'copy-btn';
-  btn.setAttribute('aria-label', 'Copy phrase');
-  btn.textContent = 'Copy';
-  btn.addEventListener('click', () => copyPhrase(phrase, btn));
-
-  card.appendChild(p);
-  card.appendChild(btn);
-
-  reframeOutput.insertBefore(card, reframeOutput.firstChild);
 }
 
 // ======================================
@@ -294,10 +276,11 @@ function copyPhrase(phrase, btn) {
 }
 
 function showCopied(btn) {
-  btn.textContent = 'copied! ✨';
+  const original = btn.textContent;
+  btn.textContent = 'Copied ✦';
   btn.classList.add('copied');
   setTimeout(() => {
-    btn.textContent = 'Copy';
+    btn.textContent = original;
     btn.classList.remove('copied');
   }, 1500);
 }

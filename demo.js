@@ -7,12 +7,6 @@
 // ======================================
 
 // --- Curated phrase list ---
-// Sourced from prompt.js canonical examples + phrases rated "good" in
-// eval-sessions/latest.json. Edit freely before an event.
-//
-// `theme` is a short tag for the beauty domain. The shuffler below avoids
-// placing two phrases with the same theme back-to-back so the demo doesn't
-// feel like 8 variations of the same idea.
 const CURATED_PHRASES = [
   // --- Canonical examples from prompt.js (v0.1) ---
   {
@@ -137,8 +131,6 @@ const CURATED_PHRASES = [
 // --- Elements ---
 const btnGenerate    = document.getElementById('btn-generate');
 const btnReframe     = document.getElementById('btn-reframe');
-const topicSection   = document.getElementById('topic-section');
-const reframeSection = document.getElementById('reframe-section');
 const reframeInput   = document.getElementById('reframe-input');
 const charCount      = document.getElementById('char-count');
 
@@ -147,7 +139,6 @@ const btnText        = document.getElementById('btn-text');
 const btnLoading     = document.getElementById('btn-loading');
 const topicInput     = document.getElementById('topic-input');
 
-const generateOutput = document.getElementById('generate-output');
 const currentPhrase  = document.getElementById('current-phrase');
 const currentUsage   = document.getElementById('current-usage');
 const copyCurrent    = document.getElementById('copy-current-btn');
@@ -163,16 +154,14 @@ const arsenalModal   = document.getElementById('arsenal-modal');
 const arsenalBackdrop= document.getElementById('arsenal-backdrop');
 const arsenalCloseBtn= document.getElementById('arsenal-close-btn');
 
-const reframeOutput  = document.getElementById('reframe-output');
-
 // --- State ---
 let currentMode      = 'generate';
 let savedPhrases     = [];
 let recentPhrases    = [];
 let recentCategories = [];
+let lastResults      = { generate: null, reframe: null };
 
-// Shuffle the curated list once on load so each demo session orders differently.
-// Same rotation rule as the live API: no two adjacent phrases share a theme.
+// Shuffle curated list with no two adjacent phrases sharing a theme.
 let demoQueue = shuffleNoAdjacentTheme([...CURATED_PHRASES]);
 
 function shuffleInPlace(arr) {
@@ -183,15 +172,11 @@ function shuffleInPlace(arr) {
   return arr;
 }
 
-// Random shuffle, then walk the array and swap any back-to-back same-theme
-// items with a later item that fixes the adjacency. Up to 50 reshuffle attempts
-// before falling back to a greedy single-pass repair.
 function shuffleNoAdjacentTheme(arr) {
   for (let attempt = 0; attempt < 50; attempt++) {
     const candidate = shuffleInPlace([...arr]);
     if (!hasAdjacentTheme(candidate)) return candidate;
   }
-  // Greedy repair fallback
   const result = shuffleInPlace([...arr]);
   for (let i = 1; i < result.length; i++) {
     if (result[i].theme === result[i - 1].theme) {
@@ -232,17 +217,22 @@ function setMode(mode) {
   btnReframe.classList.toggle('active', !isGenerate);
   btnReframe.setAttribute('aria-pressed', String(!isGenerate));
 
-  topicSection.hidden   = !isGenerate;
-  reframeSection.hidden = isGenerate;
+  document.querySelectorAll('[data-mode-section]').forEach(el => {
+    el.hidden = el.dataset.modeSection !== mode;
+  });
 
-  btnText.textContent = isGenerate ? 'Generate ✨' : 'Reframe 💄';
+  document.body.dataset.mode = mode;
 
-  if (isGenerate) {
-    reframeOutput.hidden  = true;
-    generateOutput.hidden = currentPhrase.textContent === '' && savedPhrases.length === 0;
+  btnText.innerHTML = isGenerate
+    ? 'Generate <span aria-hidden="true">✦</span>'
+    : 'Reframe <span aria-hidden="true">✦</span>';
+
+  // Restore this mode's last result, or fall back to empty
+  const last = lastResults[mode];
+  if (last) {
+    showCurrentPhrase(last.phrase, last.usage);
   } else {
-    generateOutput.hidden = true;
-    reframeOutput.hidden  = reframeOutput.children.length === 0;
+    document.body.dataset.state = 'empty';
   }
 }
 
@@ -263,7 +253,7 @@ submitBtn.addEventListener('click', handleSubmit);
 async function handleSubmit() {
   setLoading(true);
 
-  // Generate mode + curated queue still has phrases → use the curated path.
+  // Generate mode + curated queue still has phrases → curated path.
   if (currentMode === 'generate' && demoQueue.length > 0) {
     const next = demoQueue.shift();
     await new Promise(r => setTimeout(r, 600));
@@ -294,10 +284,9 @@ async function handleSubmit() {
 
     if (!res.ok) {
       const errMsg = data.error || "the mirror's a little foggy — try again in a sec";
-      if (currentMode === 'reframe') addReframeCard(errMsg);
-      else showCurrentPhrase(errMsg, '');
+      showCurrentPhrase(errMsg, '');
     } else if (currentMode === 'reframe') {
-      addReframeCard(data.phrase);
+      showCurrentPhrase(data.phrase, '');
     } else {
       recentPhrases.push(data.phrase);
       if (recentPhrases.length > 3) recentPhrases.shift();
@@ -308,9 +297,7 @@ async function handleSubmit() {
       showCurrentPhrase(data.phrase, data.usage || '');
     }
   } catch {
-    const errMsg = "the mirror's a little foggy — try again in a sec";
-    if (currentMode === 'reframe') addReframeCard(errMsg);
-    else showCurrentPhrase(errMsg, '');
+    showCurrentPhrase("the mirror's a little foggy — try again in a sec", '');
   }
 
   setLoading(false);
@@ -323,55 +310,35 @@ function setLoading(loading) {
 }
 
 // ======================================
-// Reframe mode — growing card list
-// ======================================
-
-function addReframeCard(phrase) {
-  reframeOutput.hidden = false;
-  document.body.classList.add('has-output');
-
-  const card = document.createElement('div');
-  card.className = 'phrase-card';
-
-  const p = document.createElement('p');
-  p.className   = 'phrase-text';
-  p.textContent = phrase;
-
-  const btn = document.createElement('button');
-  btn.type      = 'button';
-  btn.className = 'copy-btn';
-  btn.setAttribute('aria-label', 'Copy phrase');
-  btn.textContent = 'Copy';
-  btn.addEventListener('click', () => copyPhrase(phrase, btn));
-
-  card.appendChild(p);
-  card.appendChild(btn);
-
-  reframeOutput.insertBefore(card, reframeOutput.firstChild);
-}
-
-// ======================================
-// Current phrase display
+// Single current-phrase card (shared by both modes)
 // ======================================
 
 function showCurrentPhrase(phrase, usage) {
+  lastResults[currentMode] = { phrase, usage };
+
   currentPhrase.textContent = phrase;
   currentUsage.textContent  = usage;
   currentUsage.hidden       = !usage;
 
-  generateOutput.hidden = false;
-  document.body.classList.add('has-output');
+  document.body.dataset.state = 'filled';
 
-  saveBtn.textContent = 'Save';
-  saveBtn.disabled    = false;
-  saveBtn.classList.remove('saved');
+  const alreadySaved = savedPhrases.some(p => p.phrase === phrase);
+  if (alreadySaved) {
+    saveBtn.textContent = 'Saved ✦';
+    saveBtn.disabled    = true;
+    saveBtn.classList.add('saved');
+  } else {
+    saveBtn.textContent = 'Save';
+    saveBtn.disabled    = false;
+    saveBtn.classList.remove('saved');
+  }
 
   copyCurrent.onclick = () => copyPhrase(phrase, copyCurrent);
   saveBtn.onclick     = () => savePhraseToList(phrase, usage);
 }
 
 // ======================================
-// Save phrase
+// Save phrase + arsenal
 // ======================================
 
 function savePhraseToList(phrase, usage) {
@@ -452,7 +419,7 @@ copyAllBtn.addEventListener('click', () => {
 });
 
 function showCopiedAll() {
-  copyAllBtn.textContent = 'Copied! ✨';
+  copyAllBtn.textContent = 'Copied! ✦';
   setTimeout(() => { copyAllBtn.textContent = 'Copy all'; }, 1500);
 }
 
@@ -467,10 +434,11 @@ function copyPhrase(phrase, btn) {
 }
 
 function showCopied(btn) {
-  btn.textContent = 'copied! ✨';
+  const original = btn.textContent;
+  btn.textContent = 'Copied ✦';
   btn.classList.add('copied');
   setTimeout(() => {
-    btn.textContent = 'Copy';
+    btn.textContent = original;
     btn.classList.remove('copied');
   }, 1500);
 }

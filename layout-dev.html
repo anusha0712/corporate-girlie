@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layout Dev Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Layout variables (edited by the tool) ── */
+    :root {
+      --ld-title-size:   3.8rem;
+      --ld-container-pt: 32px;
+      --ld-header-mb:    8px;
+      --ld-main-gap:     14px;
+      --ld-card-mt:      0px;
+      --ld-footer-mt:    16px;
+    }
+
+    /* ── Override real CSS with the dev variables ── */
+    .title { font-size: var(--ld-title-size) !important; }
+
+    .container {
+      padding-top: var(--ld-container-pt) !important;
+      justify-content: flex-start !important;
+    }
+
+    header { margin-bottom: var(--ld-header-mb) !important; }
+
+    main {
+      flex: 0 0 auto !important;
+      justify-content: flex-start !important;
+      gap: var(--ld-main-gap) !important;
+      padding: 0 !important;
+    }
+
+    #generate-output { margin-top: var(--ld-card-mt) !important; }
+
+    footer { margin-top: var(--ld-footer-mt) !important; }
+
+    /* ── Floating control panel ── */
+    #ld-panel {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 9999;
+      background: #1a0a2e;
+      color: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      width: 260px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+
+    #ld-panel h2 {
+      font-size: 13px;
+      font-weight: 700;
+      margin: 0 0 12px;
+      color: #ff9de6;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .ld-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #bf94e4;
+      margin: 10px 0 6px;
+    }
+
+    .ld-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+
+    .ld-label { flex: 1; color: #ddd; }
+
+    .ld-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ld-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      border: 1.5px solid #bf94e4;
+      background: transparent;
+      color: #fff;
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      transition: background 0.12s;
+    }
+
+    .ld-btn:hover { background: #bf94e4; }
+
+    .ld-val {
+      min-width: 48px;
+      text-align: center;
+      font-weight: 700;
+      color: #87d4f5;
+      font-size: 12px;
+    }
+
+    .ld-divider {
+      border: none;
+      border-top: 1px solid #3a2a5e;
+      margin: 12px 0 8px;
+    }
+
+    /* State toggle */
+    .ld-state-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .ld-state-btn {
+      flex: 1;
+      padding: 7px 4px;
+      border-radius: 8px;
+      border: 1.5px solid #bf94e4;
+      background: transparent;
+      color: #ddd;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s;
+    }
+
+    .ld-state-btn.active {
+      background: #e8267a;
+      border-color: #e8267a;
+      color: #fff;
+    }
+
+    /* JSON output */
+    #ld-json {
+      margin-top: 10px;
+      background: #0d0620;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-family: monospace;
+      font-size: 10px;
+      color: #87d4f5;
+      white-space: pre;
+      line-height: 1.6;
+    }
+
+    .ld-copy-btn {
+      width: 100%;
+      margin-top: 8px;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1.5px solid #87d4f5;
+      background: transparent;
+      color: #87d4f5;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s;
+    }
+
+    .ld-copy-btn:hover { background: #87d4f5; color: #1a0a2e; }
+  </style>
+</head>
+<body>
+
+  <!-- ── Sparkle background (same as real app) ── -->
+  <div class="bg-sparkles" aria-hidden="true">
+    <span class="bg-sparkle s1">✦</span>
+    <span class="bg-sparkle s2">♥</span>
+    <span class="bg-sparkle s3">✦</span>
+    <span class="bg-sparkle s4">◆</span>
+    <span class="bg-sparkle s5">✦</span>
+    <span class="bg-sparkle s6">♥</span>
+    <span class="bg-sparkle s7">◆</span>
+    <span class="bg-sparkle s8">✦</span>
+    <span class="bg-sparkle s9">♥</span>
+    <span class="bg-sparkle s10">✦</span>
+  </div>
+
+  <!-- ── Main page UI (replica) ── -->
+  <div class="container">
+
+    <header>
+      <div class="title-row">
+        <div class="star-group" aria-hidden="true">
+          <svg class="star tiny" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
+          <svg class="star small" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
+        </div>
+        <h1 class="title">Corporate Girlie</h1>
+        <div class="star-group" aria-hidden="true">
+          <svg class="star" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
+          <svg class="star small" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
+          <svg class="star tiny" viewBox="0 0 24 24"><path d="M12 0L13.8 10.2L24 12L13.8 13.8L12 24L10.2 13.8L0 12L10.2 10.2Z"/></svg>
+        </div>
+      </div>
+      <p class="header-dec" aria-hidden="true">♥ ✦ ♥</p>
+      <p class="instructions">Type a topic or leave it blank to get a beauty-coded phrase for your next meeting. Save the ones you like and copy them all when you're done. Switch to Reframe to translate a corporate sentence into beauty language.</p>
+    </header>
+
+    <main>
+      <div class="mode-toggle">
+        <button type="button" class="mode-btn active">Generate ✨</button>
+        <button type="button" class="mode-btn">Reframe 💄</button>
+      </div>
+
+      <div class="input-section">
+        <input type="text" class="text-input" placeholder="Topic hint (optional) — e.g. we keep avoiding the hard decision, budget cuts...">
+      </div>
+
+      <button type="button" class="submit-btn">Generate ✨</button>
+
+      <!-- Generated state content — shown/hidden by the tool -->
+      <div id="generate-output">
+        <div class="phrase-card current-card">
+          <div class="current-card-body">
+            <p class="phrase-text">We're diffusing on high heat. That's why it's frizzing.</p>
+            <p class="phrase-usage">Use this when a team is moving too fast through a process that requires patience and the rushed approach is directly causing the problem they are trying to avoid.</p>
+          </div>
+          <div class="current-card-actions">
+            <button type="button" class="copy-btn">Copy</button>
+            <button type="button" class="save-btn">Save ✦</button>
+          </div>
+        </div>
+
+        <div class="saved-section">
+          <button type="button" class="arsenal-trigger-btn">Your Arsenal ✦ (2)</button>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <span>made with ✦ and SPF 50</span>
+      <a href="#" class="evals-link">evals</a>
+    </footer>
+
+  </div>
+
+  <!-- ── Control panel ── -->
+  <div id="ld-panel">
+    <h2>Layout Tool ✦</h2>
+
+    <div class="ld-state-row">
+      <button class="ld-state-btn active" id="btn-empty" onclick="setState('empty')">Empty state</button>
+      <button class="ld-state-btn" id="btn-generated" onclick="setState('generated')">After generate</button>
+    </div>
+
+    <div class="ld-section-label">Title</div>
+
+    <div class="ld-row">
+      <span class="ld-label">Font size</span>
+      <div class="ld-controls">
+        <button class="ld-btn" onclick="adj('titleSize', -1)">−</button>
+        <span class="ld-val" id="v-titleSize">3.8</span>
+        <button class="ld-btn" onclick="adj('titleSize', +1)">+</button>
+      </div>
+    </div>
+
+    <div class="ld-row">
+      <span class="ld-label">Top padding</span>
+      <div class="ld-controls">
+        <button class="ld-btn" onclick="adj('containerPt', -4)">−</button>
+        <span class="ld-val" id="v-containerPt">32px</span>
+        <button class="ld-btn" onclick="adj('containerPt', +4)">+</button>
+      </div>
+    </div>
+
+    <div class="ld-section-label">Spacing</div>
+
+    <div class="ld-row">
+      <span class="ld-label">Header → controls</span>
+      <div class="ld-controls">
+        <button class="ld-btn" onclick="adj('headerMb', -4)">−</button>
+        <span class="ld-val" id="v-headerMb">8px</span>
+        <button class="ld-btn" onclick="adj('headerMb', +4)">+</button>
+      </div>
+    </div>
+
+    <div class="ld-row">
+      <span class="ld-label">Between controls</span>
+      <div class="ld-controls">
+        <button class="ld-btn" onclick="adj('mainGap', -2)">−</button>
+        <span class="ld-val" id="v-mainGap">14px</span>
+        <button class="ld-btn" onclick="adj('mainGap', +2)">+</button>
+      </div>
+    </div>
+
+    <div class="ld-row">
+      <span class="ld-label">Button → card gap</span>
+      <div class="ld-controls">
+        <button class="ld-btn" onclick="adj('cardMt', -2)">−</button>
+        <span class="ld-val" id="v-cardMt">0px</span>
+        <button class="ld-btn" onclick="adj('cardMt', +2)">+</button>
+      </div>
+    </div>
+
+    <div class="ld-row">
+      <span class="ld-label">Footer gap</span>
+      <div class="ld-controls">
+        <button class="ld-btn" onclick="adj('footerMt', -4)">−</button>
+        <span class="ld-val" id="v-footerMt">16px</span>
+        <button class="ld-btn" onclick="adj('footerMt', +4)">+</button>
+      </div>
+    </div>
+
+    <hr class="ld-divider">
+
+    <div id="ld-json"></div>
+    <button class="ld-copy-btn" onclick="copyJson()">Copy values</button>
+  </div>
+
+  <script>
+    const vals = {
+      titleSize:   3.8,   // rem
+      containerPt: 32,    // px
+      headerMb:    8,     // px
+      mainGap:     14,    // px
+      cardMt:      0,     // px
+      footerMt:    16,    // px
+    };
+
+    const root = document.documentElement;
+
+    function apply() {
+      root.style.setProperty('--ld-title-size',   vals.titleSize + 'rem');
+      root.style.setProperty('--ld-container-pt', vals.containerPt + 'px');
+      root.style.setProperty('--ld-header-mb',    vals.headerMb + 'px');
+      root.style.setProperty('--ld-main-gap',     vals.mainGap + 'px');
+      root.style.setProperty('--ld-card-mt',      vals.cardMt + 'px');
+      root.style.setProperty('--ld-footer-mt',    vals.footerMt + 'px');
+
+      document.getElementById('v-titleSize').textContent   = vals.titleSize.toFixed(1);
+      document.getElementById('v-containerPt').textContent = vals.containerPt + 'px';
+      document.getElementById('v-headerMb').textContent    = vals.headerMb + 'px';
+      document.getElementById('v-mainGap').textContent     = vals.mainGap + 'px';
+      document.getElementById('v-cardMt').textContent      = vals.cardMt + 'px';
+      document.getElementById('v-footerMt').textContent    = vals.footerMt + 'px';
+
+      document.getElementById('ld-json').textContent =
+        `titleSize:   ${vals.titleSize}rem\n` +
+        `containerPt: ${vals.containerPt}px\n` +
+        `headerMb:    ${vals.headerMb}px\n` +
+        `mainGap:     ${vals.mainGap}px\n` +
+        `cardMt:      ${vals.cardMt}px\n` +
+        `footerMt:    ${vals.footerMt}px`;
+    }
+
+    function adj(key, delta) {
+      if (key === 'titleSize') {
+        vals[key] = Math.max(1.5, Math.round((vals[key] + delta * 0.1) * 10) / 10);
+      } else {
+        vals[key] = Math.max(0, vals[key] + delta);
+      }
+      apply();
+    }
+
+    function setState(state) {
+      const output = document.getElementById('generate-output');
+      output.hidden = (state === 'empty');
+      document.getElementById('btn-empty').classList.toggle('active', state === 'empty');
+      document.getElementById('btn-generated').classList.toggle('active', state === 'generated');
+    }
+
+    function copyJson() {
+      const text = document.getElementById('ld-json').textContent;
+      navigator.clipboard.writeText(text);
+      const btn = document.querySelector('.ld-copy-btn');
+      btn.textContent = 'Copied ✦';
+      setTimeout(() => btn.textContent = 'Copy values', 2000);
+    }
+
+    // Start in empty state
+    setState('empty');
+    apply();
+  </script>
+</body>
+</html>

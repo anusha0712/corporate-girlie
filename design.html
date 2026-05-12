@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corporate Girlie ✦ Memphis Tuner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+
+/* =====================================================================
+   Reset + tunable variables.
+
+   Colors live in --c-* slots, swapped wholesale by palette presets.
+   Layout/size/angle values live in --m-* slots, driven by the active
+   state's value set (empty vs filled).
+   ===================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+:root {
+  /* Color palette (default Memphis Pink) */
+  --c-bg:       #fff8e8;
+  --c-text:     #1a0a2e;
+  --c-surface:  #ffffff;
+  --c-accent1:  #ff71ce;
+  --c-accent2:  #ffce5c;
+  --c-accent3:  #86ccca;
+  --c-accent4:  #6a7bb4;
+
+  --column-max: 820px;
+
+  /* per-element Y offsets (px) — move each element up/down independently */
+  --m-y-title:     0px;
+  --m-y-tagline: -28px;
+  --m-y-toggle:    0px;
+  --m-y-input:     0px;
+  --m-y-button:    0px;
+  --m-y-card:      0px;
+  --m-y-arsenal:   0px;
+
+  /* angles (deg) */
+  --m-angle-title:    0deg;
+  --m-angle-tagline:  0deg;
+  --m-angle-toggle:   0deg;
+  --m-angle-input:    0deg;
+  --m-angle-button:   0deg;
+  --m-angle-card:    -0.8deg;
+  --m-angle-arsenal:  0.5deg;
+
+  /* shared sizes */
+  --m-size-title:      100px;
+  --m-size-border:       3px;
+  --m-size-tagline:     18px;
+
+  /* shadows */
+  --m-shadow-title:      8px;
+  --m-shadow-button:     8px;
+  --m-shadow-card:      10px;
+  --m-shadow-arsenal:    6px;
+
+  /* form */
+  --m-input-width:      680px;
+  --m-input-font:        16px;
+  --m-submit-font:       17px;
+  --m-submit-pad-x:      56px;
+
+  /* card */
+  --m-card-pad:          30px;
+  --m-card-phrase:       21px;
+  --m-card-usage:        14px;
+
+  /* mini btn + arsenal */
+  --m-mini-font:         12px;
+  --m-mini-pad-y:        10px;
+  --m-arsenal-font:      14px;
+  --m-arsenal-pad-y:     16px;
+
+  --m-sticker-scale:    1;
+
+  /* spacing */
+  --m-gap-header:       54px;
+  --m-gap-form:         40px;
+  --m-gap-section:      24px;
+  --m-pad-top:           0px;
+}
+
+html { height: 100%; overflow: hidden; }
+body {
+  height: 100svh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle, var(--c-text) 1.5px, transparent 1.5px) 0 0 / 24px 24px,
+    var(--c-bg);
+  color: var(--c-text);
+  font-family: 'Space Grotesk', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.25s ease;
+}
+
+/* ===== mock page shell ===== */
+.mock-page {
+  position: relative;
+  height: 100svh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  isolation: isolate;
+}
+.mock-page-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.mock-page-column {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: var(--column-max);
+  margin: 0 auto;
+  padding: var(--m-pad-top) 28px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--m-gap-section);
+  transition: gap 0.3s ease, padding 0.3s ease;
+}
+body[data-state="filled"] .mock-page-column { justify-content: flex-start; }
+
+.mock-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--m-gap-header);
+  text-align: center;
+  transition: gap 0.3s ease;
+}
+.mock-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--m-gap-form);
+  width: 100%;
+  transition: gap 0.3s ease;
+}
+
+/* ===== Title ===== */
+.mock-title {
+  font-family: 'Bagel Fat One', cursive;
+  font-size: var(--m-size-title);
+  line-height: 0.95;
+  color: var(--c-accent1);
+  -webkit-text-stroke: 4px var(--c-text);
+  paint-order: stroke fill;
+  transform: translateY(var(--m-y-title)) rotate(var(--m-angle-title));
+  display: inline-block;
+  transition: transform 0.3s, filter 0.2s;
+  filter: drop-shadow(var(--m-shadow-title) var(--m-shadow-title) 0 var(--c-accent2));
+  white-space: nowrap;
+}
+.mock-title:hover {
+  transform: translateY(var(--m-y-title)) rotate(var(--m-angle-title)) scale(1.02);
+}
+
+/* ===== Tagline — marker-highlight style ===== */
+.mock-tagline {
+  color: var(--c-text);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-style: italic;
+  font-size: var(--m-size-tagline);
+  line-height: 1.45;
+  display: inline-block;
+  padding: 0 10px 2px;
+  background-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 55%,
+    var(--c-accent2) 55%,
+    var(--c-accent2) 92%,
+    transparent 92%
+  );
+  background-repeat: no-repeat;
+  transform: translateY(var(--m-y-tagline)) rotate(var(--m-angle-tagline));
+  transition: transform 0.3s ease;
+  letter-spacing: 0.01em;
+}
+
+/* ===== form: mode toggle, input, submit ===== */
+.mock-mode-toggle {
+  display: inline-flex;
+  background: var(--c-surface);
+  border: var(--m-size-border) solid var(--c-text);
+  transform: translateY(var(--m-y-toggle)) rotate(var(--m-angle-toggle));
+  box-shadow: 6px 6px 0 var(--c-text);
+  transition: transform 0.3s ease;
+}
+.mock-mode-btn {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 14px 28px;
+  color: var(--c-text);
+  border-right: var(--m-size-border) solid var(--c-text);
+  background: var(--c-surface);
+  letter-spacing: 0.02em;
+}
+.mock-mode-btn:last-child { border-right: none; }
+.mock-mode-btn.is-active { background: var(--c-accent3); color: var(--c-text); }
+
+.mock-input-wrap { width: 100%; max-width: var(--m-input-width); }
+.mock-input {
+  display: block;
+  width: 100%;
+  background: var(--c-surface);
+  border: var(--m-size-border) solid var(--c-text);
+  padding: 16px 22px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: var(--m-input-font);
+  font-weight: 500;
+  color: var(--c-text);
+  box-shadow: 5px 5px 0 var(--c-accent4);
+  outline: none;
+  transform: translateY(var(--m-y-input)) rotate(var(--m-angle-input));
+  transition: transform 0.3s ease;
+}
+.mock-input::placeholder { color: var(--c-accent4); font-weight: 500; opacity: 0.9; }
+
+/* textarea variant for Reframe mode */
+.mock-textarea {
+  min-height: 80px;
+  resize: vertical;
+  line-height: 1.5;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.mock-char-counter {
+  margin-top: 8px;
+  text-align: right;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-accent4);
+}
+.mock-char-counter span { color: var(--c-text); }
+
+.mock-submit {
+  background: var(--c-accent1);
+  color: var(--c-text);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: var(--m-submit-font);
+  border: var(--m-size-border) solid var(--c-text);
+  padding: 18px var(--m-submit-pad-x);
+  letter-spacing: 0.03em;
+  box-shadow:
+    var(--m-shadow-button) var(--m-shadow-button) 0 var(--c-accent2),
+    var(--m-shadow-button) var(--m-shadow-button) 0 var(--m-size-border) var(--c-text);
+  transform: translateY(var(--m-y-button)) rotate(var(--m-angle-button));
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+.mock-submit:hover  { transform: translateY(var(--m-y-button)) rotate(var(--m-angle-button)) translate(-2px, -2px); }
+.mock-submit:active { transform: translateY(var(--m-y-button)) rotate(var(--m-angle-button)) translate(5px, 5px); }
+
+/* ===== output / card ===== */
+.mock-output {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+body[data-state="empty"] .mock-output { display: none; }
+
+.mock-output-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.mock-output-pane[hidden] { display: none; }
+
+.mock-card {
+  background: var(--c-surface);
+  border: var(--m-size-border) solid var(--c-text);
+  padding: var(--m-card-pad);
+  box-shadow:
+    var(--m-shadow-card) var(--m-shadow-card) 0 var(--c-accent3),
+    var(--m-shadow-card) var(--m-shadow-card) 0 var(--m-size-border) var(--c-text);
+  transform: translateY(var(--m-y-card)) rotate(var(--m-angle-card));
+  transition: transform 0.3s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.mock-card-squiggle {
+  position: absolute;
+  top: -22px; right: -16px;
+  width: 60px; height: 60px;
+  transform: rotate(15deg);
+  pointer-events: none;
+}
+.mock-card-phrase {
+  color: var(--c-text);
+  font-weight: 700;
+  font-size: var(--m-card-phrase);
+  line-height: 1.35;
+}
+.mock-card-usage {
+  color: var(--c-accent4);
+  font-weight: 500;
+  font-size: var(--m-card-usage);
+  line-height: 1.55;
+}
+.mock-card-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+.mock-mini-btn {
+  background: var(--c-surface);
+  color: var(--c-text);
+  border: var(--m-size-border) solid var(--c-text);
+  padding: var(--m-mini-pad-y) 18px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: var(--m-mini-font);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: 4px 4px 0 var(--c-text);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.mock-mini-btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--c-text); }
+.mock-mini-btn.is-save { background: var(--c-accent2); color: var(--c-text); }
+
+.mock-arsenal {
+  background: var(--c-accent4);
+  color: var(--c-surface);
+  border: var(--m-size-border) solid var(--c-text);
+  padding: var(--m-arsenal-pad-y) 22px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: var(--m-arsenal-font);
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow:
+    var(--m-shadow-arsenal) var(--m-shadow-arsenal) 0 var(--c-accent1),
+    var(--m-shadow-arsenal) var(--m-shadow-arsenal) 0 var(--m-size-border) var(--c-text);
+  transform: translateY(var(--m-y-arsenal)) rotate(var(--m-angle-arsenal));
+  transition: transform 0.3s ease;
+}
+.mock-arsenal::after { content: '→'; opacity: 0.7; }
+
+.mock-footer {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  padding: 12px 24px 18px;
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-text);
+  font-weight: 700;
+  opacity: 0.7;
+}
+
+/* ===== stickers ===== */
+.memphis-sticker {
+  position: absolute;
+  pointer-events: none;
+  animation: memphis-sway 5s ease-in-out infinite;
+  transform-origin: center;
+}
+.memphis-sticker.s1 { top: 7%;  right: 8%;  animation-delay: 0s;    }
+.memphis-sticker.s2 { top: 18%; left: 4%;   animation-delay: -1s;   }
+.memphis-sticker.s3 { top: 33%; right: 13%; animation-delay: -2s;   }
+.memphis-sticker.s4 { top: 50%; left: 3%;   animation-delay: -0.5s; }
+.memphis-sticker.s5 { top: 64%; right: 6%;  animation-delay: -3s;   }
+.memphis-sticker.s6 { top: 80%; left: 8%;   animation-delay: -1.5s; }
+.memphis-sticker.s7 { top: 92%; right: 22%; animation-delay: -2.5s; }
+.memphis-sticker.s8 { top: 68%; left: 18%;  animation-delay: -4s;   }
+@keyframes memphis-sway {
+  0%, 100% { transform: scale(var(--m-sticker-scale)) rotate(0deg) translateY(0); }
+  50%      { transform: scale(var(--m-sticker-scale)) rotate(3deg) translateY(-6px); }
+}
+
+/* Sticker fill/stroke classes — pick up palette colors */
+.f-accent1 { fill: var(--c-accent1); }
+.f-accent2 { fill: var(--c-accent2); }
+.f-accent3 { fill: var(--c-accent3); }
+.f-accent4 { fill: var(--c-accent4); }
+.f-text    { fill: var(--c-text); }
+.f-bg      { fill: var(--c-bg); }
+.f-none    { fill: none; }
+.s-text    { stroke: var(--c-text); }
+.s-accent1 { stroke: var(--c-accent1); }
+.s-accent3 { stroke: var(--c-accent3); }
+.s-accent4 { stroke: var(--c-accent4); }
+
+/* =====================================================================
+   Control panel — tabs across the top, per-tab content below.
+   ===================================================================== */
+#m-panel {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 312px;
+  max-height: calc(100svh - 32px);
+  overflow-y: auto;
+  z-index: 9999;
+  background: #1a0a2e;
+  color: #fff;
+  border-radius: 10px;
+  padding: 14px 14px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  border: 1px solid #2a2350;
+}
+#m-panel h2 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: #ff71ce;
+}
+#m-panel h3 {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8a82b8;
+  margin: 10px 0 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #2a2350;
+}
+.m-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 0;
+  gap: 8px;
+}
+.m-label { font-size: 12px; color: #e9dafa; }
+.m-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.m-btn {
+  background: #2a1d4a;
+  color: #fff;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.m-btn:hover { background: #3d2a66; }
+.m-val {
+  min-width: 52px;
+  text-align: center;
+  font-family: 'SF Mono', Menlo, monospace;
+  font-size: 11px;
+  color: #ffce5c;
+}
+
+/* state pills */
+.m-state-group {
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  background: #0c0a1e;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+.m-state-btn {
+  flex: 1;
+  padding: 7px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #b0a0e0;
+  border-radius: 4px;
+  transition: background 0.15s, color 0.15s;
+}
+.m-state-btn.is-active { background: #e8267a; color: #fff; }
+.m-state-hint {
+  font-size: 10px;
+  color: #6e6594;
+  margin: 3px 0 6px;
+  font-style: italic;
+}
+
+/* tabs */
+.m-tabs {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+  padding: 2px;
+  background: #0c0a1e;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+.m-tab {
+  padding: 7px 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #b0a0e0;
+  border-radius: 4px;
+  transition: background 0.15s, color 0.15s;
+}
+.m-tab:hover { color: #fff; }
+.m-tab.is-active { background: #ff71ce; color: #1a0a2e; }
+
+.m-tab-panel { display: none; }
+.m-tab-panel.is-active { display: block; }
+
+/* color palette buttons */
+.m-pal-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 4px;
+  background: #2a1d4a;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #e9dafa;
+  letter-spacing: 0.02em;
+  transition: background 0.15s, transform 0.1s;
+}
+.m-pal-btn:hover { background: #3d2a66; }
+.m-pal-btn.is-active {
+  background: #ff71ce;
+  color: #1a0a2e;
+  font-weight: 700;
+}
+.m-pal-swatches {
+  display: inline-flex;
+  gap: 3px;
+}
+.m-pal-swatches span {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+/* json output + copy */
+#m-json {
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: #0c0a1e;
+  color: #86ccca;
+  border-radius: 6px;
+  font-family: 'SF Mono', Menlo, monospace;
+  font-size: 10px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 200px;
+  overflow-y: auto;
+}
+#m-copy {
+  margin-top: 8px;
+  width: 100%;
+  padding: 9px;
+  background: #ff71ce;
+  color: #1a0a2e;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: background 0.15s;
+}
+#m-copy:hover { background: #ffce5c; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+</style>
+</head>
+<body data-state="empty">
+
+<!-- ─────────────────────────────────────────────────────────────────────
+     MOCK PAGE
+     ───────────────────────────────────────────────────────────────────── -->
+<main class="mock-page">
+
+  <div class="mock-page-bg" aria-hidden="true">
+    <svg class="memphis-sticker s1" width="68" height="68" viewBox="0 0 68 68">
+      <polygon class="f-accent2 s-text" points="34,4 64,60 4,60" stroke-width="3.5"/>
+    </svg>
+    <svg class="memphis-sticker s2" width="80" height="38" viewBox="0 0 80 38">
+      <path class="f-none s-accent1" d="M4 20 Q15 4 26 20 T48 20 T74 20" stroke-width="5" stroke-linecap="round"/>
+    </svg>
+    <svg class="memphis-sticker s3" width="58" height="58" viewBox="0 0 58 58">
+      <circle class="f-none s-text" cx="29" cy="29" r="24" stroke-width="4"/>
+      <circle class="f-accent3" cx="29" cy="29" r="10"/>
+    </svg>
+    <svg class="memphis-sticker s4" width="64" height="40" viewBox="0 0 64 40">
+      <path class="f-none s-accent4" d="M4 36 L20 4 L36 36 L52 4 L60 36" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <svg class="memphis-sticker s5" width="60" height="60" viewBox="0 0 60 60">
+      <rect class="f-text" x="4" y="4" width="52" height="52"/>
+      <rect class="f-bg" x="4" y="4" width="26" height="26"/>
+      <rect class="f-bg" x="30" y="30" width="26" height="26"/>
+    </svg>
+    <svg class="memphis-sticker s6" width="60" height="36" viewBox="0 0 60 36">
+      <path class="f-accent1 s-text" d="M0 36 A30 30 0 0 1 60 36 Z" stroke-width="3"/>
+    </svg>
+    <svg class="memphis-sticker s7" width="46" height="46" viewBox="0 0 46 46">
+      <polygon class="f-accent2 s-text" points="23,2 28,17 44,17 31,27 36,42 23,33 10,42 15,27 2,17 18,17" stroke-width="2.5"/>
+    </svg>
+    <svg class="memphis-sticker s8" width="34" height="34" viewBox="0 0 34 34">
+      <circle class="f-accent3 s-text" cx="17" cy="17" r="14" stroke-width="3"/>
+    </svg>
+  </div>
+
+  <div class="mock-page-column">
+
+    <section class="mock-header">
+      <h1 class="mock-title">Corporate Girlie</h1>
+      <p class="mock-tagline">corporate language, finally beat to the gods.</p>
+    </section>
+
+    <section class="mock-form">
+      <div class="mock-mode-toggle" role="group" aria-label="Mode">
+        <button class="mock-mode-btn is-active" type="button" data-mode="generate">Generate ✨</button>
+        <button class="mock-mode-btn" type="button" data-mode="reframe">Reframe 💄</button>
+      </div>
+
+      <div class="mock-input-wrap" data-mode-section="generate">
+        <input class="mock-input" type="text" placeholder="Topic hint — e.g. budget cuts, hard decisions…">
+      </div>
+
+      <div class="mock-input-wrap" data-mode-section="reframe" hidden>
+        <textarea class="mock-input mock-textarea" maxlength="500" placeholder="Paste a corporate sentence — we'll translate it into beauty language…"></textarea>
+        <div class="mock-char-counter"><span>0</span>/500</div>
+      </div>
+
+      <button class="mock-submit" type="button">
+        <span class="mock-submit-text">Generate</span> <span aria-hidden="true">✦</span>
+      </button>
+    </section>
+
+    <section class="mock-output">
+
+      <!-- Generate mode: single phrase card + Arsenal trigger -->
+      <div class="mock-output-pane" data-mode-section="generate">
+        <article class="mock-card">
+          <svg class="mock-card-squiggle" viewBox="0 0 60 60" aria-hidden="true">
+            <path class="f-none s-text" d="M5 30 Q15 10 25 30 T45 30 T65 30" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+          <div>
+            <p class="mock-card-phrase">We can't dry shampoo our way out of this.</p>
+          </div>
+          <p class="mock-card-usage">Use this when a quick cosmetic patch is being proposed for what's actually a structural problem.</p>
+          <div class="mock-card-actions">
+            <button class="mock-mini-btn" type="button">Copy</button>
+            <button class="mock-mini-btn is-save" type="button">Save ✦</button>
+          </div>
+        </article>
+
+        <button class="mock-arsenal" type="button">
+          <span>Your Arsenal ✦ &nbsp;(3)</span>
+        </button>
+      </div>
+
+      <!-- Reframe mode: same shape as generate — single card + Arsenal trigger -->
+      <div class="mock-output-pane" data-mode-section="reframe" hidden>
+        <article class="mock-card">
+          <svg class="mock-card-squiggle" viewBox="0 0 60 60" aria-hidden="true">
+            <path class="f-none s-text" d="M5 30 Q15 10 25 30 T45 30 T65 30" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+          <div>
+            <p class="mock-card-phrase">Strategic pivots need a primer first — let's read the room before we contour the budget.</p>
+          </div>
+          <p class="mock-card-usage">Reframed from: "We need to evaluate market dynamics before making strategic pivots."</p>
+          <div class="mock-card-actions">
+            <button class="mock-mini-btn" type="button">Copy</button>
+            <button class="mock-mini-btn is-save" type="button">Save ✦</button>
+          </div>
+        </article>
+
+        <button class="mock-arsenal" type="button">
+          <span>Your Arsenal ✦ &nbsp;(3)</span>
+        </button>
+      </div>
+
+    </section>
+
+  </div>
+
+  <footer class="mock-footer">made with ✦ and SPF 50</footer>
+</main>
+
+<!-- ─────────────────────────────────────────────────────────────────────
+     CONTROL PANEL — state + tabs (Move / Font / Angle / Size / Color)
+     ───────────────────────────────────────────────────────────────────── -->
+<aside id="m-panel">
+  <h2>Memphis Tuner ✦</h2>
+
+  <div class="m-state-group" role="group" aria-label="State">
+    <button class="m-state-btn is-active" data-set-state="empty"  type="button">Empty</button>
+    <button class="m-state-btn"           data-set-state="filled" type="button">Filled</button>
+  </div>
+  <div class="m-state-hint">edits apply to the active state (color palette is shared)</div>
+
+  <div class="m-tabs" role="tablist">
+    <button class="m-tab is-active" data-set-tab="move"  type="button">Move</button>
+    <button class="m-tab"           data-set-tab="font"  type="button">Font</button>
+    <button class="m-tab"           data-set-tab="angle" type="button">Angle</button>
+    <button class="m-tab"           data-set-tab="size"  type="button">Size</button>
+    <button class="m-tab"           data-set-tab="color" type="button">Color</button>
+  </div>
+
+  <!-- ===== MOVE tab ===== -->
+  <div class="m-tab-panel is-active" data-panel="move">
+    <h3>Move element (Y offset)</h3>
+    <div class="m-row"><span class="m-label">Title</span>      <div class="m-controls"><button class="m-btn" type="button" onclick="adj('yTitle',-4)">↑</button><span class="m-val" id="v-yTitle"></span><button class="m-btn" type="button" onclick="adj('yTitle',4)">↓</button></div></div>
+    <div class="m-row"><span class="m-label">Tagline</span>    <div class="m-controls"><button class="m-btn" type="button" onclick="adj('yTagline',-4)">↑</button><span class="m-val" id="v-yTagline"></span><button class="m-btn" type="button" onclick="adj('yTagline',4)">↓</button></div></div>
+    <div class="m-row"><span class="m-label">Mode toggle</span><div class="m-controls"><button class="m-btn" type="button" onclick="adj('yToggle',-4)">↑</button><span class="m-val" id="v-yToggle"></span><button class="m-btn" type="button" onclick="adj('yToggle',4)">↓</button></div></div>
+    <div class="m-row"><span class="m-label">Input</span>      <div class="m-controls"><button class="m-btn" type="button" onclick="adj('yInput',-4)">↑</button><span class="m-val" id="v-yInput"></span><button class="m-btn" type="button" onclick="adj('yInput',4)">↓</button></div></div>
+    <div class="m-row"><span class="m-label">Submit</span>     <div class="m-controls"><button class="m-btn" type="button" onclick="adj('yButton',-4)">↑</button><span class="m-val" id="v-yButton"></span><button class="m-btn" type="button" onclick="adj('yButton',4)">↓</button></div></div>
+    <div class="m-row"><span class="m-label">Card</span>       <div class="m-controls"><button class="m-btn" type="button" onclick="adj('yCard',-4)">↑</button><span class="m-val" id="v-yCard"></span><button class="m-btn" type="button" onclick="adj('yCard',4)">↓</button></div></div>
+    <div class="m-row"><span class="m-label">Arsenal</span>    <div class="m-controls"><button class="m-btn" type="button" onclick="adj('yArsenal',-4)">↑</button><span class="m-val" id="v-yArsenal"></span><button class="m-btn" type="button" onclick="adj('yArsenal',4)">↓</button></div></div>
+
+    <h3>Section spacing</h3>
+    <div class="m-row"><span class="m-label">Header gap</span> <div class="m-controls"><button class="m-btn" type="button" onclick="adj('gapHeader',-2)">−</button><span class="m-val" id="v-gapHeader"></span><button class="m-btn" type="button" onclick="adj('gapHeader',2)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Form gap</span>   <div class="m-controls"><button class="m-btn" type="button" onclick="adj('gapForm',-2)">−</button><span class="m-val" id="v-gapForm"></span><button class="m-btn" type="button" onclick="adj('gapForm',2)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Section gap</span><div class="m-controls"><button class="m-btn" type="button" onclick="adj('gapSection',-4)">−</button><span class="m-val" id="v-gapSection"></span><button class="m-btn" type="button" onclick="adj('gapSection',4)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Top padding</span><div class="m-controls"><button class="m-btn" type="button" onclick="adj('padTop',-4)">−</button><span class="m-val" id="v-padTop"></span><button class="m-btn" type="button" onclick="adj('padTop',4)">+</button></div></div>
+  </div>
+
+  <!-- ===== FONT tab ===== -->
+  <div class="m-tab-panel" data-panel="font">
+    <h3>Font sizes</h3>
+    <div class="m-row"><span class="m-label">Title</span>       <div class="m-controls"><button class="m-btn" type="button" onclick="adj('sizeTitle',-2)">−</button><span class="m-val" id="v-sizeTitle"></span><button class="m-btn" type="button" onclick="adj('sizeTitle',2)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Tagline</span>     <div class="m-controls"><button class="m-btn" type="button" onclick="adj('sizeTagline',-1)">−</button><span class="m-val" id="v-sizeTagline"></span><button class="m-btn" type="button" onclick="adj('sizeTagline',1)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Input</span>       <div class="m-controls"><button class="m-btn" type="button" onclick="adj('inputFont',-1)">−</button><span class="m-val" id="v-inputFont"></span><button class="m-btn" type="button" onclick="adj('inputFont',1)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Submit</span>      <div class="m-controls"><button class="m-btn" type="button" onclick="adj('submitFont',-1)">−</button><span class="m-val" id="v-submitFont"></span><button class="m-btn" type="button" onclick="adj('submitFont',1)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Card phrase</span> <div class="m-controls"><button class="m-btn" type="button" onclick="adj('cardPhrase',-1)">−</button><span class="m-val" id="v-cardPhrase"></span><button class="m-btn" type="button" onclick="adj('cardPhrase',1)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Card usage</span>  <div class="m-controls"><button class="m-btn" type="button" onclick="adj('cardUsage',-1)">−</button><span class="m-val" id="v-cardUsage"></span><button class="m-btn" type="button" onclick="adj('cardUsage',1)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Mini buttons</span><div class="m-controls"><button class="m-btn" type="button" onclick="adj('miniFont',-1)">−</button><span class="m-val" id="v-miniFont"></span><button class="m-btn" type="button" onclick="adj('miniFont',1)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Arsenal</span>     <div class="m-controls"><button class="m-btn" type="button" onclick="adj('arsenalFont',-1)">−</button><span class="m-val" id="v-arsenalFont"></span><button class="m-btn" type="button" onclick="adj('arsenalFont',1)">+</button></div></div>
+  </div>
+
+  <!-- ===== ANGLE tab ===== -->
+  <div class="m-tab-panel" data-panel="angle">
+    <h3>Rotations</h3>
+    <div class="m-row"><span class="m-label">Title</span>      <div class="m-controls"><button class="m-btn" type="button" onclick="adj('angleTitle',-0.5)">−</button><span class="m-val" id="v-angleTitle"></span><button class="m-btn" type="button" onclick="adj('angleTitle',0.5)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Tagline</span>    <div class="m-controls"><button class="m-btn" type="button" onclick="adj('angleTagline',-0.5)">−</button><span class="m-val" id="v-angleTagline"></span><button class="m-btn" type="button" onclick="adj('angleTagline',0.5)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Mode toggle</span><div class="m-controls"><button class="m-btn" type="button" onclick="adj('angleToggle',-0.5)">−</button><span class="m-val" id="v-angleToggle"></span><button class="m-btn" type="button" onclick="adj('angleToggle',0.5)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Input</span>      <div class="m-controls"><button class="m-btn" type="button" onclick="adj('angleInput',-0.5)">−</button><span class="m-val" id="v-angleInput"></span><button class="m-btn" type="button" onclick="adj('angleInput',0.5)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Submit</span>     <div class="m-controls"><button class="m-btn" type="button" onclick="adj('angleButton',-0.5)">−</button><span class="m-val" id="v-angleButton"></span><button class="m-btn" type="button" onclick="adj('angleButton',0.5)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Card</span>       <div class="m-controls"><button class="m-btn" type="button" onclick="adj('angleCard',-0.5)">−</button><span class="m-val" id="v-angleCard"></span><button class="m-btn" type="button" onclick="adj('angleCard',0.5)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Arsenal</span>    <div class="m-controls"><button class="m-btn" type="button" onclick="adj('angleArsenal',-0.5)">−</button><span class="m-val" id="v-angleArsenal"></span><button class="m-btn" type="button" onclick="adj('angleArsenal',0.5)">+</button></div></div>
+  </div>
+
+  <!-- ===== SIZE tab ===== -->
+  <div class="m-tab-panel" data-panel="size">
+    <h3>Dimensions</h3>
+    <div class="m-row"><span class="m-label">Border width</span><div class="m-controls"><button class="m-btn" type="button" onclick="adj('sizeBorder',-0.5)">−</button><span class="m-val" id="v-sizeBorder"></span><button class="m-btn" type="button" onclick="adj('sizeBorder',0.5)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Input width</span> <div class="m-controls"><button class="m-btn" type="button" onclick="adj('inputWidth',-20)">−</button><span class="m-val" id="v-inputWidth"></span><button class="m-btn" type="button" onclick="adj('inputWidth',20)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Submit pad-X</span><div class="m-controls"><button class="m-btn" type="button" onclick="adj('submitPadX',-4)">−</button><span class="m-val" id="v-submitPadX"></span><button class="m-btn" type="button" onclick="adj('submitPadX',4)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Card padding</span><div class="m-controls"><button class="m-btn" type="button" onclick="adj('cardPad',-2)">−</button><span class="m-val" id="v-cardPad"></span><button class="m-btn" type="button" onclick="adj('cardPad',2)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Mini pad-Y</span>  <div class="m-controls"><button class="m-btn" type="button" onclick="adj('miniPadY',-1)">−</button><span class="m-val" id="v-miniPadY"></span><button class="m-btn" type="button" onclick="adj('miniPadY',1)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Arsenal pad-Y</span><div class="m-controls"><button class="m-btn" type="button" onclick="adj('arsenalPadY',-2)">−</button><span class="m-val" id="v-arsenalPadY"></span><button class="m-btn" type="button" onclick="adj('arsenalPadY',2)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Sticker scale</span><div class="m-controls"><button class="m-btn" type="button" onclick="adj('stickerScale',-0.05)">−</button><span class="m-val" id="v-stickerScale"></span><button class="m-btn" type="button" onclick="adj('stickerScale',0.05)">+</button></div></div>
+
+    <h3>Shadows</h3>
+    <div class="m-row"><span class="m-label">Title</span>      <div class="m-controls"><button class="m-btn" type="button" onclick="adj('shadowTitle',-1)">−</button><span class="m-val" id="v-shadowTitle"></span><button class="m-btn" type="button" onclick="adj('shadowTitle',1)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Submit</span>     <div class="m-controls"><button class="m-btn" type="button" onclick="adj('shadowButton',-1)">−</button><span class="m-val" id="v-shadowButton"></span><button class="m-btn" type="button" onclick="adj('shadowButton',1)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Card</span>       <div class="m-controls"><button class="m-btn" type="button" onclick="adj('shadowCard',-1)">−</button><span class="m-val" id="v-shadowCard"></span><button class="m-btn" type="button" onclick="adj('shadowCard',1)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Arsenal</span>    <div class="m-controls"><button class="m-btn" type="button" onclick="adj('shadowArsenal',-1)">−</button><span class="m-val" id="v-shadowArsenal"></span><button class="m-btn" type="button" onclick="adj('shadowArsenal',1)">+</button></div></div>
+  </div>
+
+  <!-- ===== COLOR tab ===== -->
+  <div class="m-tab-panel" data-panel="color">
+    <h3>Palette</h3>
+    <div id="m-palette-list"></div>
+  </div>
+
+  <pre id="m-json"></pre>
+  <button id="m-copy" type="button" onclick="copyJson()">Copy values</button>
+</aside>
+
+<script>
+// ============================================================
+// Color palettes — global (shared across states)
+// ============================================================
+const palettes = {
+  default: {
+    name:    'Memphis Pink',
+    bg:      '#fff8e8',
+    text:    '#1a0a2e',
+    surface: '#ffffff',
+    accent1: '#ff71ce',
+    accent2: '#ffce5c',
+    accent3: '#86ccca',
+    accent4: '#6a7bb4',
+  },
+  cyber: {
+    name:    'Cyber Y2K',
+    bg:      '#f0e8ff',
+    text:    '#1d0a3a',
+    surface: '#ffffff',
+    accent1: '#ff2bd4',
+    accent2: '#a8ff00',
+    accent3: '#00f5ff',
+    accent4: '#7c3aed',
+  },
+  sunset: {
+    name:    'Sunset',
+    bg:      '#fff3e0',
+    text:    '#3a1a0a',
+    surface: '#fffaf3',
+    accent1: '#ff5a4d',
+    accent2: '#ffb84a',
+    accent3: '#ffd9c7',
+    accent4: '#9c4a52',
+  },
+  mint: {
+    name:    'Cool Mint',
+    bg:      '#e8fff5',
+    text:    '#0a2e22',
+    surface: '#ffffff',
+    accent1: '#00c08b',
+    accent2: '#ffe066',
+    accent3: '#7ddef0',
+    accent4: '#3a5f7c',
+  },
+};
+
+// ============================================================
+// Per-state value sets — seeded from Anusha's tuned snapshots.
+// ============================================================
+const vals = {
+  palette: 'default',
+  // empty is shared across modes
+  empty: {
+    yTitle: 0, yTagline: -28, yToggle: 0, yInput: 0,
+    yButton: 0, yCard: 0, yArsenal: 0,
+    angleTitle: 0, angleTagline: 0, angleToggle: 0, angleInput: 0,
+    angleButton: 0, angleCard: -0.8, angleArsenal: 0.5,
+    sizeTitle: 100, sizeBorder: 3, sizeTagline: 18,
+    shadowTitle: 8, shadowButton: 8, shadowCard: 10, shadowArsenal: 6,
+    inputWidth: 680, inputFont: 16,
+    submitFont: 17, submitPadX: 56,
+    cardPad: 30, cardPhrase: 21, cardUsage: 14,
+    miniFont: 12, miniPadY: 10,
+    arsenalFont: 14, arsenalPadY: 16,
+    stickerScale: 1,
+    gapHeader: 54, gapForm: 40, gapSection: 24, padTop: 0,
+  },
+  // filled diverges per mode
+  filled: {
+    generate: {
+      yTitle: 0, yTagline: -12, yToggle: 0, yInput: -4,
+      yButton: -4, yCard: 16, yArsenal: 32,
+      angleTitle: 0, angleTagline: 0, angleToggle: 0, angleInput: 0,
+      angleButton: 0, angleCard: -1.3, angleArsenal: 0.5,
+      sizeTitle: 100, sizeBorder: 3, sizeTagline: 18,
+      shadowTitle: 8, shadowButton: 8, shadowCard: 10, shadowArsenal: 6,
+      inputWidth: 680, inputFont: 16,
+      submitFont: 17, submitPadX: 56,
+      cardPad: 30, cardPhrase: 21, cardUsage: 14,
+      miniFont: 12, miniPadY: 10,
+      arsenalFont: 14, arsenalPadY: 16,
+      stickerScale: 1,
+      gapHeader: 38, gapForm: 30, gapSection: 20, padTop: 56,
+    },
+    reframe: {
+      yTitle: 0, yTagline: -12, yToggle: 0, yInput: -4,
+      yButton: -32, yCard: -16, yArsenal: 0,
+      angleTitle: 0, angleTagline: 0, angleToggle: 0, angleInput: 0,
+      angleButton: 0, angleCard: -1.3, angleArsenal: 0.5,
+      sizeTitle: 100, sizeBorder: 3, sizeTagline: 18,
+      shadowTitle: 8, shadowButton: 8, shadowCard: 10, shadowArsenal: 6,
+      inputWidth: 680, inputFont: 16,
+      submitFont: 17, submitPadX: 56,
+      cardPad: 30, cardPhrase: 21, cardUsage: 14,
+      miniFont: 12, miniPadY: 10,
+      arsenalFont: 14, arsenalPadY: 16,
+      stickerScale: 1,
+      gapHeader: 38, gapForm: 30, gapSection: 20, padTop: 56,
+    },
+  },
+};
+
+const ui = { state: 'empty', mode: 'generate', tab: 'move' };
+
+// Active set = empty (shared) OR filled[currentMode] (per-mode).
+function activeSet() {
+  return ui.state === 'empty' ? vals.empty : vals.filled[ui.mode];
+}
+
+// key → [CSS var, unit, decimal places]
+const cssMap = {
+  yTitle:        ['--m-y-title',         'px',  0],
+  yTagline:      ['--m-y-tagline',       'px',  0],
+  yToggle:       ['--m-y-toggle',        'px',  0],
+  yInput:        ['--m-y-input',         'px',  0],
+  yButton:       ['--m-y-button',        'px',  0],
+  yCard:         ['--m-y-card',          'px',  0],
+  yArsenal:      ['--m-y-arsenal',       'px',  0],
+
+  angleTitle:    ['--m-angle-title',     'deg', 1],
+  angleTagline:  ['--m-angle-tagline',   'deg', 1],
+  angleToggle:   ['--m-angle-toggle',    'deg', 1],
+  angleInput:    ['--m-angle-input',     'deg', 1],
+  angleButton:   ['--m-angle-button',    'deg', 1],
+  angleCard:     ['--m-angle-card',      'deg', 1],
+  angleArsenal:  ['--m-angle-arsenal',   'deg', 1],
+
+  sizeTitle:     ['--m-size-title',      'px',  0],
+  sizeBorder:    ['--m-size-border',     'px',  1],
+  sizeTagline:   ['--m-size-tagline',    'px',  0],
+
+  shadowTitle:   ['--m-shadow-title',    'px',  0],
+  shadowButton:  ['--m-shadow-button',   'px',  0],
+  shadowCard:    ['--m-shadow-card',     'px',  0],
+  shadowArsenal: ['--m-shadow-arsenal',  'px',  0],
+
+  inputWidth:    ['--m-input-width',     'px',  0],
+  inputFont:     ['--m-input-font',      'px',  0],
+  submitFont:    ['--m-submit-font',     'px',  0],
+  submitPadX:    ['--m-submit-pad-x',    'px',  0],
+
+  cardPad:       ['--m-card-pad',        'px',  0],
+  cardPhrase:    ['--m-card-phrase',     'px',  0],
+  cardUsage:     ['--m-card-usage',      'px',  0],
+
+  miniFont:      ['--m-mini-font',       'px',  0],
+  miniPadY:      ['--m-mini-pad-y',      'px',  0],
+  arsenalFont:   ['--m-arsenal-font',    'px',  0],
+  arsenalPadY:   ['--m-arsenal-pad-y',   'px',  0],
+
+  stickerScale:  ['--m-sticker-scale',   '',    2],
+
+  gapHeader:     ['--m-gap-header',      'px',  0],
+  gapForm:       ['--m-gap-form',        'px',  0],
+  gapSection:    ['--m-gap-section',     'px',  0],
+  padTop:        ['--m-pad-top',         'px',  0],
+};
+
+function round(v, places) {
+  const m = Math.pow(10, places);
+  return Math.round(v * m) / m;
+}
+
+function applyState() {
+  const root = document.documentElement;
+  const set = activeSet();
+  Object.keys(set).forEach(key => {
+    const [cssVar, unit, places] = cssMap[key];
+    const v = round(set[key], places);
+    set[key] = v;
+    root.style.setProperty(cssVar, v + unit);
+    const el = document.getElementById('v-' + key);
+    if (el) {
+      const suffix = unit === 'deg' ? '°' : unit;
+      el.textContent = v + suffix;
+    }
+  });
+  refreshJson();
+}
+
+function applyPalette() {
+  const p = palettes[vals.palette];
+  const root = document.documentElement;
+  root.style.setProperty('--c-bg',      p.bg);
+  root.style.setProperty('--c-text',    p.text);
+  root.style.setProperty('--c-surface', p.surface);
+  root.style.setProperty('--c-accent1', p.accent1);
+  root.style.setProperty('--c-accent2', p.accent2);
+  root.style.setProperty('--c-accent3', p.accent3);
+  root.style.setProperty('--c-accent4', p.accent4);
+  document.querySelectorAll('[data-set-palette]').forEach(b => {
+    b.classList.toggle('is-active', b.dataset.setPalette === vals.palette);
+  });
+  refreshJson();
+}
+
+function groupFor(set) {
+  return {
+    move: {
+      title: set.yTitle, tagline: set.yTagline, toggle: set.yToggle,
+      input: set.yInput, button: set.yButton, card: set.yCard, arsenal: set.yArsenal,
+    },
+    angles: {
+      title:   set.angleTitle, tagline: set.angleTagline, toggle: set.angleToggle,
+      input:   set.angleInput, button: set.angleButton, card: set.angleCard, arsenal: set.angleArsenal,
+    },
+    fonts: {
+      title:      set.sizeTitle, tagline: set.sizeTagline,
+      input:      set.inputFont, submit: set.submitFont,
+      cardPhrase: set.cardPhrase, cardUsage: set.cardUsage,
+      mini:       set.miniFont, arsenal: set.arsenalFont,
+    },
+    sizes: {
+      border:        set.sizeBorder,
+      inputWidth:    set.inputWidth,
+      submitPadX:    set.submitPadX,
+      cardPad:       set.cardPad,
+      miniPadY:      set.miniPadY,
+      arsenalPadY:   set.arsenalPadY,
+      stickerScale:  set.stickerScale,
+      shadowTitle:   set.shadowTitle,
+      shadowButton:  set.shadowButton,
+      shadowCard:    set.shadowCard,
+      shadowArsenal: set.shadowArsenal,
+    },
+    spacing: {
+      header:  set.gapHeader, form: set.gapForm,
+      section: set.gapSection, padTop: set.padTop,
+    },
+  };
+}
+
+function refreshJson() {
+  const out = {
+    palette: vals.palette,
+    empty:   groupFor(vals.empty),
+    filled: {
+      generate: groupFor(vals.filled.generate),
+      reframe:  groupFor(vals.filled.reframe),
+    },
+  };
+  document.getElementById('m-json').textContent = JSON.stringify(out, null, 2);
+}
+
+const NON_NEG = new Set([
+  'sizeTitle','sizeBorder','sizeTagline',
+  'shadowTitle','shadowButton','shadowCard','shadowArsenal',
+  'inputFont','submitFont','submitPadX',
+  'cardPad','cardPhrase','cardUsage',
+  'miniFont','miniPadY','arsenalFont','arsenalPadY',
+  'gapHeader','gapForm','gapSection','padTop',
+]);
+
+function adj(key, delta) {
+  const set = activeSet();
+  let next = set[key] + delta;
+  if (key === 'stickerScale')      next = Math.max(0.1, next);
+  else if (key === 'inputWidth')   next = Math.max(120, next);
+  else if (NON_NEG.has(key))       next = Math.max(0, next);
+  set[key] = next;
+  applyState();
+}
+
+function setState(state) {
+  ui.state = state;
+  document.body.dataset.state = state;
+  document.querySelectorAll('[data-set-state]').forEach(b => {
+    b.classList.toggle('is-active', b.dataset.setState === state);
+  });
+  applyState();
+}
+
+function setTab(tab) {
+  ui.tab = tab;
+  document.querySelectorAll('[data-set-tab]').forEach(b => {
+    b.classList.toggle('is-active', b.dataset.setTab === tab);
+  });
+  document.querySelectorAll('.m-tab-panel').forEach(p => {
+    p.classList.toggle('is-active', p.dataset.panel === tab);
+  });
+}
+
+function setPalette(name) {
+  if (!palettes[name]) return;
+  vals.palette = name;
+  applyPalette();
+}
+
+function copyJson() {
+  const text = document.getElementById('m-json').textContent;
+  navigator.clipboard.writeText(text);
+  const btn = document.getElementById('m-copy');
+  btn.textContent = 'Copied ✦';
+  setTimeout(() => { btn.textContent = 'Copy values'; }, 1800);
+}
+
+// Wire state + tab buttons
+document.querySelectorAll('[data-set-state]').forEach(btn => {
+  btn.addEventListener('click', () => setState(btn.dataset.setState));
+});
+document.querySelectorAll('[data-set-tab]').forEach(btn => {
+  btn.addEventListener('click', () => setTab(btn.dataset.setTab));
+});
+
+// Build palette buttons dynamically (so swatches stay in sync with the palette defs)
+const palList = document.getElementById('m-palette-list');
+Object.entries(palettes).forEach(([key, p]) => {
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'm-pal-btn' + (key === vals.palette ? ' is-active' : '');
+  btn.dataset.setPalette = key;
+  btn.innerHTML = `
+    <span class="m-pal-name">${p.name}</span>
+    <span class="m-pal-swatches">
+      <span style="background:${p.accent1}"></span>
+      <span style="background:${p.accent2}"></span>
+      <span style="background:${p.accent3}"></span>
+      <span style="background:${p.accent4}"></span>
+    </span>
+  `;
+  btn.addEventListener('click', () => setPalette(key));
+  palList.appendChild(btn);
+});
+
+// Mode toggle — swaps input/output panes, submit text, AND which filled set is active
+function setMode(mode) {
+  ui.mode = mode;
+  document.querySelectorAll('.mock-mode-btn').forEach(b => {
+    b.classList.toggle('is-active', b.dataset.mode === mode);
+  });
+  document.querySelectorAll('[data-mode-section]').forEach(el => {
+    el.hidden = el.dataset.modeSection !== mode;
+  });
+  const t = document.querySelector('.mock-submit-text');
+  if (t) t.textContent = mode === 'reframe' ? 'Reframe' : 'Generate';
+  applyState();
+}
+document.querySelectorAll('.mock-mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => setMode(btn.dataset.mode));
+});
+
+applyPalette();
+applyState();
+</script>
+
+</body>
+</html>
