@@ -636,8 +636,8 @@ footer > span { opacity: 0.7; }
     --m-y-title:      0px;
     --m-y-tagline:  -16px;
     --m-y-toggle:     0px;
-    --m-y-input:      0px;
-    --m-y-button:   -20px;
+    --m-y-input:      4px;
+    --m-y-button:     8px;
     --m-y-card:       0px;
     --m-y-arsenal:    0px;
     --m-angle-title:    0deg;
@@ -653,7 +653,7 @@ footer > span { opacity: 0.7; }
     --m-gap-header:    24px;
     --m-gap-form:      22px;
     --m-gap-section:   18px;
-    --m-pad-top:      204px;
+    --m-pad-top:       24px;
   }
 
   body[data-state="filled"] {
@@ -665,7 +665,7 @@ footer > span { opacity: 0.7; }
     --m-gap-header:  16px;
     --m-gap-form:    24px;
     --m-gap-section: 14px;
-    --m-pad-top:     92px;
+    --m-pad-top:     24px;
   }
 
   body[data-state="filled"][data-mode="generate"] {
@@ -676,9 +676,10 @@ footer > span { opacity: 0.7; }
   }
 
   body[data-state="filled"][data-mode="reframe"] {
-    --m-y-button:   -28px;
-    --m-y-card:    -16px;
-    --m-y-arsenal:  -8px;
+    --m-y-input:    -10px;
+    --m-y-button:   -40px;
+    --m-y-card:    -36px;
+    --m-y-arsenal:  -28px;
     /* arsenal-font inherits 13 from :root */
   }
 

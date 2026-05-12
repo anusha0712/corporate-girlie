@@ -47,8 +47,8 @@ body {
   --m-y-title:     0px;
   --m-y-tagline: -16px;
   --m-y-toggle:    0px;
-  --m-y-input:     0px;
-  --m-y-button:    0px;
+  --m-y-input:     4px;
+  --m-y-button:    8px;
   --m-y-card:      0px;
   --m-y-arsenal:   0px;
 
@@ -60,9 +60,9 @@ body {
   --m-angle-card:    -0.8deg;
   --m-angle-arsenal:  0.5deg;
 
-  --m-size-title:      48px;
+  --m-size-title:      54px;
   --m-size-border:      3px;
-  --m-size-tagline:    16px;
+  --m-size-tagline:    15px;
 
   --m-shadow-title:     6px;
   --m-shadow-button:    6px;
@@ -88,7 +88,7 @@ body {
   --m-gap-header:      24px;
   --m-gap-form:        22px;
   --m-gap-section:     18px;
-  --m-pad-top:         8vh;
+  --m-pad-top:         24px;
 
   /* Phone shell */
   flex-shrink: 0;
@@ -112,20 +112,24 @@ body {
   --m-y-tagline:   -8px;
   --m-y-input:     -2px;
   --m-angle-card: -1.3deg;
+  --m-card-usage:  12px;
+  --m-mini-font:    9px;
   --m-gap-header:  16px;
-  --m-gap-form:    16px;
+  --m-gap-form:    24px;
   --m-gap-section: 14px;
-  --m-pad-top:     12px;
+  --m-pad-top:     24px;
 }
 .phone-frame[data-state="filled"][data-mode="generate"] {
-  --m-y-button: -2px;
-  --m-y-card:    8px;
-  --m-y-arsenal: 16px;
+  --m-y-button:    -2px;
+  --m-y-card:       8px;
+  --m-y-arsenal:   16px;
+  --m-arsenal-font: 12px;
 }
 .phone-frame[data-state="filled"][data-mode="reframe"] {
-  --m-y-button: -16px;
-  --m-y-card:    -8px;
-  --m-y-arsenal:  0px;
+  --m-y-input:    -10px;
+  --m-y-button:   -40px;
+  --m-y-card:    -36px;
+  --m-y-arsenal:  -28px;
 }
 
 /* ===== Sticker layer ===== */
@@ -807,28 +811,52 @@ const palettes = {
   mint:    { name: 'Cool Mint',    bg: '#e8fff5', text: '#0a2e22', surface: '#ffffff', accent1: '#00c08b', accent2: '#ffe066', accent3: '#7ddef0', accent4: '#3a5f7c' },
 };
 
-// Mobile defaults
-const baseValues = () => ({
-  yTitle: 0, yTagline: -16, yToggle: 0, yInput: 0,
-  yButton: 0, yCard: 0, yArsenal: 0,
-  angleTitle: 0, angleTagline: 0, angleToggle: 0, angleInput: 0,
-  angleButton: 0, angleCard: -0.8, angleArsenal: 0.5,
-  sizeTitle: 48, sizeBorder: 3, sizeTagline: 16,
-  shadowTitle: 6, shadowButton: 6, shadowCard: 8, shadowArsenal: 5,
-  inputFont: 15, submitFont: 16, submitPadX: 36,
-  cardPad: 22, cardPhrase: 18, cardUsage: 13,
-  miniFont: 11, miniPadY: 9,
-  arsenalFont: 13, arsenalPadY: 14,
-  stickerScale: 0.7,
-  gapHeader: 24, gapForm: 22, gapSection: 18, padTop: 60,
-});
-
+// Seeded from Anusha's tuned mobile snapshots (390x844).
 const vals = {
   palette: 'default',
-  empty: baseValues(),
+  empty: {
+    yTitle: 0, yTagline: -16, yToggle: 0, yInput: 4,
+    yButton: 8, yCard: 0, yArsenal: 0,
+    angleTitle: 0, angleTagline: 0, angleToggle: 0, angleInput: 0,
+    angleButton: 0, angleCard: -0.8, angleArsenal: 0.5,
+    sizeTitle: 54, sizeBorder: 3, sizeTagline: 15,
+    shadowTitle: 6, shadowButton: 6, shadowCard: 8, shadowArsenal: 5,
+    inputFont: 15, submitFont: 16, submitPadX: 36,
+    cardPad: 22, cardPhrase: 18, cardUsage: 13,
+    miniFont: 11, miniPadY: 9,
+    arsenalFont: 13, arsenalPadY: 14,
+    stickerScale: 0.7,
+    gapHeader: 24, gapForm: 22, gapSection: 18, padTop: 24,
+  },
   filled: {
-    generate: { ...baseValues(), yTagline: -8, yInput: -2, angleCard: -1.3, yButton: -2, yCard: 8, yArsenal: 16, gapHeader: 16, gapForm: 16, gapSection: 14, padTop: 12 },
-    reframe:  { ...baseValues(), yTagline: -8, yInput: -2, angleCard: -1.3, yButton: -16, yCard: -8, yArsenal: 0, gapHeader: 16, gapForm: 16, gapSection: 14, padTop: 12 },
+    generate: {
+      yTitle: 0, yTagline: -8, yToggle: 0, yInput: -2,
+      yButton: -2, yCard: 8, yArsenal: 16,
+      angleTitle: 0, angleTagline: 0, angleToggle: 0, angleInput: 0,
+      angleButton: 0, angleCard: -1.3, angleArsenal: 0.5,
+      sizeTitle: 54, sizeBorder: 3, sizeTagline: 15,
+      shadowTitle: 6, shadowButton: 6, shadowCard: 8, shadowArsenal: 5,
+      inputFont: 15, submitFont: 16, submitPadX: 36,
+      cardPad: 22, cardPhrase: 18, cardUsage: 12,
+      miniFont: 9, miniPadY: 9,
+      arsenalFont: 12, arsenalPadY: 14,
+      stickerScale: 0.7,
+      gapHeader: 16, gapForm: 24, gapSection: 14, padTop: 24,
+    },
+    reframe: {
+      yTitle: 0, yTagline: -8, yToggle: 0, yInput: -10,
+      yButton: -40, yCard: -36, yArsenal: -28,
+      angleTitle: 0, angleTagline: 0, angleToggle: 0, angleInput: 0,
+      angleButton: 0, angleCard: -1.3, angleArsenal: 0.5,
+      sizeTitle: 54, sizeBorder: 3, sizeTagline: 15,
+      shadowTitle: 6, shadowButton: 6, shadowCard: 8, shadowArsenal: 5,
+      inputFont: 15, submitFont: 16, submitPadX: 36,
+      cardPad: 22, cardPhrase: 18, cardUsage: 12,
+      miniFont: 9, miniPadY: 9,
+      arsenalFont: 13, arsenalPadY: 14,
+      stickerScale: 0.7,
+      gapHeader: 16, gapForm: 24, gapSection: 14, padTop: 24,
+    },
   },
 };
 
