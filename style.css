@@ -700,6 +700,9 @@ footer > span { opacity: 0.7; }
     max-width: 100%;
   }
   .input-section, .phrase-card, .saved-section { max-width: 100%; }
+
+  /* Yellow triangle sticker hidden on mobile */
+  .memphis-sticker.s1 { display: none; }
 }
 
 @media (max-height: 700px) and (min-width: 700px) {
