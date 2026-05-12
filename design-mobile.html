@@ -47,8 +47,8 @@ body {
   --m-y-title:     0px;
   --m-y-tagline: -16px;
   --m-y-toggle:    0px;
-  --m-y-input:     4px;
-  --m-y-button:  -16px;
+  --m-y-input:    -4px;
+  --m-y-button:   -8px;
   --m-y-card:      0px;
   --m-y-arsenal:   0px;
 
@@ -62,25 +62,35 @@ body {
 
   --m-size-title:      44px;
   --m-size-border:      3px;
-  --m-size-tagline:    15px;
+  --m-size-tagline:    14px;
 
   --m-shadow-title:     6px;
   --m-shadow-button:    6px;
   --m-shadow-card:      8px;
   --m-shadow-arsenal:   5px;
 
+  --m-mode-font:       13px;
+  --m-mode-pad-x:      22px;
+  --m-mode-pad-y:      12px;
+
   --m-input-width:    100%;
   --m-input-font:      15px;
+  --m-input-pad-x:     16px;
+  --m-input-pad-y:     13px;
+
   --m-submit-font:     16px;
   --m-submit-pad-x:    36px;
+  --m-submit-pad-y:    14px;
 
   --m-card-pad:        22px;
   --m-card-phrase:     18px;
   --m-card-usage:      13px;
 
   --m-mini-font:       11px;
+  --m-mini-pad-x:      14px;
   --m-mini-pad-y:       9px;
   --m-arsenal-font:    13px;
+  --m-arsenal-pad-x:   16px;
   --m-arsenal-pad-y:   14px;
 
   --m-sticker-scale:  0.7;
@@ -88,7 +98,7 @@ body {
   --m-gap-header:      24px;
   --m-gap-form:        22px;
   --m-gap-section:     18px;
-  --m-pad-top:        232px;
+  --m-pad-top:        176px;
 
   /* Phone shell */
   flex-shrink: 0;
@@ -112,6 +122,7 @@ body {
   --m-y-tagline:   -8px;
   --m-y-input:     -2px;
   --m-angle-card: -1.3deg;
+  --m-size-tagline: 15px;
   --m-card-usage:  12px;
   --m-mini-font:    9px;
   --m-gap-header:  16px;
@@ -268,8 +279,8 @@ body {
 .mock-mode-btn {
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 700;
-  font-size: 13px;
-  padding: 12px 22px;
+  font-size: var(--m-mode-font);
+  padding: var(--m-mode-pad-y) var(--m-mode-pad-x);
   color: var(--c-text);
   border-right: var(--m-size-border) solid var(--c-text);
   background: var(--c-surface);
@@ -288,7 +299,7 @@ body {
   width: 100%;
   background: var(--c-surface);
   border: var(--m-size-border) solid var(--c-text);
-  padding: 13px 16px;
+  padding: var(--m-input-pad-y) var(--m-input-pad-x);
   font-family: 'Space Grotesk', sans-serif;
   font-size: var(--m-input-font);
   font-weight: 500;
@@ -326,7 +337,7 @@ body {
   font-weight: 800;
   font-size: var(--m-submit-font);
   border: var(--m-size-border) solid var(--c-text);
-  padding: 14px var(--m-submit-pad-x);
+  padding: var(--m-submit-pad-y) var(--m-submit-pad-x);
   letter-spacing: 0.03em;
   box-shadow:
     var(--m-shadow-button) var(--m-shadow-button) 0 var(--c-accent2),
@@ -392,7 +403,7 @@ body {
   background: var(--c-surface);
   color: var(--c-text);
   border: var(--m-size-border) solid var(--c-text);
-  padding: var(--m-mini-pad-y) 14px;
+  padding: var(--m-mini-pad-y) var(--m-mini-pad-x);
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 800;
   font-size: var(--m-mini-font);
@@ -408,7 +419,7 @@ body {
   background: var(--c-accent4);
   color: var(--c-surface);
   border: var(--m-size-border) solid var(--c-text);
-  padding: var(--m-arsenal-pad-y) 16px;
+  padding: var(--m-arsenal-pad-y) var(--m-arsenal-pad-x);
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 700;
   font-size: var(--m-arsenal-font);
@@ -750,6 +761,7 @@ body {
     <h3>Font sizes</h3>
     <div class="m-row"><span class="m-label">Title</span>       <div class="m-controls"><button class="m-btn" type="button" onclick="adj('sizeTitle',-2)">−</button><span class="m-val" id="v-sizeTitle"></span><button class="m-btn" type="button" onclick="adj('sizeTitle',2)">+</button></div></div>
     <div class="m-row"><span class="m-label">Tagline</span>     <div class="m-controls"><button class="m-btn" type="button" onclick="adj('sizeTagline',-1)">−</button><span class="m-val" id="v-sizeTagline"></span><button class="m-btn" type="button" onclick="adj('sizeTagline',1)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Mode toggle</span> <div class="m-controls"><button class="m-btn" type="button" onclick="adj('modeFont',-1)">−</button><span class="m-val" id="v-modeFont"></span><button class="m-btn" type="button" onclick="adj('modeFont',1)">+</button></div></div>
     <div class="m-row"><span class="m-label">Input</span>       <div class="m-controls"><button class="m-btn" type="button" onclick="adj('inputFont',-1)">−</button><span class="m-val" id="v-inputFont"></span><button class="m-btn" type="button" onclick="adj('inputFont',1)">+</button></div></div>
     <div class="m-row"><span class="m-label">Submit</span>      <div class="m-controls"><button class="m-btn" type="button" onclick="adj('submitFont',-1)">−</button><span class="m-val" id="v-submitFont"></span><button class="m-btn" type="button" onclick="adj('submitFont',1)">+</button></div></div>
     <div class="m-row"><span class="m-label">Card phrase</span> <div class="m-controls"><button class="m-btn" type="button" onclick="adj('cardPhrase',-1)">−</button><span class="m-val" id="v-cardPhrase"></span><button class="m-btn" type="button" onclick="adj('cardPhrase',1)">+</button></div></div>
@@ -772,13 +784,34 @@ body {
 
   <!-- SIZE -->
   <div class="m-tab-panel" data-panel="size">
-    <h3>Dimensions</h3>
-    <div class="m-row"><span class="m-label">Border width</span><div class="m-controls"><button class="m-btn" type="button" onclick="adj('sizeBorder',-0.5)">−</button><span class="m-val" id="v-sizeBorder"></span><button class="m-btn" type="button" onclick="adj('sizeBorder',0.5)">+</button></div></div>
-    <div class="m-row"><span class="m-label">Submit pad-X</span><div class="m-controls"><button class="m-btn" type="button" onclick="adj('submitPadX',-2)">−</button><span class="m-val" id="v-submitPadX"></span><button class="m-btn" type="button" onclick="adj('submitPadX',2)">+</button></div></div>
-    <div class="m-row"><span class="m-label">Card padding</span><div class="m-controls"><button class="m-btn" type="button" onclick="adj('cardPad',-2)">−</button><span class="m-val" id="v-cardPad"></span><button class="m-btn" type="button" onclick="adj('cardPad',2)">+</button></div></div>
-    <div class="m-row"><span class="m-label">Mini pad-Y</span>  <div class="m-controls"><button class="m-btn" type="button" onclick="adj('miniPadY',-1)">−</button><span class="m-val" id="v-miniPadY"></span><button class="m-btn" type="button" onclick="adj('miniPadY',1)">+</button></div></div>
-    <div class="m-row"><span class="m-label">Arsenal pad-Y</span><div class="m-controls"><button class="m-btn" type="button" onclick="adj('arsenalPadY',-2)">−</button><span class="m-val" id="v-arsenalPadY"></span><button class="m-btn" type="button" onclick="adj('arsenalPadY',2)">+</button></div></div>
-    <div class="m-row"><span class="m-label">Sticker scale</span><div class="m-controls"><button class="m-btn" type="button" onclick="adj('stickerScale',-0.05)">−</button><span class="m-val" id="v-stickerScale"></span><button class="m-btn" type="button" onclick="adj('stickerScale',0.05)">+</button></div></div>
+    <h3>Border</h3>
+    <div class="m-row"><span class="m-label">Width</span>      <div class="m-controls"><button class="m-btn" type="button" onclick="adj('sizeBorder',-0.5)">−</button><span class="m-val" id="v-sizeBorder"></span><button class="m-btn" type="button" onclick="adj('sizeBorder',0.5)">+</button></div></div>
+
+    <h3>Mode toggle</h3>
+    <div class="m-row"><span class="m-label">Pad-X</span>      <div class="m-controls"><button class="m-btn" type="button" onclick="adj('modePadX',-2)">−</button><span class="m-val" id="v-modePadX"></span><button class="m-btn" type="button" onclick="adj('modePadX',2)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Pad-Y</span>      <div class="m-controls"><button class="m-btn" type="button" onclick="adj('modePadY',-1)">−</button><span class="m-val" id="v-modePadY"></span><button class="m-btn" type="button" onclick="adj('modePadY',1)">+</button></div></div>
+
+    <h3>Input</h3>
+    <div class="m-row"><span class="m-label">Pad-X</span>      <div class="m-controls"><button class="m-btn" type="button" onclick="adj('inputPadX',-2)">−</button><span class="m-val" id="v-inputPadX"></span><button class="m-btn" type="button" onclick="adj('inputPadX',2)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Pad-Y</span>      <div class="m-controls"><button class="m-btn" type="button" onclick="adj('inputPadY',-1)">−</button><span class="m-val" id="v-inputPadY"></span><button class="m-btn" type="button" onclick="adj('inputPadY',1)">+</button></div></div>
+
+    <h3>Submit</h3>
+    <div class="m-row"><span class="m-label">Pad-X</span>      <div class="m-controls"><button class="m-btn" type="button" onclick="adj('submitPadX',-2)">−</button><span class="m-val" id="v-submitPadX"></span><button class="m-btn" type="button" onclick="adj('submitPadX',2)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Pad-Y</span>      <div class="m-controls"><button class="m-btn" type="button" onclick="adj('submitPadY',-1)">−</button><span class="m-val" id="v-submitPadY"></span><button class="m-btn" type="button" onclick="adj('submitPadY',1)">+</button></div></div>
+
+    <h3>Card</h3>
+    <div class="m-row"><span class="m-label">Padding</span>    <div class="m-controls"><button class="m-btn" type="button" onclick="adj('cardPad',-2)">−</button><span class="m-val" id="v-cardPad"></span><button class="m-btn" type="button" onclick="adj('cardPad',2)">+</button></div></div>
+
+    <h3>Mini buttons</h3>
+    <div class="m-row"><span class="m-label">Pad-X</span>      <div class="m-controls"><button class="m-btn" type="button" onclick="adj('miniPadX',-1)">−</button><span class="m-val" id="v-miniPadX"></span><button class="m-btn" type="button" onclick="adj('miniPadX',1)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Pad-Y</span>      <div class="m-controls"><button class="m-btn" type="button" onclick="adj('miniPadY',-1)">−</button><span class="m-val" id="v-miniPadY"></span><button class="m-btn" type="button" onclick="adj('miniPadY',1)">+</button></div></div>
+
+    <h3>Arsenal</h3>
+    <div class="m-row"><span class="m-label">Pad-X</span>      <div class="m-controls"><button class="m-btn" type="button" onclick="adj('arsenalPadX',-2)">−</button><span class="m-val" id="v-arsenalPadX"></span><button class="m-btn" type="button" onclick="adj('arsenalPadX',2)">+</button></div></div>
+    <div class="m-row"><span class="m-label">Pad-Y</span>      <div class="m-controls"><button class="m-btn" type="button" onclick="adj('arsenalPadY',-1)">−</button><span class="m-val" id="v-arsenalPadY"></span><button class="m-btn" type="button" onclick="adj('arsenalPadY',1)">+</button></div></div>
+
+    <h3>Stickers</h3>
+    <div class="m-row"><span class="m-label">Scale</span>      <div class="m-controls"><button class="m-btn" type="button" onclick="adj('stickerScale',-0.05)">−</button><span class="m-val" id="v-stickerScale"></span><button class="m-btn" type="button" onclick="adj('stickerScale',0.05)">+</button></div></div>
 
     <h3>Shadows</h3>
     <div class="m-row"><span class="m-label">Title</span>      <div class="m-controls"><button class="m-btn" type="button" onclick="adj('shadowTitle',-1)">−</button><span class="m-val" id="v-shadowTitle"></span><button class="m-btn" type="button" onclick="adj('shadowTitle',1)">+</button></div></div>
@@ -812,21 +845,35 @@ const palettes = {
 };
 
 // Seeded from Anusha's tuned mobile snapshots (390x844).
+// 4-cell model: each (state × mode) has its own value set.
+const emptyBase = {
+  yTitle: 0, yTagline: -16, yToggle: 0, yInput: -4,
+  yButton: -8, yCard: 0, yArsenal: 0,
+  angleTitle: 0, angleTagline: 0, angleToggle: 0, angleInput: 0,
+  angleButton: 0, angleCard: -0.8, angleArsenal: 0.5,
+  sizeTitle: 44, sizeBorder: 3, sizeTagline: 14,
+  shadowTitle: 6, shadowButton: 6, shadowCard: 8, shadowArsenal: 5,
+  // mode toggle
+  modeFont: 13, modePadX: 22, modePadY: 12,
+  // input
+  inputFont: 15, inputPadX: 16, inputPadY: 13,
+  // submit
+  submitFont: 16, submitPadX: 36, submitPadY: 14,
+  // card
+  cardPad: 22, cardPhrase: 18, cardUsage: 13,
+  // mini buttons
+  miniFont: 11, miniPadX: 14, miniPadY: 9,
+  // arsenal
+  arsenalFont: 13, arsenalPadX: 16, arsenalPadY: 14,
+  stickerScale: 0.7,
+  gapHeader: 24, gapForm: 22, gapSection: 18, padTop: 176,
+};
+
 const vals = {
   palette: 'default',
   empty: {
-    yTitle: 0, yTagline: -16, yToggle: 0, yInput: 4,
-    yButton: -16, yCard: 0, yArsenal: 0,
-    angleTitle: 0, angleTagline: 0, angleToggle: 0, angleInput: 0,
-    angleButton: 0, angleCard: -0.8, angleArsenal: 0.5,
-    sizeTitle: 44, sizeBorder: 3, sizeTagline: 15,
-    shadowTitle: 6, shadowButton: 6, shadowCard: 8, shadowArsenal: 5,
-    inputFont: 15, submitFont: 16, submitPadX: 36,
-    cardPad: 22, cardPhrase: 18, cardUsage: 13,
-    miniFont: 11, miniPadY: 9,
-    arsenalFont: 13, arsenalPadY: 14,
-    stickerScale: 0.7,
-    gapHeader: 24, gapForm: 22, gapSection: 18, padTop: 232,
+    generate: { ...emptyBase },
+    reframe:  { ...emptyBase },
   },
   filled: {
     generate: {
@@ -836,10 +883,12 @@ const vals = {
       angleButton: 0, angleCard: -1.3, angleArsenal: 0.5,
       sizeTitle: 44, sizeBorder: 3, sizeTagline: 15,
       shadowTitle: 6, shadowButton: 6, shadowCard: 8, shadowArsenal: 5,
-      inputFont: 15, submitFont: 16, submitPadX: 36,
+      modeFont: 13, modePadX: 22, modePadY: 12,
+      inputFont: 15, inputPadX: 16, inputPadY: 13,
+      submitFont: 16, submitPadX: 36, submitPadY: 14,
       cardPad: 22, cardPhrase: 18, cardUsage: 12,
-      miniFont: 9, miniPadY: 9,
-      arsenalFont: 12, arsenalPadY: 14,
+      miniFont: 9, miniPadX: 14, miniPadY: 9,
+      arsenalFont: 12, arsenalPadX: 16, arsenalPadY: 14,
       stickerScale: 0.7,
       gapHeader: 16, gapForm: 24, gapSection: 14, padTop: 24,
     },
@@ -850,10 +899,12 @@ const vals = {
       angleButton: 0, angleCard: -1.3, angleArsenal: 0.5,
       sizeTitle: 44, sizeBorder: 3, sizeTagline: 15,
       shadowTitle: 6, shadowButton: 6, shadowCard: 8, shadowArsenal: 5,
-      inputFont: 15, submitFont: 16, submitPadX: 36,
+      modeFont: 13, modePadX: 22, modePadY: 12,
+      inputFont: 15, inputPadX: 16, inputPadY: 13,
+      submitFont: 16, submitPadX: 36, submitPadY: 14,
       cardPad: 22, cardPhrase: 18, cardUsage: 12,
-      miniFont: 9, miniPadY: 9,
-      arsenalFont: 13, arsenalPadY: 14,
+      miniFont: 9, miniPadX: 14, miniPadY: 9,
+      arsenalFont: 13, arsenalPadX: 16, arsenalPadY: 14,
       stickerScale: 0.7,
       gapHeader: 16, gapForm: 24, gapSection: 14, padTop: 24,
     },
@@ -863,7 +914,7 @@ const vals = {
 const ui = { state: 'empty', mode: 'generate', tab: 'move' };
 
 function activeSet() {
-  return ui.state === 'empty' ? vals.empty : vals.filled[ui.mode];
+  return vals[ui.state][ui.mode];
 }
 
 const cssMap = {
@@ -888,15 +939,23 @@ const cssMap = {
   shadowButton:  ['--m-shadow-button',   'px',  0],
   shadowCard:    ['--m-shadow-card',     'px',  0],
   shadowArsenal: ['--m-shadow-arsenal',  'px',  0],
+  modeFont:      ['--m-mode-font',       'px',  0],
+  modePadX:      ['--m-mode-pad-x',      'px',  0],
+  modePadY:      ['--m-mode-pad-y',      'px',  0],
   inputFont:     ['--m-input-font',      'px',  0],
+  inputPadX:     ['--m-input-pad-x',     'px',  0],
+  inputPadY:     ['--m-input-pad-y',     'px',  0],
   submitFont:    ['--m-submit-font',     'px',  0],
   submitPadX:    ['--m-submit-pad-x',    'px',  0],
+  submitPadY:    ['--m-submit-pad-y',    'px',  0],
   cardPad:       ['--m-card-pad',        'px',  0],
   cardPhrase:    ['--m-card-phrase',     'px',  0],
   cardUsage:     ['--m-card-usage',      'px',  0],
   miniFont:      ['--m-mini-font',       'px',  0],
+  miniPadX:      ['--m-mini-pad-x',      'px',  0],
   miniPadY:      ['--m-mini-pad-y',      'px',  0],
   arsenalFont:   ['--m-arsenal-font',    'px',  0],
+  arsenalPadX:   ['--m-arsenal-pad-x',   'px',  0],
   arsenalPadY:   ['--m-arsenal-pad-y',   'px',  0],
   stickerScale:  ['--m-sticker-scale',   '',    2],
   gapHeader:     ['--m-gap-header',      'px',  0],
@@ -961,7 +1020,10 @@ function refreshJson() {
   const out = {
     viewport: 'mobile (390x844)',
     palette: vals.palette,
-    empty: groupFor(vals.empty),
+    empty: {
+      generate: groupFor(vals.empty.generate),
+      reframe:  groupFor(vals.empty.reframe),
+    },
     filled: {
       generate: groupFor(vals.filled.generate),
       reframe:  groupFor(vals.filled.reframe),
@@ -973,9 +1035,12 @@ function refreshJson() {
 const NON_NEG = new Set([
   'sizeTitle','sizeBorder','sizeTagline',
   'shadowTitle','shadowButton','shadowCard','shadowArsenal',
-  'inputFont','submitFont','submitPadX',
+  'modeFont','modePadX','modePadY',
+  'inputFont','inputPadX','inputPadY',
+  'submitFont','submitPadX','submitPadY',
   'cardPad','cardPhrase','cardUsage',
-  'miniFont','miniPadY','arsenalFont','arsenalPadY',
+  'miniFont','miniPadX','miniPadY',
+  'arsenalFont','arsenalPadX','arsenalPadY',
   'gapHeader','gapForm','gapSection','padTop',
 ]);
 

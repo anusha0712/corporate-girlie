@@ -108,7 +108,13 @@ body[data-state="filled"][data-mode="reframe"] {
   --m-y-arsenal:  0px;
 }
 
-html { height: 100%; overflow: hidden; }
+html {
+  height: 100%;
+  overflow: hidden;
+  /* Prevent iOS Safari from auto-scaling text on rotation */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 body {
   height: 100svh;
   overflow: hidden;
@@ -617,7 +623,7 @@ footer > span { opacity: 0.7; }
     /* Shared across all state/mode combos on mobile */
     --m-size-title:      44px;
     --m-size-border:      3px;
-    --m-size-tagline:    15px;
+    --m-size-tagline:    14px;
     --m-shadow-title:     6px;
     --m-shadow-button:    6px;
     --m-shadow-card:      8px;
@@ -636,8 +642,8 @@ footer > span { opacity: 0.7; }
     --m-y-title:      0px;
     --m-y-tagline:  -16px;
     --m-y-toggle:     0px;
-    --m-y-input:      4px;
-    --m-y-button:   -16px;
+    --m-y-input:     -4px;
+    --m-y-button:    -8px;
     --m-y-card:       0px;
     --m-y-arsenal:    0px;
     --m-angle-title:    0deg;
@@ -653,7 +659,7 @@ footer > span { opacity: 0.7; }
     --m-gap-header:    24px;
     --m-gap-form:      22px;
     --m-gap-section:   18px;
-    --m-pad-top:      232px;
+    --m-pad-top:      176px;
   }
 
   /* Mobile is the only viewport where we allow vertical scrolling — the
@@ -663,18 +669,31 @@ footer > span { opacity: 0.7; }
     min-height: 100svh;
     overflow-y: auto;
     overflow-x: hidden;
+    /* Stop iOS rubber-band scroll from exposing the page background */
+    overscroll-behavior-y: contain;
+    /* iOS Safari: include safe-area at the bottom so the home indicator
+       doesn't sit on top of the footer */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Inputs under 16px trigger iOS Safari's zoom-on-focus and shift the
+     whole layout. Clamp the rendered font to 16px while leaving the
+     tuner's --m-input-font intact at its tuned value. */
+  .text-input {
+    font-size: max(16px, var(--m-input-font));
   }
 
   body[data-state="filled"] {
-    --m-y-tagline:   -8px;
-    --m-y-input:     -2px;
-    --m-angle-card: -1.3deg;
-    --m-card-usage:  12px;
-    --m-mini-font:    9px;
-    --m-gap-header:  16px;
-    --m-gap-form:    24px;
-    --m-gap-section: 14px;
-    --m-pad-top:     24px;
+    --m-y-tagline:    -8px;
+    --m-y-input:      -2px;
+    --m-angle-card:  -1.3deg;
+    --m-size-tagline: 15px;
+    --m-card-usage:   12px;
+    --m-mini-font:     9px;
+    --m-gap-header:   16px;
+    --m-gap-form:     24px;
+    --m-gap-section:  14px;
+    --m-pad-top:      24px;
   }
 
   body[data-state="filled"][data-mode="generate"] {
