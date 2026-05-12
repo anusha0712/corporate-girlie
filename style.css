@@ -620,10 +620,9 @@ footer > span { opacity: 0.7; }
 /* ===== Responsive — mobile (390×844 tuned via design-mobile.html) ===== */
 @media (max-width: 700px) {
   :root {
-    /* Shared across all state/mode combos on mobile */
+    /* Shared across all 4 state/mode combos on mobile */
     --m-size-title:      44px;
     --m-size-border:      3px;
-    --m-size-tagline:    14px;
     --m-shadow-title:     6px;
     --m-shadow-button:    6px;
     --m-shadow-card:      8px;
@@ -631,35 +630,41 @@ footer > span { opacity: 0.7; }
     --m-input-width:    100%;
     --m-input-font:      15px;
     --m-submit-font:     16px;
-    --m-submit-pad-x:    36px;
-    --m-card-pad:        22px;
+    --m-submit-pad-x:    18px;
     --m-card-phrase:     18px;
-    --m-mini-pad-y:       9px;
-    --m-arsenal-pad-y:   14px;
     --m-sticker-scale:  0.7;
-
-    /* Empty state */
-    --m-y-title:      0px;
-    --m-y-tagline:  -16px;
-    --m-y-toggle:     0px;
-    --m-y-input:     -4px;
-    --m-y-button:    -8px;
-    --m-y-card:       0px;
-    --m-y-arsenal:    0px;
     --m-angle-title:    0deg;
     --m-angle-tagline:  0deg;
     --m-angle-toggle:   0deg;
     --m-angle-input:    0deg;
     --m-angle-button:   0deg;
-    --m-angle-card:    -0.8deg;
     --m-angle-arsenal:  0.5deg;
-    --m-card-usage:    13px;
-    --m-mini-font:     11px;
-    --m-arsenal-font:  13px;
-    --m-gap-header:    24px;
-    --m-gap-form:      22px;
-    --m-gap-section:   18px;
-    --m-pad-top:      176px;
+    --m-y-title:        0px;
+    --m-y-toggle:       0px;
+
+    /* Empty defaults (empty.generate; empty.reframe overrides yButton only) */
+    --m-y-tagline:    -16px;
+    --m-y-input:       -4px;
+    --m-y-button:      -8px;
+    --m-y-card:         0px;
+    --m-y-arsenal:      0px;
+    --m-angle-card:    -0.8deg;
+    --m-size-tagline:   14px;
+    --m-card-pad:       22px;
+    --m-card-usage:     13px;
+    --m-mini-font:      11px;
+    --m-mini-pad-y:      9px;
+    --m-arsenal-font:   13px;
+    --m-arsenal-pad-y:  14px;
+    --m-gap-header:     24px;
+    --m-gap-form:       22px;
+    --m-gap-section:    18px;
+    --m-pad-top:       176px;
+  }
+
+  /* Empty · Reframe (only yButton differs from empty.generate) */
+  body[data-state="empty"][data-mode="reframe"] {
+    --m-y-button: -28px;
   }
 
   /* Mobile is the only viewport where we allow vertical scrolling — the
@@ -684,30 +689,32 @@ footer > span { opacity: 0.7; }
   }
 
   body[data-state="filled"] {
-    --m-y-tagline:    -8px;
-    --m-y-input:      -2px;
-    --m-angle-card:  -1.3deg;
-    --m-size-tagline: 15px;
-    --m-card-usage:   12px;
-    --m-mini-font:     9px;
-    --m-gap-header:   16px;
-    --m-gap-form:     24px;
-    --m-gap-section:  14px;
-    --m-pad-top:      24px;
+    --m-y-tagline:     -8px;
+    --m-y-input:      -10px;
+    --m-angle-card:   -1.3deg;
+    --m-size-tagline:  15px;
+    --m-card-pad:      14px;
+    --m-card-usage:    12px;
+    --m-mini-font:      9px;
+    --m-mini-pad-y:     4px;
+    --m-arsenal-pad-y:  8px;
+    --m-gap-header:    16px;
+    --m-gap-form:      24px;
+    --m-gap-section:   14px;
+    --m-pad-top:       24px;
   }
 
   body[data-state="filled"][data-mode="generate"] {
-    --m-y-button:    -2px;
-    --m-y-card:       8px;
-    --m-y-arsenal:   16px;
+    --m-y-button:    -22px;
+    --m-y-card:      -16px;
+    --m-y-arsenal:    -8px;
     --m-arsenal-font: 12px;
   }
 
   body[data-state="filled"][data-mode="reframe"] {
-    --m-y-input:    -10px;
-    --m-y-button:   -40px;
-    --m-y-card:    -36px;
-    --m-y-arsenal:  -28px;
+    --m-y-button:    -40px;
+    --m-y-card:      -36px;
+    --m-y-arsenal:   -28px;
     /* arsenal-font inherits 13 from :root */
   }
 

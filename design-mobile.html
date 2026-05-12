@@ -79,7 +79,7 @@ body {
   --m-input-pad-y:     13px;
 
   --m-submit-font:     16px;
-  --m-submit-pad-x:    36px;
+  --m-submit-pad-x:    18px;
   --m-submit-pad-y:    14px;
 
   --m-card-pad:        22px;
@@ -118,29 +118,34 @@ body {
   flex-direction: column;
 }
 
+.phone-frame[data-state="empty"][data-mode="reframe"] {
+  --m-y-button: -28px;
+}
 .phone-frame[data-state="filled"] {
-  --m-y-tagline:   -8px;
-  --m-y-input:     -2px;
-  --m-angle-card: -1.3deg;
-  --m-size-tagline: 15px;
-  --m-card-usage:  12px;
-  --m-mini-font:    9px;
-  --m-gap-header:  16px;
-  --m-gap-form:    24px;
-  --m-gap-section: 14px;
-  --m-pad-top:     24px;
+  --m-y-tagline:     -8px;
+  --m-y-input:      -10px;
+  --m-angle-card:   -1.3deg;
+  --m-size-tagline:  15px;
+  --m-card-pad:      14px;
+  --m-card-usage:    12px;
+  --m-mini-font:      9px;
+  --m-mini-pad-y:     4px;
+  --m-arsenal-pad-y:  8px;
+  --m-gap-header:    16px;
+  --m-gap-form:      24px;
+  --m-gap-section:   14px;
+  --m-pad-top:       24px;
 }
 .phone-frame[data-state="filled"][data-mode="generate"] {
-  --m-y-button:    -2px;
-  --m-y-card:       8px;
-  --m-y-arsenal:   16px;
+  --m-y-button:    -22px;
+  --m-y-card:      -16px;
+  --m-y-arsenal:    -8px;
   --m-arsenal-font: 12px;
 }
 .phone-frame[data-state="filled"][data-mode="reframe"] {
-  --m-y-input:    -10px;
-  --m-y-button:   -40px;
-  --m-y-card:    -36px;
-  --m-y-arsenal:  -28px;
+  --m-y-button:    -40px;
+  --m-y-card:      -36px;
+  --m-y-arsenal:   -28px;
 }
 
 /* ===== Sticker layer ===== */
@@ -858,7 +863,7 @@ const emptyBase = {
   // input
   inputFont: 15, inputPadX: 16, inputPadY: 13,
   // submit
-  submitFont: 16, submitPadX: 36, submitPadY: 14,
+  submitFont: 16, submitPadX: 18, submitPadY: 14,
   // card
   cardPad: 22, cardPhrase: 18, cardUsage: 13,
   // mini buttons
@@ -873,22 +878,22 @@ const vals = {
   palette: 'default',
   empty: {
     generate: { ...emptyBase },
-    reframe:  { ...emptyBase },
+    reframe:  { ...emptyBase, yButton: -28 },
   },
   filled: {
     generate: {
-      yTitle: 0, yTagline: -8, yToggle: 0, yInput: -2,
-      yButton: -2, yCard: 8, yArsenal: 16,
+      yTitle: 0, yTagline: -8, yToggle: 0, yInput: -10,
+      yButton: -22, yCard: -16, yArsenal: -8,
       angleTitle: 0, angleTagline: 0, angleToggle: 0, angleInput: 0,
       angleButton: 0, angleCard: -1.3, angleArsenal: 0.5,
       sizeTitle: 44, sizeBorder: 3, sizeTagline: 15,
       shadowTitle: 6, shadowButton: 6, shadowCard: 8, shadowArsenal: 5,
       modeFont: 13, modePadX: 22, modePadY: 12,
       inputFont: 15, inputPadX: 16, inputPadY: 13,
-      submitFont: 16, submitPadX: 36, submitPadY: 14,
-      cardPad: 22, cardPhrase: 18, cardUsage: 12,
-      miniFont: 9, miniPadX: 14, miniPadY: 9,
-      arsenalFont: 12, arsenalPadX: 16, arsenalPadY: 14,
+      submitFont: 16, submitPadX: 18, submitPadY: 14,
+      cardPad: 14, cardPhrase: 18, cardUsage: 12,
+      miniFont: 9, miniPadX: 14, miniPadY: 4,
+      arsenalFont: 12, arsenalPadX: 16, arsenalPadY: 8,
       stickerScale: 0.7,
       gapHeader: 16, gapForm: 24, gapSection: 14, padTop: 24,
     },
@@ -901,10 +906,10 @@ const vals = {
       shadowTitle: 6, shadowButton: 6, shadowCard: 8, shadowArsenal: 5,
       modeFont: 13, modePadX: 22, modePadY: 12,
       inputFont: 15, inputPadX: 16, inputPadY: 13,
-      submitFont: 16, submitPadX: 36, submitPadY: 14,
-      cardPad: 22, cardPhrase: 18, cardUsage: 12,
-      miniFont: 9, miniPadX: 14, miniPadY: 9,
-      arsenalFont: 13, arsenalPadX: 16, arsenalPadY: 14,
+      submitFont: 16, submitPadX: 18, submitPadY: 14,
+      cardPad: 14, cardPhrase: 18, cardUsage: 12,
+      miniFont: 9, miniPadX: 14, miniPadY: 4,
+      arsenalFont: 13, arsenalPadX: 16, arsenalPadY: 8,
       stickerScale: 0.7,
       gapHeader: 16, gapForm: 24, gapSection: 14, padTop: 24,
     },
