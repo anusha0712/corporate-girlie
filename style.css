@@ -637,7 +637,7 @@ footer > span { opacity: 0.7; }
     --m-y-tagline:  -16px;
     --m-y-toggle:     0px;
     --m-y-input:      4px;
-    --m-y-button:     8px;
+    --m-y-button:   -16px;
     --m-y-card:       0px;
     --m-y-arsenal:    0px;
     --m-angle-title:    0deg;
@@ -653,7 +653,16 @@ footer > span { opacity: 0.7; }
     --m-gap-header:    24px;
     --m-gap-form:      22px;
     --m-gap-section:   18px;
-    --m-pad-top:       24px;
+    --m-pad-top:      232px;
+  }
+
+  /* Mobile is the only viewport where we allow vertical scrolling — the
+     tuned padTop pushes content past the initial fold deliberately. */
+  html, body {
+    height: auto;
+    min-height: 100svh;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   body[data-state="filled"] {
